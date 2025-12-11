@@ -54,8 +54,8 @@ static MKAudio *_mkAudioShared;
 - (void)talkOff:(UIButton *)button;
 - (void)appDidEnterBackground:(NSNotification *)notification;
 @end
-#endif
-#endif
+#endif // TARGET_OS_IPHONE
+#endif // __has_include(<MumbleKit/MKServerModel.h>)
 
 #import "MUApplicationDelegate.h"
 
