@@ -64,11 +64,7 @@ final class MUAudioSessionManager: NSObject {
         UserDefaults.standard.set(value(for: resolvedMode), forKey: "AudioTransmitMethod")
 
         do {
-            if resolvedMode == .continuous {
-                try session.setMode(.measurement)
-            } else {
-                try session.setMode(.voiceChat)
-            }
+            try session.setMode(.voiceChat)
         } catch {
             NSLog("MUAudioSessionManager: Failed to update transmit mode: %@", error.localizedDescription)
         }
