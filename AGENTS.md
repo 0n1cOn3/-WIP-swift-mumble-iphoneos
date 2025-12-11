@@ -16,8 +16,10 @@ Completed tasks
 - Replaced **SenTestingKit** with **XCTest**.
 - Rewrote certificate controllers in Swift and deleted the old Objective‑C implementations.
 - Converted most user interfaces from xib files to storyboards, including the former `MainWindow.xib`.
+- Converted the preferences UI to Swift (`MUPreferencesViewController`).
+- Added a centralized **AVAudioEngine** capture pipeline with push-to-talk and VAD metering support.
 
 Open tasks
 ==========
-- Migrate the remaining Objective‑C controllers (for example `MUPreferencesViewController` and `MUConnectionController`) to Swift.
-- Adopt modern audio APIs such as `AVAudioSession` and `AVAudioEngine`.
+- Migrate the remaining Objective‑C controllers (for example `MUConnectionController`) to Swift.
+- Finish modernizing the audio stack beyond capture (routing, playback, and MumbleKit integration) while keeping compatibility with older iOS versions.

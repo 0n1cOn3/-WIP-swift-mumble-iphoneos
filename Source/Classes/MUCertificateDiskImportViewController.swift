@@ -97,7 +97,7 @@ class MUCertificateDiskImportViewController: UITableViewController, UITextFieldD
         }
         let leaf = chain[0]
         guard let transformedData = leaf.exportPKCS12(withPassword: "") else {
-            showAlertDialog(title: NSLocalizedString("Import Error", comment: ""), msg: NSLocalizedString("Mumble was unable to export the specified certificate.", comment: ""))
+            showAlertDialog(title: NSLocalizedString("Import Error", comment: "Error title for certificate import failure"), msg: NSLocalizedString("Mumble was unable to export the specified certificate.", comment: "Error message when certificate export fails"))
             tableView.deselectRow(at: attemptIndexPath!, animated: true)
             return
         }
@@ -110,7 +110,7 @@ class MUCertificateDiskImportViewController: UITableViewController, UITextFieldD
                     let op = [kSecValueRef as String: secCert] as CFDictionary
                     let r = SecItemAdd(op, nil)
                     if r != errSecSuccess && r != errSecDuplicateItem {
-                        showAlertDialog(title: NSLocalizedString("Import Error", comment: ""), msg: NSLocalizedString("Mumble was unable to import one of the intermediate certificates in the certificate chain.", comment: ""))
+                        showAlertDialog(title: NSLocalizedString("Import Error", comment: "Error title for certificate import failure"), msg: NSLocalizedString("Mumble was unable to import one of the intermediate certificates in the certificate chain.", comment: "Error message when intermediate certificate import fails"))
                     }
                 }
             }
@@ -126,10 +126,10 @@ class MUCertificateDiskImportViewController: UITableViewController, UITextFieldD
                     tableView.deleteRows(at: [attemptIndexPath!], with: .fade)
                     return
                 } else if addErr == errSecDuplicateItem || (addErr == errSecSuccess && dataRef == nil) {
-                    showAlertDialog(title: NSLocalizedString("Import Error", comment: ""), msg: NSLocalizedString("A certificate with the same name already exist.", comment: ""))
+                    showAlertDialog(title: NSLocalizedString("Import Error", comment: "Error title for certificate import failure"), msg: NSLocalizedString("A certificate with the same name already exist.", comment: "Error message when certificate with same name exists"))
                 } else {
-                    let msg = String(format: NSLocalizedString("Mumble was unable to import the certificate.\nError Code: %li", comment: ""), addErr)
-                    showAlertDialog(title: "Import Error", msg: msg)
+                    let msg = String(format: NSLocalizedString("Mumble was unable to import the certificate.\nError Code: %li", comment: "Error message with error code for certificate import failure"), addErr)
+                    showAlertDialog(title: NSLocalizedString("Import Error", comment: "Error title for certificate import failure"), msg: msg)
                 }
             }
             tableView.deselectRow(at: attemptIndexPath!, animated: true)
@@ -137,21 +137,21 @@ class MUCertificateDiskImportViewController: UITableViewController, UITextFieldD
             showPasswordDialog()
             tableView.deselectRow(at: attemptIndexPath!, animated: true)
         } else if err == errSecDecode {
-            showAlertDialog(title: NSLocalizedString("Import Error", comment: ""), msg: "Unable to decode PKCS12 file")
+            showAlertDialog(title: NSLocalizedString("Import Error", comment: "Error title for certificate import failure"), msg: NSLocalizedString("Unable to decode PKCS12 file", comment: "Error message when PKCS12 file cannot be decoded"))
             tableView.deselectRow(at: attemptIndexPath!, animated: true)
         } else {
-            showAlertDialog(title: NSLocalizedString("Import Error", comment: ""), msg: NSLocalizedString("Mumble was unable to import the certificate.", comment: ""))
+            showAlertDialog(title: NSLocalizedString("Import Error", comment: "Error title for certificate import failure"), msg: NSLocalizedString("Mumble was unable to import the certificate.", comment: "Error message when certificate import fails"))
             tableView.deselectRow(at: attemptIndexPath!, animated: true)
         }
     }
 
     private func showPasswordDialog() {
-        let title = NSLocalizedString("Enter Password", comment: "")
-        let msg = NSLocalizedString("The certificate is protected by a password. Please enter it below:", comment: "")
+        let title = NSLocalizedString("Enter Password", comment: "Title for password entry dialog for protected certificate")
+        let msg = NSLocalizedString("The certificate is protected by a password. Please enter it below:", comment: "Message prompting user to enter certificate password")
         let alert = UIAlertController(title: title, message: msg, preferredStyle: .alert)
         alert.addTextField { $0.isSecureTextEntry = true; self.passwordField = $0 }
-        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .default) { _ in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel button for password dialog"), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK button for password dialog"), style: .default) { _ in
             self.tryImportCertificate(password: self.passwordField?.text)
         })
         present(alert, animated: true)
@@ -163,10 +163,10 @@ class MUCertificateDiskImportViewController: UITableViewController, UITextFieldD
             let path = (dir as NSString).appendingPathComponent(fn)
             if let err = try? FileManager.default.removeItem(atPath: path) { }
             else {
-                let title = NSLocalizedString("Unable to remove file", comment: "")
-                let msg = String(format: NSLocalizedString("File '%@' could not be deleted: %@", comment: ""), fn, "")
+                let title = NSLocalizedString("Unable to remove file", comment: "Error title when file cannot be removed")
+                let msg = String(format: NSLocalizedString("File '%@' could not be deleted: %@", comment: "Error message when file deletion fails"), fn, "")
                 let alert = UIAlertController(title: title, message: msg, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .cancel, handler: nil))
+                alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "OK button for file deletion error dialog"), style: .cancel, handler: nil))
                 present(alert, animated: true)
             }
         }
@@ -177,20 +177,20 @@ class MUCertificateDiskImportViewController: UITableViewController, UITextFieldD
     @objc private func doneClicked(_ sender: Any) { dismiss(animated: true) }
 
     private func showRemoveAlert() {
-        let title = NSLocalizedString("Remove Importable Certificates", comment: "")
-        let msg = NSLocalizedString("Are you sure you want to delete all importable certificates?\n\nCertificates already imported into Mumble will not be touched.", comment: "")
+        let title = NSLocalizedString("Remove Importable Certificates", comment: "Title for certificate removal confirmation dialog")
+        let msg = NSLocalizedString("Are you sure you want to delete all importable certificates?\n\nCertificates already imported into Mumble will not be touched.", comment: "Confirmation message for removing all importable certificates")
         let alert = UIAlertController(title: title, message: msg, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: NSLocalizedString("No", comment: ""), style: .cancel, handler: nil))
-        alert.addAction(UIAlertAction(title: NSLocalizedString("Yes", comment: ""), style: .default) { _ in
+        alert.addAction(UIAlertAction(title: NSLocalizedString("No", comment: "No button for certificate removal confirmation"), style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Yes", comment: "Yes button for certificate removal confirmation"), style: .default) { _ in
             self.removeAllDiskCertificates()
         })
         present(alert, animated: true)
     }
 
     @objc private func actionClicked(_ sender: Any) {
-        let title = NSLocalizedString("Import Actions", comment: "")
+        let title = NSLocalizedString("Import Actions", comment: "Title for import actions sheet")
         let sheet = UIAlertController(title: title, message: nil, preferredStyle: .actionSheet)
-        sheet.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: nil))
+        sheet.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel button for import actions sheet"), style: .cancel, handler: nil))
         sheet.addAction(UIAlertAction(title: NSLocalizedString("Remove All", comment: "Remove all importable certificates action."), style: .destructive) { _ in
             self.showRemoveAlert()
         })

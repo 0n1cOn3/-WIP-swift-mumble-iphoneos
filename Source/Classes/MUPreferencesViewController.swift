@@ -37,7 +37,7 @@ class MUPreferencesViewController: UITableViewController {
             tableView.separatorStyle = .none
         }
 
-        title = NSLocalizedString("Preferences", comment: "")
+        title = NSLocalizedString("Preferences", comment: "Title for preferences screen")
         tableView.reloadData()
     }
 
@@ -76,14 +76,14 @@ class MUPreferencesViewController: UITableViewController {
                 volSlider.maximumValue = 1.0
                 volSlider.minimumValue = 0.0
                 volSlider.value = UserDefaults.standard.float(forKey: "AudioOutputVolume")
-                cell.textLabel?.text = NSLocalizedString("Volume", comment: "")
+                cell.textLabel?.text = NSLocalizedString("Volume", comment: "Volume settings option")
                 cell.accessoryView = volSlider
                 cell.selectionStyle = .none
                 volSlider.addTarget(self, action: #selector(audioVolumeChanged(_:)), for: .valueChanged)
             case 1:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "AudioTransmitCell") ??
                     UITableViewCell(style: .value1, reuseIdentifier: "AudioTransmitCell")
-                cell.textLabel?.text = NSLocalizedString("Transmission", comment: "")
+                cell.textLabel?.text = NSLocalizedString("Transmission", comment: "Transmission settings option")
                 let xmit = UserDefaults.standard.string(forKey: "AudioTransmitMethod")
                 if xmit == "vad" {
                     cell.detailTextLabel?.text = NSLocalizedString("Voice Activated", comment: "Voice activated transmission mode")
@@ -97,7 +97,7 @@ class MUPreferencesViewController: UITableViewController {
                 cell.selectionStyle = .gray
                 return cell
             default:
-                cell.textLabel?.text = NSLocalizedString("Advanced", comment: "")
+                cell.textLabel?.text = NSLocalizedString("Advanced", comment: "Advanced settings option")
                 cell.accessoryView = nil
                 cell.accessoryType = .disclosureIndicator
             }
@@ -106,7 +106,7 @@ class MUPreferencesViewController: UITableViewController {
             case 0:
                 let tcpSwitch = UISwitch()
                 tcpSwitch.isOn = UserDefaults.standard.bool(forKey: "NetworkForceTCP")
-                cell.textLabel?.text = NSLocalizedString("Force TCP", comment: "")
+                cell.textLabel?.text = NSLocalizedString("Force TCP", comment: "Force TCP connection option")
                 cell.accessoryView = tcpSwitch
                 cell.selectionStyle = .none
                 tcpSwitch.onTintColor = .black
@@ -115,7 +115,7 @@ class MUPreferencesViewController: UITableViewController {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "PrefCertificateCell") ??
                     UITableViewCell(style: .value1, reuseIdentifier: "PrefCertificateCell")
                 let cert = MUCertificateController.defaultCertificate()
-                cell.textLabel?.text = NSLocalizedString("Certificate", comment: "")
+                cell.textLabel?.text = NSLocalizedString("Certificate", comment: "Certificate settings option")
                 cell.detailTextLabel?.text = cert != nil ? cert?.subjectName() : NSLocalizedString("None", comment: "None (No certificate chosen)")
                 cell.detailTextLabel?.textColor = MUColor.selectedTextColor()
                 cell.accessoryType = .disclosureIndicator
@@ -125,9 +125,9 @@ class MUPreferencesViewController: UITableViewController {
             case 2:
                 let cell = tableView.dequeueReusableCell(withIdentifier: "RemoteControlCell") ??
                     UITableViewCell(style: .value1, reuseIdentifier: "RemoteControlCell")
-                cell.textLabel?.text = NSLocalizedString("Remote Control", comment: "")
+                cell.textLabel?.text = NSLocalizedString("Remote Control", comment: "Remote control settings option")
                 let isOn = MURemoteControlServer.sharedRemoteControlServer().isRunning()
-                cell.detailTextLabel?.text = isOn ? NSLocalizedString("On", comment: "") : NSLocalizedString("Off", comment: "")
+                cell.detailTextLabel?.text = isOn ? NSLocalizedString("On", comment: "Remote control is enabled") : NSLocalizedString("Off", comment: "Remote control is disabled")
                 cell.detailTextLabel?.textColor = MUColor.selectedTextColor()
                 cell.accessoryType = .disclosureIndicator
                 cell.selectionStyle = .gray
@@ -142,9 +142,9 @@ class MUPreferencesViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if section == 0 {
-            return MUTableViewHeaderLabel.label(withText: NSLocalizedString("Audio", comment: ""))
+            return MUTableViewHeaderLabel.label(withText: NSLocalizedString("Audio", comment: "Audio section header"))
         } else if section == 1 {
-            return MUTableViewHeaderLabel.label(withText: NSLocalizedString("Network", comment: ""))
+            return MUTableViewHeaderLabel.label(withText: NSLocalizedString("Network", comment: "Network section header"))
         }
         return nil
     }
