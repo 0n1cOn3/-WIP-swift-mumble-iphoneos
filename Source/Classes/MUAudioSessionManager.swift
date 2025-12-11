@@ -143,10 +143,13 @@ final class MUAudioSessionManager: NSObject {
         }
 
         recorderSettings = [
-            AVFormatIDKey: kAudioFormatMPEG4AAC,
+            AVFormatIDKey: kAudioFormatLinearPCM,
             AVSampleRateKey: sampleRate,
-            AVEncoderBitRateKey: bitRate,
-            AVNumberOfChannelsKey: 1
+            AVNumberOfChannelsKey: 1,
+            AVLinearPCMBitDepthKey: 16,
+            AVLinearPCMIsFloatKey: false,
+            AVLinearPCMIsBigEndianKey: false,
+            AVLinearPCMIsNonInterleaved: false
         ]
 
         do {
