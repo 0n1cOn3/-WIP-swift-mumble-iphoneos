@@ -253,11 +253,11 @@
 
     MUAudioCaptureManager *captureManager = [MUAudioCaptureManager sharedManager];
     [captureManager configureFromDefaults];
-    [captureManager start];
 
     MKAudio *audio = [MKAudio sharedAudio];
+    [[MUAudioSessionManager shared] bindToMumbleKitAudio:audio defaults:defaults];
     [audio updateAudioSettings:&settings];
-    [audio restart];
+    [[MUAudioSessionManager shared] refreshPlaybackChain];
 
     // Only activate the audio session if it is not already active
     if (![[AVAudioSession sharedInstance] isActive]) {
@@ -348,8 +348,7 @@
         case AVAudioSessionRouteChangeReasonCategoryChange:
         case AVAudioSessionRouteChangeReasonOverride:
         case AVAudioSessionRouteChangeReasonWakeFromSleep:
-            [self activateAudioSessionIfNeeded];
-            [[MKAudio sharedAudio] restart];
+            [[MUAudioSessionManager shared] handleRouteChangeWithReason:reason defaults:[NSUserDefaults standardUserDefaults]];
             break;
         default:
             break;
@@ -395,10 +394,12 @@
         [audio start];
         [[MUAudioCaptureManager sharedManager] start];
     }
-        
+
     if (![connController isConnected] && ![[AVAudioSession sharedInstance] isOtherAudioPlaying]) {
         NSLog(@"MumbleApplicationDelegate: Reactivating audio session after foregrounding.");
         [self activateAudioSession];
+
+        [[MUAudioSessionManager shared] refreshPlaybackChain];
       
 #if ENABLE_REMOTE_CONTROL
         // Re-start the remote control server.

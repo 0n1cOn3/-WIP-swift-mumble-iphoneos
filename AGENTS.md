@@ -21,5 +21,6 @@ Completed tasks
 
 Open tasks
 ==========
-- Migrate the remaining Objective‑C controllers (for example `MUConnectionController`) to Swift.
-- Finish modernizing the audio stack beyond capture (routing, playback, and MumbleKit integration) while keeping compatibility with older iOS versions.
+- Migrate the remaining Objective‑C controllers (for example `MUConnectionController` and the server list flows) to Swift 5 with ARC semantics.
+- Port the legacy Objective‑C preference and messaging screens (audio detail panels, server buttons, message bubbles) to Swift 5 while keeping storyboard/Auto Layout parity.
+- Trim the bridging header and delete unused Objective‑C shims once the last controllers are rewritten to Swift 5.

@@ -4,6 +4,7 @@
 #import "MUColor.h"
 #import "MUImage.h"
 #import "MUAudioBarView.h"
+#import "MUAudioCaptureManager.h"
 #import "MUApplicationDelegate.h"
 #import "MUCertificateController.h"
 #import "MURemoteControlServer.h"
