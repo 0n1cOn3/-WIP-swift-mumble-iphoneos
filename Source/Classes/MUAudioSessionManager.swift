@@ -11,6 +11,7 @@ import AVFoundation
     case low
     case balanced
     case high
+    case custom
 }
 
 @objcMembers
@@ -118,8 +119,10 @@ final class MUAudioSessionManager: NSObject {
         switch preset?.lowercased() {
         case "low":
             resolvedPreset = .low
-        case "high":
+        case "high", "opus":
             resolvedPreset = .high
+        case "custom":
+            resolvedPreset = .custom
         default:
             resolvedPreset = .balanced
         }
@@ -148,6 +151,18 @@ final class MUAudioSessionManager: NSObject {
             sampleRate = 48000
             bitRate = 40000
             packetDuration = 0.02
+        case .custom:
+            // Read custom codec settings from UserDefaults
+            let defaults = UserDefaults.standard
+            bitRate = defaults.object(forKey: "AudioQualityBitrate") as? Int ?? 40000
+            let framesPerPacket = defaults.object(forKey: "AudioQualityFrames") as? Int ?? 2
+            
+            // Calculate packet duration based on frames per packet (each frame is ~10ms)
+            packetDuration = Double(framesPerPacket) * 0.01
+            
+            // Determine sample rate based on bitrate (similar to original logic)
+            // Low bitrates typically use 16kHz, higher bitrates use 48kHz
+            sampleRate = bitRate < 24000 ? 16000 : 48000
         }
 
         recorderSettings = [
@@ -187,6 +202,8 @@ final class MUAudioSessionManager: NSObject {
             return "balanced"
         case .high:
             return "high"
+        case .custom:
+            return "custom"
         }
     }
 
