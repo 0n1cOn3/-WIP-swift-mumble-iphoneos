@@ -332,19 +332,22 @@
         options |= AVAudioSessionCategoryOptionAllowBluetoothA2DP;
     }
 
-    AVAudioSessionMode mode = AVAudioSessionModeVoiceChat;
-    NSString *transmitMethod = [defaults stringForKey:@"AudioTransmitMethod"];
-    if ([transmitMethod isEqualToString:@"continuous"]) {
-        if (@available(iOS 9.0, *)) {
-            mode = AVAudioSessionModeSpokenAudio;
-        } else {
-            mode = AVAudioSessionModeDefault;
-        }
-    } else if ([transmitMethod isEqualToString:@"ptt"]) {
-        mode = AVAudioSessionModeDefault;
-    }
+    AVAudioSessionMode mode;
     if (![defaults boolForKey:@"AudioPreprocessor"]) {
         mode = AVAudioSessionModeMeasurement;
+    } else {
+        NSString *transmitMethod = [defaults stringForKey:@"AudioTransmitMethod"];
+        if ([transmitMethod isEqualToString:@"continuous"]) {
+            if (@available(iOS 9.0, *)) {
+                mode = AVAudioSessionModeSpokenAudio;
+            } else {
+                mode = AVAudioSessionModeDefault;
+            }
+        } else if ([transmitMethod isEqualToString:@"ptt"]) {
+            mode = AVAudioSessionModeDefault;
+        } else {
+            mode = AVAudioSessionModeVoiceChat;
+        }
     }
 
     if (@available(iOS 10.0, *)) {
