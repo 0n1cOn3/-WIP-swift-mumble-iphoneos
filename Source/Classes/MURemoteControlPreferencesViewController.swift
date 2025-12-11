@@ -16,12 +16,8 @@ final class MURemoteControlPreferencesViewController: UITableViewController {
         navigationItem.title = NSLocalizedString("Remote Control", comment: "Remote control preferences title")
         tableView.backgroundView = MUBackgroundView.backgroundView()
 
-        if #available(iOS 7.0, *) {
-            tableView.separatorStyle = .singleLine
-            tableView.separatorInset = .zero
-        } else {
-            tableView.separatorStyle = .none
-        }
+        tableView.separatorStyle = .singleLine
+        tableView.separatorInset = .zero
 
         tableView.isScrollEnabled = false
     }
