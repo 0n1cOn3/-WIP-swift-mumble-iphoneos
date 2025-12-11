@@ -18,7 +18,7 @@ import AVFoundation
 
 /// Defines preset quality levels for audio codec configuration.
 ///
-/// Each preset configures sample rate, bit rate, and packet duration
+/// Each preset configures sample rate, bit rate, and buffer duration
 /// to balance audio quality against bandwidth and processing requirements.
 @objc public enum MUAudioCodecQualityPreset: Int {
     /// Low quality preset - 16 kHz sample rate, 16 kbps bit rate, suitable for low bandwidth
