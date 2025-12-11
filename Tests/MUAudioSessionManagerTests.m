@@ -100,7 +100,13 @@ static NSString * const kApplyPlaybackPreferencesSelector = @"applyPlaybackPrefe
 // MARK: - Helper Methods
 
 - (void)bindMockAudioToSessionManager {
-    [self bindMockAudioToSessionManager];
+    SEL bindSelector = NSSelectorFromString(kBindSelector);
+    if ([self.sessionManager respondsToSelector:bindSelector]) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+        [self.sessionManager performSelector:bindSelector withObject:self.mockAudio withObject:self.mockDefaults];
+#pragma clang diagnostic pop
+    }
 }
 
 - (void)triggerRouteChangeWithReason:(AVAudioSessionRouteChangeReason)reason {
