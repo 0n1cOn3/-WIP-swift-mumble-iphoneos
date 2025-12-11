@@ -14,6 +14,7 @@
 #import "MUImage.h"
 #import "MUBackgroundView.h"
 
+#import <AVFoundation/AVFoundation.h>
 #import <MumbleKit/MKAudio.h>
 #import <MumbleKit/MKVersion.h>
 
@@ -21,18 +22,22 @@
     UIWindow                  *_window;
     UINavigationController    *_navigationController;
     MUPublicServerListFetcher *_publistFetcher;
-    BOOL                      _connectionActive;
+    BOOL                      _audioWasRunningBeforeInterruption;
 }
 - (void) setupAudio;
 - (void) forceKeyboardLoad;
+- (void) registerForAppLifecycleNotifications;
+- (void) activateAudioSessionIfNeeded;
+- (void) handleApplicationActivation:(NSNotification *)notification;
+- (void) handleAudioInterruption:(NSNotification *)notification;
+- (void) handleAudioRouteChange:(NSNotification *)notification;
 @end
 
 @implementation MUApplicationDelegate
 
 - (BOOL) application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionOpened:) name:MUConnectionOpenedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(connectionClosed:) name:MUConnectionClosedNotification object:nil];
-    
+    [self registerForAppLifecycleNotifications];
+
     // Reset application badge, in case something brought it into an inconsistent state.
     [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
     
@@ -87,7 +92,7 @@
     if (@available(iOS 7, *)) {
         [[UITextField appearance] setKeyboardAppearance:UIKeyboardAppearanceDark];
     }
-    
+
     _window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     if (@available(iOS 7, *)) {
     // XXX: don't do it system-wide just yet
@@ -261,49 +266,79 @@
     }
 }
 
-- (void) connectionOpened:(NSNotification *)notification {
-    _connectionActive = YES;
+- (void) registerForAppLifecycleNotifications {
+    NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+
+    [notificationCenter addObserver:self selector:@selector(handleApplicationActivation:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [notificationCenter addObserver:self selector:@selector(handleApplicationActivation:) name:UIApplicationDidBecomeActiveNotification object:nil];
+
+    if (@available(iOS 13.0, *)) {
+        [notificationCenter addObserver:self selector:@selector(handleApplicationActivation:) name:UISceneWillEnterForegroundNotification object:nil];
+        [notificationCenter addObserver:self selector:@selector(handleApplicationActivation:) name:UISceneDidActivateNotification object:nil];
+    }
+
+    [notificationCenter addObserver:self selector:@selector(handleAudioInterruption:) name:AVAudioSessionInterruptionNotification object:nil];
+    [notificationCenter addObserver:self selector:@selector(handleAudioRouteChange:) name:AVAudioSessionRouteChangeNotification object:nil];
 }
 
-- (void) connectionClosed:(NSNotification *)notification {
-    _connectionActive = NO;
-}
-
-- (void) applicationWillResignActive:(UIApplication *)application {
-    // If we have any active connections, don't stop MKAudio. This is
-    // for 'clicking-the-home-button' invocations of this method.
-    //
-    // In case we've been backgrounded by a phone call, MKAudio will
-    // already have shut itself down.
-    if (!_connectionActive) {
-        NSLog(@"MumbleApplicationDelegate: Not connected to a server. Stopping MKAudio.");
-        [[MKAudio sharedAudio] stop];
-        
-#ifdef ENABLE_REMOTE_CONTROL
-        // Also terminate the remote control server.
-        [[MURemoteControlServer sharedRemoteControlServer] stop];
-#endif
+- (void) activateAudioSessionIfNeeded {
+    NSError *activationError = nil;
+    [[AVAudioSession sharedInstance] setActive:YES error:&activationError];
+    if (activationError) {
+        NSLog(@"MUApplicationDelegate: Failed to activate AVAudioSession: %@", activationError);
     }
 }
 
-- (void) applicationDidBecomeActive:(UIApplication *)application {
-    // It is possible that we will become active after a phone call has ended.
-    // In the case of phone calls, MKAudio will automatically stop itself, to
-    // allow the phone call to go through. However, once we're back inside the
-    // application, we have to start ourselves again.
-    //
-    // For regular backgrounding, we usually don't turn off the audio system, and
-    // we won't have to start it again.
-    if (![[MKAudio sharedAudio] isRunning]) {
-        NSLog(@"MumbleApplicationDelegate: MKAudio not running. Starting it.");
-        [[MKAudio sharedAudio] start];
-        
-#if ENABLE_REMOTE_CONTROL
-        // Re-start the remote control server.
-        [[MURemoteControlServer sharedRemoteControlServer] stop];
-        [[MURemoteControlServer sharedRemoteControlServer] start];
-#endif
+- (void) handleApplicationActivation:(NSNotification *)notification {
+    [self activateAudioSessionIfNeeded];
+
+    MKAudio *audio = [MKAudio sharedAudio];
+    if (![audio isRunning]) {
+        [audio start];
     }
+}
+
+- (void) handleAudioInterruption:(NSNotification *)notification {
+    NSDictionary *userInfo = [notification userInfo];
+    AVAudioSessionInterruptionType type = [[userInfo objectForKey:AVAudioSessionInterruptionTypeKey] integerValue];
+
+    if (type == AVAudioSessionInterruptionTypeBegan) {
+        _audioWasRunningBeforeInterruption = [[MKAudio sharedAudio] isRunning];
+        if (_audioWasRunningBeforeInterruption) {
+            [[MKAudio sharedAudio] stop];
+        }
+    } else if (type == AVAudioSessionInterruptionTypeEnded) {
+        AVAudioSessionInterruptionOptions options = [[userInfo objectForKey:AVAudioSessionInterruptionOptionKey] integerValue];
+        if (options & AVAudioSessionInterruptionOptionShouldResume) {
+            [self activateAudioSessionIfNeeded];
+            if (_audioWasRunningBeforeInterruption) {
+                [[MKAudio sharedAudio] start];
+            }
+        }
+        _audioWasRunningBeforeInterruption = NO;
+    }
+}
+
+- (void) handleAudioRouteChange:(NSNotification *)notification {
+    NSDictionary *userInfo = [notification userInfo];
+    AVAudioSessionRouteChangeReason reason = [[userInfo objectForKey:AVAudioSessionRouteChangeReasonKey] integerValue];
+
+    switch (reason) {
+        case AVAudioSessionRouteChangeReasonNewDeviceAvailable:
+        case AVAudioSessionRouteChangeReasonOldDeviceUnavailable:
+        case AVAudioSessionRouteChangeReasonCategoryChange:
+        case AVAudioSessionRouteChangeReasonOverride:
+        case AVAudioSessionRouteChangeReasonWakeFromSleep:
+            [self activateAudioSessionIfNeeded];
+            [[MKAudio sharedAudio] restart];
+            break;
+        default:
+            break;
+    }
+}
+
+- (void) dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 @end
