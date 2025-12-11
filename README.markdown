@@ -1,66 +1,126 @@
-Mumble for iOS (iPhone, iPod touch and iPad)
-============================================
+# Mumble for iOS – Swift 5 WIP Fork
 
-**Note:** This repo and the app for iOS are unmaintained.
-If you are interested in taking over development of the app, write a comment in [#129](https://github.com/mumble-voip/mumble-iphoneos/issues/129).
+This repository is an experimental fork of the original **Mumble for iOS** client.  
+The goal is to gradually migrate the codebase to **Swift 5** and modern iOS APIs.
 
+> [!WARNING]  
+> This fork is **work in progress**, **does not compile**, and is **not usable in production**.  
+> Expect broken builds, incomplete features, and frequent changes.
 
-This is the source code of Mumble (a voice chat application) for iOS-based devices.
+---
 
-The [desktop version](https://github.com/mumble-voip/mumble) of Mumble runs on Windows, Mac OS X, Linux
-and various other Unix-like systems. 
+## Project status
 
-Visit our website at:
-<https://mumble.info/>
+- Experimental Swift 5 migration of the legacy Objective-C iOS client
+- Target platform: **iOS 12+**
+- Current state: **broken / unfinished / non-compiling**
+- No releases, no App Store build, no support guarantees
 
-Swift migration
-===============
-The project is being migrated to Swift 5 and now targets iOS 12 or later.
-Objective-C code will remain during the transition via bridging headers.
+If you need a working Mumble client, use the official stable releases or the upstream projects instead.
 
-Completed tasks
-===============
-- Migrated to WKWebView for improved performance and security.
-- Adopted XCTest and removed SenTestingKit usage.
-- Rewrote certificate controllers in Swift.
-- Converted most interfaces from xib files to storyboards.
-- Converted `MUPreferencesViewController` to Swift and cleaned up related Objective-C files.
+---
 
-Open tasks
-==========
-- Migrate `MUConnectionController` to Swift.
-- Adopt modern audio APIs such as AVAudioSession and AVAudioEngine.
+## Upstream projects
 
-Building it
-===========
+This fork is based on the original, unmaintained iOS client:
 
-**Note:** Building requires Xcode and cannot be performed in this Linux environment.
+- Original iOS repo: <https://github.com/mumble-voip/mumble-iphoneos>  
+- Desktop Mumble (Windows, macOS, Linux, *BSD, etc.): <https://github.com/mumble-voip/mumble>
+- Project website: <https://mumble.info/>
 
-To build this you need Xcode 16 and the latest iOS SDK from Apple.
+The upstream iOS app itself is currently unmaintained. This fork is an independent experiment and not an official continuation.
 
-The easiest way to get a working source tree is to check out
-the mumble-iphoneos repository recursively (his will recursively
-fetch all submodules), because there are quite a few submodules.
+---
 
-To fetch the repository:
+## Goals of this fork
 
-    $ git clone --recursive http://github.com/mumble-voip/mumble-iphoneos.git
+The long-term goals are:
 
-Once this is done, you should be able to open up the Xcode
-project file for Mumble (Mumble.xcodeproj) in the root of
-the source tree and hit Cmd-B to build! *(non-executable here)*
+- Migrate the codebase to **Swift 5** (while keeping a controlled amount of Objective-C via bridging headers).
+- Raise minimum iOS version and clean up deprecated APIs.
+- Modernize the UI layer (storyboards, Auto Layout, trait collections).
+- Replace legacy and deprecated frameworks where possible (e.g. old WebView, outdated audio APIs).
+- Make the project buildable and maintainable on current Xcode versions.
 
-Extra tips for advanced users
-=============================
+At the moment, many of these goals are only partially attempted or not yet implemented.
 
-When launching Mumble.xcodeproj for the first time, you're recommended to
-remove all schemes but the Mumble one. Xcode will automatically populate
-it with the schemes of all .xcodeprojs in the workspace.
+---
 
-Schemes can be configured using the dropdown box right of the start and stop
-buttons in the default Xcode 4 UI.
+## Work in progress
 
-We also recommend you to edit the default scheme for the Mumble target
-and change the Archive configuration to BetaDist, and the Test configuration
-to Release (debug builds pretty slow for devices, but for the Simulator, they're
-OK!)
+The migration is ongoing and very incomplete. Examples of planned or partially tackled areas:
+
+- Converting controllers and views from Objective-C to Swift.
+- Replacing legacy web views with `WKWebView`.
+- Converting old test targets and frameworks to modern Xcode testing infrastructure.
+- Updating audio handling to more modern APIs (e.g. `AVAudioSession`, `AVAudioEngine`).
+
+Nothing in this list should be considered “done” or “stable” yet.
+
+---
+
+## Building (currently fails)
+
+> [!IMPORTANT]  
+> The current state of this fork **does not build successfully**, even with a recent Xcode toolchain.  
+> The instructions below describe the *intended* build setup once the migration progresses.
+
+### Requirements
+
+- macOS with a recent Xcode version (e.g. Xcode 16 or newer)
+- Latest iOS SDK provided by Xcode
+- Git with submodule support
+
+### Getting the source
+
+Clone this fork with submodules:
+
+```bash
+git clone --recursive https://github.com/0n1cOn3/mumble-iphoneos.git
+cd mumble-iphoneos
+```
+
+If you already cloned without `--recursive`, initialize submodules with:
+
+```bash
+git submodule update --init --recursive
+```
+
+### Opening in Xcode
+
+1. Open `Mumble.xcodeproj` in Xcode.
+2. Select the **Mumble** scheme.
+3. Choose a suitable iOS Simulator or device target.
+
+At this time, the project will **not** build successfully. The migration must progress further before a clean build can be expected.
+
+---
+
+## Xcode schemes and configurations
+
+Once the project reaches a buildable state, you may want to:
+
+- Keep only the **Mumble** scheme enabled to reduce clutter.
+- Adjust build configurations for your workflow (for example, a faster configuration for device builds, or a dedicated configuration for archives).
+
+Currently, scheme and configuration tuning is secondary to getting the project to compile at all.
+
+---
+
+## Contributing
+
+This fork is experimental and highly unstable. If you want to help with the Swift 5 migration:
+
+- Focus on **small, self-contained changes** (e.g. converting a single controller or utility).
+- Avoid large refactors that touch everything at once.
+- Keep Objective-C interop via bridging headers where needed instead of rewriting everything in one go.
+- Clearly document any API replacements (especially for audio and networking).
+
+Bug reports about “it doesn’t build” are expected at this stage; detailed, reproducible issues and concrete migration contributions are more useful than general breakage reports.
+
+---
+
+## License
+
+The licensing model is inherited from the upstream `mumble-iphoneos` project.  
+Refer to the license file(s) in this repository and the upstream project for details.
