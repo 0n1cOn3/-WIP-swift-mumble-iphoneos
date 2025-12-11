@@ -13,6 +13,7 @@ final class MUAudioTransmissionPreferencesViewController: UITableViewController 
 
         func store() {
             UserDefaults.standard.set(rawValue, forKey: "AudioTransmitMethod")
+            _ = MUAudioSessionManager.shared.updateTransmitMethod(withString: rawValue)
         }
     }
 

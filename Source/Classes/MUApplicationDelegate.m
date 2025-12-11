@@ -298,9 +298,6 @@
         [notificationCenter addObserver:self selector:@selector(handleApplicationActivation:) name:UISceneWillEnterForegroundNotification object:nil];
         [notificationCenter addObserver:self selector:@selector(handleApplicationActivation:) name:UISceneDidActivateNotification object:nil];
     }
-
-    [notificationCenter addObserver:self selector:@selector(handleAudioInterruption:) name:AVAudioSessionInterruptionNotification object:nil];
-    [notificationCenter addObserver:self selector:@selector(handleAudioRouteChange:) name:AVAudioSessionRouteChangeNotification object:nil];
 }
 
 - (void) activateAudioSessionIfNeeded {
@@ -362,12 +359,14 @@
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
-}
-- (void) applicationWillResignActive:(UIApplication *)application {
-    if (!_audioWasRunningBeforeInterruption) {
 
+- (void) applicationWillResignActive:(UIApplication *)application {
+    MKAudio *audio = [MKAudio sharedAudio];
+    MUConnectionController *connController = [MUConnectionController sharedController];
+    
+    if (![connController isConnected]) {
         NSLog(@"MumbleApplicationDelegate: Not connected to a server. Stopping MKAudio.");
-        [[MKAudio sharedAudio] stop];
+        [audio stop];
         [[MUAudioCaptureManager sharedManager] stop];
 
         NSLog(@"MumbleApplicationDelegate: Not connected to a server. Deactivating audio session.");
@@ -388,12 +387,16 @@
     //
     // For regular backgrounding, we usually don't turn off the audio system, and
     // we won't have to start it again.
-    if (![[MKAudio sharedAudio] isRunning]) {
+    MKAudio *audio = [MKAudio sharedAudio];
+    MUConnectionController *connController = [MUConnectionController sharedController];
+    
+    if (![audio isRunning]) {
         NSLog(@"MumbleApplicationDelegate: MKAudio not running. Starting it.");
-        [[MKAudio sharedAudio] start];
+        [audio start];
         [[MUAudioCaptureManager sharedManager] start];
+    }
         
-    if (!_connectionActive && ![[AVAudioSession sharedInstance] isOtherAudioPlaying]) {
+    if (![connController isConnected] && ![[AVAudioSession sharedInstance] isOtherAudioPlaying]) {
         NSLog(@"MumbleApplicationDelegate: Reactivating audio session after foregrounding.");
         [self activateAudioSession];
       
@@ -424,7 +427,7 @@
     AVAudioSession *session = [AVAudioSession sharedInstance];
     NSError *error = nil;
 
-    AVAudioSessionCategoryOptions options = AVAudioSessionCategoryOptionAllowBluetooth | AVAudioSessionCategoryOptionDuckOthers;
+    AVAudioSessionCategoryOptions options = AVAudioSessionCategoryOptionAllowBluetooth | AVAudioSessionCategoryOptionMixWithOthers;
     if ([defaults boolForKey:@"AudioSpeakerPhoneMode"]) {
         options |= AVAudioSessionCategoryOptionDefaultToSpeaker;
     }
