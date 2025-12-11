@@ -88,15 +88,13 @@ final class MUAudioSessionManager: NSObject {
     /// and when returning from background.
     func configureSession() {
         do {
-            var options: AVAudioSession.CategoryOptions = session.categoryOptions
-            options.insert(.allowBluetooth)
+            // Explicitly set all required options from scratch for predictable behavior
+            var options: AVAudioSession.CategoryOptions = [.allowBluetooth]
             if #available(iOS 12.0, *) {
                 options.insert(.allowBluetoothA2DP)
             }
             if prefersSpeaker {
                 options.insert(.defaultToSpeaker)
-            } else {
-                options.remove(.defaultToSpeaker)
             }
             applyCategoryOptions(options)
             try session.setActive(true, options: [])
