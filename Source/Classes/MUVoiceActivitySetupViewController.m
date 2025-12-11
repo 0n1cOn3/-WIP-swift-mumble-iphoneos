@@ -222,6 +222,10 @@
 }
 
 - (NSInteger) vadThresholdSectionIndex {
+    // The VAD threshold controls are in section 2 if the AudioPreprocessor setting is enabled,
+    // and in section 1 otherwise. This is based on the current table structure:
+    // [Section 0: Transmission setting], [Section 1: Preprocessor (if enabled)], [Section 2: VAD thresholds]
+    // If the table structure changes, these indices must be updated accordingly.
     return [[NSUserDefaults standardUserDefaults] boolForKey:@"AudioPreprocessor"] ? 2 : 1;
 }
 
