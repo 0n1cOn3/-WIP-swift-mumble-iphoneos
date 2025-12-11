@@ -10,6 +10,7 @@
 #import "MUServerTableViewCell.h"
 
 #import <MumbleKit/MKAudio.h>
+#import "MUAudioCaptureManager.h"
 
 #pragma mark -
 #pragma mark MUChannelNavigationItem
@@ -579,11 +580,13 @@
 
 - (void) talkOn:(UIButton *)button {
     [button setAlpha:1.0f];
+    [[MUAudioCaptureManager sharedManager] beginPushToTalk];
     [[MKAudio sharedAudio] setForceTransmit:YES];
 }
 
 - (void) talkOff:(UIButton *)button {
     [button setAlpha:0.80f];
+    [[MUAudioCaptureManager sharedManager] endPushToTalk];
     [[MKAudio sharedAudio] setForceTransmit:NO];
 }
 
@@ -613,6 +616,7 @@
 
 - (void) appDidEnterBackground:(NSNotification *)notification {
     // Force Push-to-Talk to stop when the app is backgrounded.
+    [[MUAudioCaptureManager sharedManager] endPushToTalk];
     [[MKAudio sharedAudio] setForceTransmit:NO];
     
     // Reload the table view to re-render the talk state for the user

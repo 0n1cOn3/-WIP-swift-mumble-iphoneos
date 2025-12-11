@@ -17,6 +17,7 @@
 #import <MumbleKit/MKServerModel.h>
 #import <MumbleKit/MKCertificate.h>
 #import <MumbleKit/MKAudio.h>
+#import "MUAudioCaptureManager.h"
 
 #import "MKNumberBadgeView.h"
 
@@ -152,6 +153,7 @@
 
     [_segmentedControl performSelector:@selector(bringSubviewToFront:) withObject:_numberBadgeView afterDelay:0.0f];
 
+    [[MUAudioCaptureManager sharedManager] endPushToTalk];
     [[MKAudio sharedAudio] setForceTransmit:NO];
 }
 

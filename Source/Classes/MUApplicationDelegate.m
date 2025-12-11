@@ -13,6 +13,7 @@
 #import "MURemoteControlServer.h"
 #import "MUImage.h"
 #import "MUBackgroundView.h"
+#import "MUAudioCaptureManager.h"
 
 #import <AVFoundation/AVFoundation.h>
 #import <MumbleKit/MKAudio.h>
@@ -25,6 +26,10 @@
     BOOL                      _audioWasRunningBeforeInterruption;
 }
 - (void) setupAudio;
+- (void) registerForAudioSessionNotifications;
+- (void) configureAudioSessionWithDefaults:(NSUserDefaults *)defaults;
+- (void) activateAudioSession;
+- (void) deactivateAudioSession;
 - (void) forceKeyboardLoad;
 - (void) registerForAppLifecycleNotifications;
 - (void) activateAudioSessionIfNeeded;
@@ -78,10 +83,12 @@
 
     // Disable mixer debugging for all builds.
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:NO] forKey:@"AudioMixerDebug"];
-    
+
     [self reloadPreferences];
     [MUDatabase initializeDatabase];
-    
+
+    [self registerForAudioSessionNotifications];
+
 #ifdef ENABLE_REMOTE_CONTROL
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"RemoteControlServerEnabled"]) {
         [[MURemoteControlServer sharedRemoteControlServer] start];
@@ -163,6 +170,8 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     MKAudioSettings settings;
 
+    [self configureAudioSessionWithDefaults:defaults];
+
     if ([[defaults stringForKey:@"AudioTransmitMethod"] isEqualToString:@"vad"])
         settings.transmitType = MKTransmitTypeVAD;
     else if ([[defaults stringForKey:@"AudioTransmitMethod"] isEqualToString:@"continuous"])
@@ -234,13 +243,22 @@
     } else {
         settings.preferReceiverOverSpeaker = YES;
     }
-    
+
     settings.opusForceCELTMode = [defaults boolForKey:@"AudioOpusCodecForceCELTMode"];
     settings.audioMixerDebug = [defaults boolForKey:@"AudioMixerDebug"];
-    
+
+    MUAudioCaptureManager *captureManager = [MUAudioCaptureManager sharedManager];
+    [captureManager configureFromDefaults];
+    [captureManager start];
+
     MKAudio *audio = [MKAudio sharedAudio];
     [audio updateAudioSettings:&settings];
     [audio restart];
+
+    // Only activate the audio session if it is not already active
+    if (![[AVAudioSession sharedInstance] isActive]) {
+        [self activateAudioSession];
+    }
 }
 
 // Reload application preferences...
@@ -339,6 +357,182 @@
 
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+- (void) applicationWillResignActive:(UIApplication *)application {
+    if (!_connectionActive) {
+
+        NSLog(@"MumbleApplicationDelegate: Not connected to a server. Stopping MKAudio.");
+        [[MKAudio sharedAudio] stop];
+        [[MUAudioCaptureManager sharedManager] stop];
+
+        NSLog(@"MumbleApplicationDelegate: Not connected to a server. Deactivating audio session.");
+        [self deactivateAudioSession];
+
+#ifdef ENABLE_REMOTE_CONTROL
+        // Also terminate the remote control server.
+        [[MURemoteControlServer sharedRemoteControlServer] stop];
+#endif
+    }
+}
+
+- (void) applicationDidBecomeActive:(UIApplication *)application {
+    // It is possible that we will become active after a phone call has ended.
+    // In the case of phone calls, MKAudio will automatically stop itself, to
+    // allow the phone call to go through. However, once we're back inside the
+    // application, we have to start ourselves again.
+    //
+    // For regular backgrounding, we usually don't turn off the audio system, and
+    // we won't have to start it again.
+    if (![[MKAudio sharedAudio] isRunning]) {
+        NSLog(@"MumbleApplicationDelegate: MKAudio not running. Starting it.");
+        [[MKAudio sharedAudio] start];
+        [[MUAudioCaptureManager sharedManager] start];
+        
+    if (!_connectionActive && ![[AVAudioSession sharedInstance] isOtherAudioPlaying]) {
+        NSLog(@"MumbleApplicationDelegate: Reactivating audio session after foregrounding.");
+        [self activateAudioSession];
+      
+#if ENABLE_REMOTE_CONTROL
+        // Re-start the remote control server.
+        [[MURemoteControlServer sharedRemoteControlServer] stop];
+        [[MURemoteControlServer sharedRemoteControlServer] start];
+#endif
+    }
+}
+
+- (void) registerForAudioSessionNotifications {
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+
+    [center addObserver:self
+               selector:@selector(handleAudioSessionInterruption:)
+                   name:AVAudioSessionInterruptionNotification
+                 object:session];
+
+    [center addObserver:self
+               selector:@selector(handleAudioSessionRouteChange:)
+                   name:AVAudioSessionRouteChangeNotification
+                 object:session];
+}
+
+- (void) configureAudioSessionWithDefaults:(NSUserDefaults *)defaults {
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    NSError *error = nil;
+
+    AVAudioSessionCategoryOptions options = AVAudioSessionCategoryOptionAllowBluetooth | AVAudioSessionCategoryOptionDuckOthers;
+    if ([defaults boolForKey:@"AudioSpeakerPhoneMode"]) {
+        options |= AVAudioSessionCategoryOptionDefaultToSpeaker;
+    }
+    if (@available(iOS 10.0, *)) {
+        options |= AVAudioSessionCategoryOptionAllowBluetoothA2DP;
+    }
+
+    AVAudioSessionMode mode;
+    if (![defaults boolForKey:@"AudioPreprocessor"]) {
+        mode = AVAudioSessionModeMeasurement;
+    } else {
+        NSString *transmitMethod = [defaults stringForKey:@"AudioTransmitMethod"];
+        if ([transmitMethod isEqualToString:@"continuous"]) {
+            if (@available(iOS 9.0, *)) {
+                mode = AVAudioSessionModeSpokenAudio;
+            } else {
+                mode = AVAudioSessionModeDefault;
+            }
+        } else if ([transmitMethod isEqualToString:@"ptt"]) {
+            mode = AVAudioSessionModeDefault;
+        } else {
+            mode = AVAudioSessionModeVoiceChat;
+        }
+    }
+
+    if (@available(iOS 10.0, *)) {
+        if (![session setCategory:AVAudioSessionCategoryPlayAndRecord mode:mode options:options error:&error]) {
+            NSLog(@"MUApplicationDelegate: Failed to set audio session category '%@', mode '%@', options '%lu': %@", AVAudioSessionCategoryPlayAndRecord, mode, (unsigned long)options, error);
+        }
+    } else {
+        if (![session setCategory:AVAudioSessionCategoryPlayAndRecord withOptions:options error:&error]) {
+            NSLog(@"MUApplicationDelegate: Failed to set audio session category: %@", error);
+        }
+        if (![session setMode:mode error:&error]) {
+            NSLog(@"MUApplicationDelegate: Failed to set audio session mode: %@", error);
+        }
+    }
+
+    NSString *quality = [defaults stringForKey:@"AudioQualityKind"];
+    double preferredSampleRate = 48000.0;
+    if ([quality isEqualToString:@"low"]) {
+        preferredSampleRate = 16000.0;
+    }
+
+    if (![session setPreferredSampleRate:preferredSampleRate error:&error]) {
+        NSLog(@"MUApplicationDelegate: Unable to set preferred sample rate: %@", error);
+    }
+
+    NSInteger framesPerPacket = [defaults integerForKey:@"AudioQualityFrames"];
+    if (framesPerPacket <= 0) {
+        if ([quality isEqualToString:@"low"]) {
+            framesPerPacket = 6;
+        } else if ([quality isEqualToString:@"balanced"]) {
+            framesPerPacket = 2;
+        } else if ([quality isEqualToString:@"high"] || [quality isEqualToString:@"opus"]) {
+            framesPerPacket = 1;
+        }
+    }
+    if (framesPerPacket <= 0) {
+        framesPerPacket = 2;
+    }
+    NSTimeInterval preferredIOBuffer = MAX(0.01, (NSTimeInterval) framesPerPacket * 0.01);
+    NSError *ioBufferError = nil;
+    if (![session setPreferredIOBufferDuration:preferredIOBuffer error:&ioBufferError]) {
+        NSLog(@"MUApplicationDelegate: Unable to set preferred IO buffer duration: %@", ioBufferError);
+    }
+
+    float vadMax = [defaults floatForKey:@"AudioVADAbove"];
+    float micBoost = [defaults floatForKey:@"AudioMicBoost"];
+    float requestedGain = fmaxf(0.0f, fminf(1.0f, micBoost));
+    if ([session isInputGainSettable]) {
+        NSError *inputGainError = nil;
+        if (![session setInputGain:requestedGain error:&inputGainError]) {
+            NSLog(@"MUApplicationDelegate: Unable to set input gain: %@", inputGainError);
+        }
+    }
+}
+
+- (void) activateAudioSession {
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    NSError *error = nil;
+    AVAudioSessionSetActiveOptions options = AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation;
+    if (![session setActive:YES withOptions:options error:&error]) {
+        NSLog(@"MUApplicationDelegate: Failed to activate audio session: %@", error);
+    }
+}
+
+- (void) deactivateAudioSession {
+    AVAudioSession *session = [AVAudioSession sharedInstance];
+    NSError *error = nil;
+    if (![session setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&error]) {
+        NSLog(@"MUApplicationDelegate: Failed to deactivate audio session: %@", error);
+    }
+}
+
+- (void) handleAudioSessionInterruption:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    AVAudioSessionInterruptionType type = [userInfo[AVAudioSessionInterruptionTypeKey] integerValue];
+
+    if (type == AVAudioSessionInterruptionTypeBegan) {
+        NSLog(@"MUApplicationDelegate: Audio session interruption began.");
+        [self deactivateAudioSession];
+    } else {
+        AVAudioSessionInterruptionOptions options = [userInfo[AVAudioSessionInterruptionOptionKey] unsignedIntegerValue];
+        if (options & AVAudioSessionInterruptionOptionShouldResume) {
+            [self activateAudioSession];
+        }
+    }
+}
+
+- (void) handleAudioSessionRouteChange:(NSNotification *)notification {
+    NSDictionary *userInfo = notification.userInfo;
+    AVAudioSessionRouteChangeReason reason = [userInfo[AVAudioSessionRouteChangeReasonKey] unsignedIntegerValue];
+    NSLog(@"MUApplicationDelegate: Audio route changed: %ld", (long) reason);
 }
 
 @end
