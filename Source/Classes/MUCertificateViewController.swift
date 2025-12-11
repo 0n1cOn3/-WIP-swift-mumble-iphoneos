@@ -263,8 +263,8 @@ class MUCertificateViewController: UITableViewController {
     }
 
     @objc func actionClicked(_ sender: Any) {
-        let cancel = NSLocalizedString("Cancel", comment: "")
-        let delete = NSLocalizedString("Delete", comment: "")
+        let cancel = NSLocalizedString("Cancel", comment: "Cancel button for certificate action sheet")
+        let delete = NSLocalizedString("Delete", comment: "Delete button for certificate action sheet")
         let export = NSLocalizedString("Export to iTunes", comment: "iTunes export button text for certificate chain action sheet")
         let sheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: cancel, style: .cancel, handler: nil))
@@ -283,8 +283,8 @@ class MUCertificateViewController: UITableViewController {
         })
         sheet.addAction(UIAlertAction(title: export, style: .default) { _ in
             let title = NSLocalizedString("Export Certificate Chain", comment: "Title for certificate export alert view")
-            let cancel = NSLocalizedString("Cancel", comment: "")
-            let export = NSLocalizedString("Export", comment: "")
+            let cancel = NSLocalizedString("Cancel", comment: "Cancel button for certificate export dialog")
+            let export = NSLocalizedString("Export", comment: "Export button for certificate export dialog")
             let filename = NSLocalizedString("Filename", comment: "Filename text field in certificate export alert view")
             let password = NSLocalizedString("Password (for importing)", comment: "Password text field in certificate export alert view")
             let alert = UIAlertController(title: title, message: nil, preferredStyle: .alert)

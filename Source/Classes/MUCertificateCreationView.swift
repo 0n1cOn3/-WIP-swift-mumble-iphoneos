@@ -3,7 +3,7 @@ import MumbleKit
 
 private func showAlertDialog(title: String, msg: String) {
     DispatchQueue.main.async {
-        let ok = NSLocalizedString("OK", comment: "")
+        let ok = NSLocalizedString("OK", comment: "OK button text for alert dialogs")
         let alert = UIAlertController(title: title, message: msg, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: ok, style: .cancel, handler: nil))
         UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true)
@@ -22,10 +22,10 @@ class MUCertificateCreationView: UITableViewController {
         super.init(style: .grouped)
         self.preferredContentSize = CGSize(width: 320, height: 480)
 
-        let name = NSLocalizedString("Name", comment: "")
-        let defaultName = NSLocalizedString("Mumble User", comment: "")
-        let email = NSLocalizedString("Email", comment: "")
-        let optional = NSLocalizedString("Optional", comment: "")
+        let name = NSLocalizedString("Name", comment: "Label for name field in certificate creation")
+        let defaultName = NSLocalizedString("Mumble User", comment: "Default name placeholder for certificate creation")
+        let email = NSLocalizedString("Email", comment: "Label for email field in certificate creation")
+        let optional = NSLocalizedString("Optional", comment: "Placeholder text indicating email field is optional")
         let textFieldRect = CGRect(x: 110.0, y: 10.0, width: 185.0, height: 30.0)
 
         let nameCell = UITableViewCell(style: .value1, reuseIdentifier: "NameCell")
@@ -91,9 +91,9 @@ class MUCertificateCreationView: UITableViewController {
         } else {
             tableView.separatorStyle = .none
         }
-        let cancel = UIBarButtonItem(title: NSLocalizedString("Cancel", comment: ""), style: .plain, target: self, action: #selector(cancelClicked(_:)))
+        let cancel = UIBarButtonItem(title: NSLocalizedString("Cancel", comment: "Cancel button for certificate creation"), style: .plain, target: self, action: #selector(cancelClicked(_:)))
         navigationItem.leftBarButtonItem = cancel
-        let create = UIBarButtonItem(title: NSLocalizedString("Create", comment: ""), style: .done, target: self, action: #selector(createClicked(_:)))
+        let create = UIBarButtonItem(title: NSLocalizedString("Create", comment: "Create button for certificate creation"), style: .done, target: self, action: #selector(createClicked(_:)))
         navigationItem.rightBarButtonItem = create
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWasShown(_:)), name: UIResponder.keyboardDidShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillBeHidden(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -167,7 +167,7 @@ class MUCertificateCreationView: UITableViewController {
             let cert = MKCertificate.selfSignedCertificate(withName: name, email: email)
             let pkcs12 = cert?.exportPKCS12(withPassword: "")
             guard let data = pkcs12 else {
-                showAlertDialog(title: NSLocalizedString("Unable to generate certificate", comment: ""), msg: NSLocalizedString("Mumble was unable to generate a certificate for your identity.", comment: ""))
+                showAlertDialog(title: NSLocalizedString("Unable to generate certificate", comment: "Error title when certificate generation fails"), msg: NSLocalizedString("Mumble was unable to generate a certificate for your identity.", comment: "Error message when certificate generation fails"))
                 DispatchQueue.main.async { self.navigationController?.dismiss(animated: true, completion: nil) }
                 return
             }
@@ -183,10 +183,10 @@ class MUCertificateCreationView: UITableViewController {
                         MUCertificateController.setDefaultCertificate(byPersistentRef: dataRef)
                     }
                 } else if addErr == errSecDuplicateItem || (addErr == errSecSuccess && ref == nil) {
-                    showAlertDialog(title: NSLocalizedString("Unable to add identity", comment: ""), msg: NSLocalizedString("A certificate with the same name already exist.", comment: ""))
+                    showAlertDialog(title: NSLocalizedString("Unable to add identity", comment: "Error title when identity cannot be added"), msg: NSLocalizedString("A certificate with the same name already exist.", comment: "Error message when certificate with same name exists"))
                 }
             } else {
-                showAlertDialog(title: NSLocalizedString("Import Error", comment: ""), msg: NSLocalizedString("Mumble was unable to import the generated certificate.", comment: ""))
+                showAlertDialog(title: NSLocalizedString("Import Error", comment: "Error title for certificate import failure"), msg: NSLocalizedString("Mumble was unable to import the generated certificate.", comment: "Error message when generated certificate cannot be imported"))
             }
             DispatchQueue.main.async {
                 self.navigationController?.dismiss(animated: true, completion: nil)
