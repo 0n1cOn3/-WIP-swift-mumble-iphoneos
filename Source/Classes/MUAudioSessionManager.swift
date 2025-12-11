@@ -231,13 +231,13 @@ final class MUAudioSessionManager: NSObject {
             resolvedPreset = .balanced
         }
 
-        codecQuality = resolvedPreset
+        codecQualityPreset = resolvedPreset
         UserDefaults.standard.set(value(for: resolvedPreset), forKey: "AudioQualityKind")
-        applyCodecSettings(for: resolvedPreset)
+        applyQualityPresetSettings(for: resolvedPreset)
         return value(for: resolvedPreset)
     }
 
-    private func applyCodecSettings(for preset: MUAudioCodecQualityPreset) {
+    private func applyQualityPresetSettings(for preset: MUAudioCodecQualityPreset) {
         let sampleRate: Double
         let bitRate: Int
         let packetDuration: TimeInterval
