@@ -91,6 +91,7 @@ final class MUAudioSessionManager: NSObject {
     ///                       Defaults to `true` for backward compatibility.
     func configureSession(activate: Bool = true) {
         do {
+            // Explicitly set all required options from scratch for predictable behavior
             var options: AVAudioSession.CategoryOptions = [.allowBluetooth]
             if #available(iOS 12.0, *) {
                 options.insert(.allowBluetoothA2DP)
