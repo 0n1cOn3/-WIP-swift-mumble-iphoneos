@@ -5,7 +5,7 @@
 #import "MUAudioBarView.h"
 #import "MUColor.h"
 
-#import <MumbleKit/MKAudio.h>
+#import "MUAudioCaptureManager.h"
 
 @interface MUAudioBarView () {
     CGFloat _below;
@@ -106,14 +106,14 @@
 }
 
 - (void) tickTock {
-    MKAudio *audio = [MKAudio sharedAudio];
+    MUAudioCaptureManager *captureManager = [MUAudioCaptureManager sharedManager];
     NSString *kind = [[NSUserDefaults standardUserDefaults] objectForKey:@"AudioVADKind"];
     if (![[NSUserDefaults standardUserDefaults] boolForKey:@"AudioPreprocessor"])
         kind = @"amplitude";
     if ([kind isEqualToString:@"snr"]) {
-        _value = [audio speechProbablity];
+        _value = [captureManager speechProbability];
     } else {
-        _value = ([audio peakCleanMic] + 96.0)/96.0;
+        _value = [captureManager meterLevel];
     }
     [self setNeedsDisplay];
 }

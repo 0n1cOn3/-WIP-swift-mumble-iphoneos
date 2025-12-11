@@ -10,6 +10,7 @@
 #import "MURemoteControlServer.h"
 
 #import <MumbleKit/MKAudio.h>
+#import "MUAudioCaptureManager.h"
 
 @interface MURemoteControlServer () {
     NSMutableArray *_activeSocks;
@@ -41,6 +42,11 @@ static void *serverThread(void *udata) {
         unsigned char code = action & ~0x1;
         if (code == 0) { // PTT
             MKAudio *audio = [MKAudio sharedAudio];
+            if (on) {
+                [[MUAudioCaptureManager sharedManager] beginPushToTalk];
+            } else {
+                [[MUAudioCaptureManager sharedManager] endPushToTalk];
+            }
             [audio setForceTransmit:on > 0];
         }
     }
