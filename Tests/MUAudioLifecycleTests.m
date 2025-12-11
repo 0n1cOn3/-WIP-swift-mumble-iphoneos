@@ -47,12 +47,14 @@ static MKAudio *_mkAudioShared;
 - (void)removeDelegate:(id)delegate;
 @end
 
+#if TARGET_OS_IPHONE
 @interface MUServerViewController : UITableViewController
 - (id)initWithServerModel:(MKServerModel *)serverModel;
 - (void)talkOn:(UIButton *)button;
 - (void)talkOff:(UIButton *)button;
 - (void)appDidEnterBackground:(NSNotification *)notification;
 @end
+#endif
 #endif
 
 #import "MUApplicationDelegate.h"
