@@ -32,12 +32,8 @@ final class MUAudioTransmissionPreferencesViewController: UITableViewController 
         title = NSLocalizedString("Transmission", comment: "Audio transmission preferences title")
         tableView.backgroundView = MUBackgroundView.backgroundView()
 
-        if #available(iOS 7.0, *) {
-            tableView.separatorStyle = .none
-            tableView.separatorInset = .zero
-        } else {
-            tableView.separatorStyle = .none
-        }
+        tableView.separatorStyle = .none
+        tableView.separatorInset = .zero
 
         tableView.isScrollEnabled = false
     }
