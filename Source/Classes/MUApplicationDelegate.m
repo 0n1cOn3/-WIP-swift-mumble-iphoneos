@@ -13,6 +13,7 @@
 #import "MURemoteControlServer.h"
 #import "MUImage.h"
 #import "MUBackgroundView.h"
+#import "MUAudioCaptureManager.h"
 
 #import <MumbleKit/MKAudio.h>
 #import <MumbleKit/MKVersion.h>
@@ -232,7 +233,11 @@
     
     settings.opusForceCELTMode = [defaults boolForKey:@"AudioOpusCodecForceCELTMode"];
     settings.audioMixerDebug = [defaults boolForKey:@"AudioMixerDebug"];
-    
+
+    MUAudioCaptureManager *captureManager = [MUAudioCaptureManager sharedManager];
+    [captureManager configureFromDefaults];
+    [captureManager start];
+
     MKAudio *audio = [MKAudio sharedAudio];
     [audio updateAudioSettings:&settings];
     [audio restart];
@@ -278,7 +283,8 @@
     if (!_connectionActive) {
         NSLog(@"MumbleApplicationDelegate: Not connected to a server. Stopping MKAudio.");
         [[MKAudio sharedAudio] stop];
-        
+        [[MUAudioCaptureManager sharedManager] stop];
+
 #ifdef ENABLE_REMOTE_CONTROL
         // Also terminate the remote control server.
         [[MURemoteControlServer sharedRemoteControlServer] stop];
@@ -297,6 +303,7 @@
     if (![[MKAudio sharedAudio] isRunning]) {
         NSLog(@"MumbleApplicationDelegate: MKAudio not running. Starting it.");
         [[MKAudio sharedAudio] start];
+        [[MUAudioCaptureManager sharedManager] start];
         
 #if ENABLE_REMOTE_CONTROL
         // Re-start the remote control server.
