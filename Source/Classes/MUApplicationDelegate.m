@@ -384,16 +384,18 @@
         framesPerPacket = 2;
     }
     NSTimeInterval preferredIOBuffer = MAX(0.01, (NSTimeInterval) framesPerPacket * 0.01);
-    if (![session setPreferredIOBufferDuration:preferredIOBuffer error:&error]) {
-        NSLog(@"MUApplicationDelegate: Unable to set preferred IO buffer duration: %@", error);
+    NSError *ioBufferError = nil;
+    if (![session setPreferredIOBufferDuration:preferredIOBuffer error:&ioBufferError]) {
+        NSLog(@"MUApplicationDelegate: Unable to set preferred IO buffer duration: %@", ioBufferError);
     }
 
     float vadMax = [defaults floatForKey:@"AudioVADAbove"];
     float micBoost = [defaults floatForKey:@"AudioMicBoost"];
     float requestedGain = fmaxf(0.0f, fminf(1.0f, vadMax * micBoost));
     if ([session isInputGainSettable]) {
-        if (![session setInputGain:requestedGain error:&error]) {
-            NSLog(@"MUApplicationDelegate: Unable to set input gain: %@", error);
+        NSError *inputGainError = nil;
+        if (![session setInputGain:requestedGain error:&inputGainError]) {
+            NSLog(@"MUApplicationDelegate: Unable to set input gain: %@", inputGainError);
         }
     }
 }
