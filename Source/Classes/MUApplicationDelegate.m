@@ -518,25 +518,4 @@
     }
 }
 
-- (void) handleAudioSessionInterruption:(NSNotification *)notification {
-    NSDictionary *userInfo = notification.userInfo;
-    AVAudioSessionInterruptionType type = [userInfo[AVAudioSessionInterruptionTypeKey] integerValue];
-
-    if (type == AVAudioSessionInterruptionTypeBegan) {
-        NSLog(@"MUApplicationDelegate: Audio session interruption began.");
-        [self deactivateAudioSession];
-    } else {
-        AVAudioSessionInterruptionOptions options = [userInfo[AVAudioSessionInterruptionOptionKey] unsignedIntegerValue];
-        if (options & AVAudioSessionInterruptionOptionShouldResume) {
-            [self activateAudioSession];
-        }
-    }
-}
-
-- (void) handleAudioSessionRouteChange:(NSNotification *)notification {
-    NSDictionary *userInfo = notification.userInfo;
-    AVAudioSessionRouteChangeReason reason = [userInfo[AVAudioSessionRouteChangeReasonKey] unsignedIntegerValue];
-    NSLog(@"MUApplicationDelegate: Audio route changed: %ld", (long) reason);
-}
-
 @end
