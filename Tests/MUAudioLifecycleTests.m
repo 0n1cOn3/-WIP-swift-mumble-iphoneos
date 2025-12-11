@@ -104,10 +104,10 @@ static id MUSharedAudioReplacement(id self, SEL _cmd) {
 - (void)removeDelegate:(id)delegate {}
 @end
 
-@interface MUAudioLifecycleTests : XCTestCase
+@interface MUAudioLifecycleTest : XCTestCase
 @end
 
-@implementation MUAudioLifecycleTests
+@implementation MUAudioLifecycleTest
 
 - (void)setUp {
     [super setUp];
