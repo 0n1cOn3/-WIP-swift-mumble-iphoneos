@@ -35,10 +35,7 @@
 @implementation MUApplicationDelegate
 
 - (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionInterruptionNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:AVAudioSessionRouteChangeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:MUConnectionOpenedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:MUConnectionClosedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (BOOL) application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
