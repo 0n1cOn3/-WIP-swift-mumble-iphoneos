@@ -371,7 +371,7 @@ final class MUAudioSessionManager: NSObject {
 
     private func applyCategoryOptions(_ options: AVAudioSession.CategoryOptions) {
         do {
-            lastCategoryOptions = options
+            // Removed unused assignment to lastCategoryOptions
             if #available(iOS 10.0, *) {
                 try session.setCategory(.playAndRecord, mode: .voiceChat, options: options)
             } else {
