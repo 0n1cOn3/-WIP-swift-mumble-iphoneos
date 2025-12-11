@@ -157,7 +157,49 @@
 - (void) setupAudio {
     [[MUAudioSessionManager shared] configureSession];
     [[MUAudioSessionManager shared] applySavedPreferences];
-    [[MKAudio sharedAudio] restart];
+    
+    // Restore MKAudio settings from user defaults
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    MKAudio *audio = [MKAudio sharedAudio];
+    
+    NSNumber *vadMin = [defaults objectForKey:@"AudioVADMin"];
+    if (vadMin) {
+        [audio setVADMin:[vadMin floatValue]];
+    }
+    NSNumber *vadMax = [defaults objectForKey:@"AudioVADMax"];
+    if (vadMax) {
+        [audio setVADMax:[vadMax floatValue]];
+    }
+    NSNumber *codec = [defaults objectForKey:@"AudioCodec"];
+    if (codec) {
+        [audio setCodec:[codec intValue]];
+    }
+    NSNumber *quality = [defaults objectForKey:@"AudioQuality"];
+    if (quality) {
+        [audio setQuality:[quality intValue]];
+    }
+    NSNumber *noiseSuppression = [defaults objectForKey:@"AudioNoiseSuppression"];
+    if (noiseSuppression) {
+        [audio setNoiseSuppression:[noiseSuppression intValue]];
+    }
+    NSNumber *amplification = [defaults objectForKey:@"AudioAmplification"];
+    if (amplification) {
+        [audio setAmplification:[amplification floatValue]];
+    }
+    NSNumber *volume = [defaults objectForKey:@"AudioVolume"];
+    if (volume) {
+        [audio setVolume:[volume floatValue]];
+    }
+    NSNumber *micBoost = [defaults objectForKey:@"AudioMicBoost"];
+    if (micBoost) {
+        [audio setMicBoost:[micBoost boolValue]];
+    }
+    NSNumber *preprocessor = [defaults objectForKey:@"AudioPreprocessor"];
+    if (preprocessor) {
+        [audio setPreprocessor:[preprocessor boolValue]];
+    }
+
+    [audio restart];
 }
 
 // Reload application preferences...
