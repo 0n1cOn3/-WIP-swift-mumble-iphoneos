@@ -423,6 +423,7 @@
 
     if (type == AVAudioSessionInterruptionTypeBegan) {
         NSLog(@"MUApplicationDelegate: Audio session interruption began.");
+        [self deactivateAudioSession];
     } else {
         AVAudioSessionInterruptionOptions options = [userInfo[AVAudioSessionInterruptionOptionKey] unsignedIntegerValue];
         if (options & AVAudioSessionInterruptionOptionShouldResume) {
