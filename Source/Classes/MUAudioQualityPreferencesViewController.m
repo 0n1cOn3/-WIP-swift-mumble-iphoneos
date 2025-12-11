@@ -7,6 +7,7 @@
 #import "MUColor.h"
 #import "MUImage.h"
 #import "MUBackgroundView.h"
+#import "Mumble-Swift.h"
 
 @implementation MUAudioQualityPreferencesViewController
 
@@ -132,7 +133,7 @@
         case 3: val = @"custom"; break;
     }
     if (val != nil)
-        [[NSUserDefaults standardUserDefaults] setObject:val forKey:@"AudioQualityKind"];
+        [[MUAudioSessionManager shared] updateCodecQualityPreset:val];
 }
 
 @end

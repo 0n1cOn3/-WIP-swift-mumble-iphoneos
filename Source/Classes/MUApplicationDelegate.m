@@ -17,6 +17,7 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import <MumbleKit/MKAudio.h>
+#import "Mumble-Swift.h"
 #import <MumbleKit/MKVersion.h>
 
 @interface MUApplicationDelegate () <UIApplicationDelegate> {
@@ -170,7 +171,10 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     MKAudioSettings settings;
 
+    // Configure AVAudioSession using both approaches for comprehensive coverage
     [self configureAudioSessionWithDefaults:defaults];
+    [[MUAudioSessionManager shared] configureSession];
+    [[MUAudioSessionManager shared] applySavedPreferences];
 
     if ([[defaults stringForKey:@"AudioTransmitMethod"] isEqualToString:@"vad"])
         settings.transmitType = MKTransmitTypeVAD;
@@ -294,9 +298,6 @@
         [notificationCenter addObserver:self selector:@selector(handleApplicationActivation:) name:UISceneWillEnterForegroundNotification object:nil];
         [notificationCenter addObserver:self selector:@selector(handleApplicationActivation:) name:UISceneDidActivateNotification object:nil];
     }
-
-    [notificationCenter addObserver:self selector:@selector(handleAudioInterruption:) name:AVAudioSessionInterruptionNotification object:nil];
-    [notificationCenter addObserver:self selector:@selector(handleAudioRouteChange:) name:AVAudioSessionRouteChangeNotification object:nil];
 }
 
 - (void) activateAudioSessionIfNeeded {
@@ -357,11 +358,15 @@
 
 - (void) dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-- (void) applicationWillResignActive:(UIApplication *)application {
-    if (!_connectionActive) {
+}
 
+- (void) applicationWillResignActive:(UIApplication *)application {
+    MKAudio *audio = [MKAudio sharedAudio];
+    MUConnectionController *connController = [MUConnectionController sharedController];
+    
+    if (![connController isConnected]) {
         NSLog(@"MumbleApplicationDelegate: Not connected to a server. Stopping MKAudio.");
-        [[MKAudio sharedAudio] stop];
+        [audio stop];
         [[MUAudioCaptureManager sharedManager] stop];
 
         NSLog(@"MumbleApplicationDelegate: Not connected to a server. Deactivating audio session.");
@@ -382,12 +387,16 @@
     //
     // For regular backgrounding, we usually don't turn off the audio system, and
     // we won't have to start it again.
-    if (![[MKAudio sharedAudio] isRunning]) {
+    MKAudio *audio = [MKAudio sharedAudio];
+    MUConnectionController *connController = [MUConnectionController sharedController];
+    
+    if (![audio isRunning]) {
         NSLog(@"MumbleApplicationDelegate: MKAudio not running. Starting it.");
-        [[MKAudio sharedAudio] start];
+        [audio start];
         [[MUAudioCaptureManager sharedManager] start];
+    }
         
-    if (!_connectionActive && ![[AVAudioSession sharedInstance] isOtherAudioPlaying]) {
+    if (![connController isConnected] && ![[AVAudioSession sharedInstance] isOtherAudioPlaying]) {
         NSLog(@"MumbleApplicationDelegate: Reactivating audio session after foregrounding.");
         [self activateAudioSession];
       
@@ -418,7 +427,7 @@
     AVAudioSession *session = [AVAudioSession sharedInstance];
     NSError *error = nil;
 
-    AVAudioSessionCategoryOptions options = AVAudioSessionCategoryOptionAllowBluetooth | AVAudioSessionCategoryOptionDuckOthers;
+    AVAudioSessionCategoryOptions options = AVAudioSessionCategoryOptionAllowBluetooth | AVAudioSessionCategoryOptionMixWithOthers;
     if ([defaults boolForKey:@"AudioSpeakerPhoneMode"]) {
         options |= AVAudioSessionCategoryOptionDefaultToSpeaker;
     }
@@ -512,27 +521,6 @@
     if (![session setActive:NO withOptions:AVAudioSessionSetActiveOptionNotifyOthersOnDeactivation error:&error]) {
         NSLog(@"MUApplicationDelegate: Failed to deactivate audio session: %@", error);
     }
-}
-
-- (void) handleAudioSessionInterruption:(NSNotification *)notification {
-    NSDictionary *userInfo = notification.userInfo;
-    AVAudioSessionInterruptionType type = [userInfo[AVAudioSessionInterruptionTypeKey] integerValue];
-
-    if (type == AVAudioSessionInterruptionTypeBegan) {
-        NSLog(@"MUApplicationDelegate: Audio session interruption began.");
-        [self deactivateAudioSession];
-    } else {
-        AVAudioSessionInterruptionOptions options = [userInfo[AVAudioSessionInterruptionOptionKey] unsignedIntegerValue];
-        if (options & AVAudioSessionInterruptionOptionShouldResume) {
-            [self activateAudioSession];
-        }
-    }
-}
-
-- (void) handleAudioSessionRouteChange:(NSNotification *)notification {
-    NSDictionary *userInfo = notification.userInfo;
-    AVAudioSessionRouteChangeReason reason = [userInfo[AVAudioSessionRouteChangeReasonKey] unsignedIntegerValue];
-    NSLog(@"MUApplicationDelegate: Audio route changed: %ld", (long) reason);
 }
 
 @end

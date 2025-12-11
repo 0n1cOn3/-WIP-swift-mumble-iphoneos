@@ -8,6 +8,7 @@
 #import "MUColor.h"
 #import "MUImage.h"
 #import "MUBackgroundView.h"
+#import "Mumble-Swift.h"
 
 @implementation MUVoiceActivitySetupViewController
 
@@ -167,9 +168,9 @@
         }
         [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
         if (indexPath.row == 0) {
-            [[NSUserDefaults standardUserDefaults] setObject:@"amplitude" forKey:@"AudioVADKind"];
+            [[MUAudioSessionManager shared] updateVADKindWithString:@"amplitude"];
         } else if (indexPath.row == 1) {
-            [[NSUserDefaults standardUserDefaults] setObject:@"snr" forKey:@"AudioVADKind"];
+            [[MUAudioSessionManager shared] updateVADKindWithString:@"snr"];
         }
         cell = [self.tableView cellForRowAtIndexPath:indexPath];
         cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"GrayCheckmark"]];
@@ -201,11 +202,40 @@
 #pragma mark - Actions
 
 - (void) vadBelowChanged:(UISlider *)sender {
-    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithFloat:[sender value]] forKey:@"AudioVADBelow"];
+    UISlider *upperSlider = [self vadThresholdSliderAtRow:1];
+    if (upperSlider == nil) {
+        return;
+    }
+    NSDictionary *thresholds = [[MUAudioSessionManager shared] updateVADThresholdsWithLower:sender.value upper:upperSlider.value];
+    sender.value = [[thresholds objectForKey:@"lower"] floatValue];
+    upperSlider.value = [[thresholds objectForKey:@"upper"] floatValue];
 }
 
 - (void) vadAboveChanged:(UISlider *)sender {
-    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithFloat:[sender value]] forKey:@"AudioVADAbove"];
+    UISlider *lowerSlider = [self vadThresholdSliderAtRow:0];
+    if (lowerSlider == nil) {
+        return;
+    }
+    NSDictionary *thresholds = [[MUAudioSessionManager shared] updateVADThresholdsWithLower:lowerSlider.value upper:sender.value];
+    lowerSlider.value = [[thresholds objectForKey:@"lower"] floatValue];
+    sender.value = [[thresholds objectForKey:@"upper"] floatValue];
+}
+
+- (NSInteger) vadThresholdSectionIndex {
+    // The VAD threshold controls are in section 2 if the AudioPreprocessor setting is enabled,
+    // and in section 1 otherwise. This is based on the current table structure:
+    // [Section 0: Transmission setting], [Section 1: Preprocessor (if enabled)], [Section 2: VAD thresholds]
+    // If the table structure changes, these indices must be updated accordingly.
+    return [[NSUserDefaults standardUserDefaults] boolForKey:@"AudioPreprocessor"] ? 2 : 1;
+}
+
+- (UISlider *) vadThresholdSliderAtRow:(NSInteger)row {
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:[self vadThresholdSectionIndex]];
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    if (![cell.accessoryView isKindOfClass:[UISlider class]]) {
+        return nil;
+    }
+    return (UISlider *) cell.accessoryView;
 }
 
 @end
