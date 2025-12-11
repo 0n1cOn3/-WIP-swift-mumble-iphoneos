@@ -50,6 +50,12 @@
     self.restartCallCount += 1;
 }
 
+- (void)resetCallCounts {
+    self.startCallCount = 0;
+    self.stopCallCount = 0;
+    self.restartCallCount = 0;
+}
+
 @end
 
 @interface MUAudioSessionManagerTests : XCTestCase
@@ -59,6 +65,12 @@
 @end
 
 @implementation MUAudioSessionManagerTests
+
+// Selector constants to avoid duplication
+static NSString * const kBindSelector = @"bindToMumbleKitAudio:defaults:";
+static NSString * const kRefreshSelector = @"refreshPlaybackChain";
+static NSString * const kHandleRouteChangeSelector = @"handleRouteChangeWithReason:defaults:";
+static NSString * const kApplyPlaybackPreferencesSelector = @"applyPlaybackPreferencesWithDefaults:";
 
 - (void)setUp {
     [super setUp];
@@ -84,7 +96,6 @@
     
     [super tearDown];
 }
-    
 
 // MARK: - bind(to:defaults:) Tests
 
@@ -98,7 +109,7 @@
     [self.mockDefaults setBool:YES forKey:@"AudioSpeakerPhoneMode"];
     
     // When: Binding to MKAudio
-    SEL bindSelector = NSSelectorFromString(@"bindToMumbleKitAudio:defaults:");
+    SEL bindSelector = NSSelectorFromString(kBindSelector);
     if ([self.sessionManager respondsToSelector:bindSelector]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -119,7 +130,7 @@
     // Given: No speaker mode preference set (defaults to false)
     
     // When: Binding to MKAudio
-    SEL bindSelector = NSSelectorFromString(@"bindToMumbleKitAudio:defaults:");
+    SEL bindSelector = NSSelectorFromString(kBindSelector);
     if ([self.sessionManager respondsToSelector:bindSelector]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -141,7 +152,7 @@
     
     // Given: Audio is bound and running
     self.mockAudio.mockIsRunning = YES;
-    SEL bindSelector = NSSelectorFromString(@"bindToMumbleKitAudio:defaults:");
+    SEL bindSelector = NSSelectorFromString(kBindSelector);
     if ([self.sessionManager respondsToSelector:bindSelector]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -150,7 +161,7 @@
     }
     
     // When: Refreshing the playback chain
-    SEL refreshSelector = NSSelectorFromString(@"refreshPlaybackChain");
+    SEL refreshSelector = NSSelectorFromString(kRefreshSelector);
     if ([self.sessionManager respondsToSelector:refreshSelector]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -170,7 +181,7 @@
     
     // Given: Audio is bound but not running
     self.mockAudio.mockIsRunning = NO;
-    SEL bindSelector = NSSelectorFromString(@"bindToMumbleKitAudio:defaults:");
+    SEL bindSelector = NSSelectorFromString(kBindSelector);
     if ([self.sessionManager respondsToSelector:bindSelector]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -179,10 +190,10 @@
     }
     
     // Reset call counts after bind
-    self.mockAudio.startCallCount = 0;
+    [self.mockAudio resetCallCounts];
     
     // When: Refreshing the playback chain
-    SEL refreshSelector = NSSelectorFromString(@"refreshPlaybackChain");
+    SEL refreshSelector = NSSelectorFromString(kRefreshSelector);
     if ([self.sessionManager respondsToSelector:refreshSelector]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -204,18 +215,18 @@
     
     // Given: Audio is bound and running
     self.mockAudio.mockIsRunning = YES;
-    SEL bindSelector = NSSelectorFromString(@"bindToMumbleKitAudio:defaults:");
+    SEL bindSelector = NSSelectorFromString(kBindSelector);
     if ([self.sessionManager respondsToSelector:bindSelector]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         [self.sessionManager performSelector:bindSelector withObject:self.mockAudio withObject:self.mockDefaults];
 #pragma clang diagnostic pop
     }
-    self.mockAudio.restartCallCount = 0;
+    [self.mockAudio resetCallCounts];
     
     // When: Route changes due to new device
     AVAudioSessionRouteChangeReason reason = AVAudioSessionRouteChangeReasonNewDeviceAvailable;
-    SEL handleSelector = NSSelectorFromString(@"handleRouteChangeWithReason:defaults:");
+    SEL handleSelector = NSSelectorFromString(kHandleRouteChangeSelector);
     if ([self.sessionManager respondsToSelector:handleSelector]) {
         NSMethodSignature *signature = [self.sessionManager methodSignatureForSelector:handleSelector];
         NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -240,18 +251,18 @@
     
     // Given: Audio is bound and running
     self.mockAudio.mockIsRunning = YES;
-    SEL bindSelector = NSSelectorFromString(@"bindToMumbleKitAudio:defaults:");
+    SEL bindSelector = NSSelectorFromString(kBindSelector);
     if ([self.sessionManager respondsToSelector:bindSelector]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         [self.sessionManager performSelector:bindSelector withObject:self.mockAudio withObject:self.mockDefaults];
 #pragma clang diagnostic pop
     }
-    self.mockAudio.restartCallCount = 0;
+    [self.mockAudio resetCallCounts];
     
     // When: Route changes due to device removal
     AVAudioSessionRouteChangeReason reason = AVAudioSessionRouteChangeReasonOldDeviceUnavailable;
-    SEL handleSelector = NSSelectorFromString(@"handleRouteChangeWithReason:defaults:");
+    SEL handleSelector = NSSelectorFromString(kHandleRouteChangeSelector);
     if ([self.sessionManager respondsToSelector:handleSelector]) {
         NSMethodSignature *signature = [self.sessionManager methodSignatureForSelector:handleSelector];
         NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -276,18 +287,18 @@
     
     // Given: Audio is bound and running
     self.mockAudio.mockIsRunning = YES;
-    SEL bindSelector = NSSelectorFromString(@"bindToMumbleKitAudio:defaults:");
+    SEL bindSelector = NSSelectorFromString(kBindSelector);
     if ([self.sessionManager respondsToSelector:bindSelector]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         [self.sessionManager performSelector:bindSelector withObject:self.mockAudio withObject:self.mockDefaults];
 #pragma clang diagnostic pop
     }
-    self.mockAudio.restartCallCount = 0;
+    [self.mockAudio resetCallCounts];
     
     // When: Route changes due to category change
     AVAudioSessionRouteChangeReason reason = AVAudioSessionRouteChangeReasonCategoryChange;
-    SEL handleSelector = NSSelectorFromString(@"handleRouteChangeWithReason:defaults:");
+    SEL handleSelector = NSSelectorFromString(kHandleRouteChangeSelector);
     if ([self.sessionManager respondsToSelector:handleSelector]) {
         NSMethodSignature *signature = [self.sessionManager methodSignatureForSelector:handleSelector];
         NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -312,18 +323,18 @@
     
     // Given: Audio is bound and running
     self.mockAudio.mockIsRunning = YES;
-    SEL bindSelector = NSSelectorFromString(@"bindToMumbleKitAudio:defaults:");
+    SEL bindSelector = NSSelectorFromString(kBindSelector);
     if ([self.sessionManager respondsToSelector:bindSelector]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         [self.sessionManager performSelector:bindSelector withObject:self.mockAudio withObject:self.mockDefaults];
 #pragma clang diagnostic pop
     }
-    self.mockAudio.restartCallCount = 0;
+    [self.mockAudio resetCallCounts];
     
     // When: Route changes due to override
     AVAudioSessionRouteChangeReason reason = AVAudioSessionRouteChangeReasonOverride;
-    SEL handleSelector = NSSelectorFromString(@"handleRouteChangeWithReason:defaults:");
+    SEL handleSelector = NSSelectorFromString(kHandleRouteChangeSelector);
     if ([self.sessionManager respondsToSelector:handleSelector]) {
         NSMethodSignature *signature = [self.sessionManager methodSignatureForSelector:handleSelector];
         NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -348,18 +359,18 @@
     
     // Given: Audio is bound and running
     self.mockAudio.mockIsRunning = YES;
-    SEL bindSelector = NSSelectorFromString(@"bindToMumbleKitAudio:defaults:");
+    SEL bindSelector = NSSelectorFromString(kBindSelector);
     if ([self.sessionManager respondsToSelector:bindSelector]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         [self.sessionManager performSelector:bindSelector withObject:self.mockAudio withObject:self.mockDefaults];
 #pragma clang diagnostic pop
     }
-    self.mockAudio.restartCallCount = 0;
+    [self.mockAudio resetCallCounts];
     
     // When: Route changes due to wake from sleep
     AVAudioSessionRouteChangeReason reason = AVAudioSessionRouteChangeReasonWakeFromSleep;
-    SEL handleSelector = NSSelectorFromString(@"handleRouteChangeWithReason:defaults:");
+    SEL handleSelector = NSSelectorFromString(kHandleRouteChangeSelector);
     if ([self.sessionManager respondsToSelector:handleSelector]) {
         NSMethodSignature *signature = [self.sessionManager methodSignatureForSelector:handleSelector];
         NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -384,18 +395,18 @@
     
     // Given: Audio is bound and running
     self.mockAudio.mockIsRunning = YES;
-    SEL bindSelector = NSSelectorFromString(@"bindToMumbleKitAudio:defaults:");
+    SEL bindSelector = NSSelectorFromString(kBindSelector);
     if ([self.sessionManager respondsToSelector:bindSelector]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         [self.sessionManager performSelector:bindSelector withObject:self.mockAudio withObject:self.mockDefaults];
 #pragma clang diagnostic pop
     }
-    self.mockAudio.restartCallCount = 0;
+    [self.mockAudio resetCallCounts];
     
     // When: Route changes for an unknown reason
     AVAudioSessionRouteChangeReason reason = AVAudioSessionRouteChangeReasonUnknown;
-    SEL handleSelector = NSSelectorFromString(@"handleRouteChangeWithReason:defaults:");
+    SEL handleSelector = NSSelectorFromString(kHandleRouteChangeSelector);
     if ([self.sessionManager respondsToSelector:handleSelector]) {
         NSMethodSignature *signature = [self.sessionManager methodSignatureForSelector:handleSelector];
         NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
@@ -424,7 +435,7 @@
     [self.mockDefaults setBool:YES forKey:@"AudioSpeakerPhoneMode"];
     
     // When: Applying playback preferences
-    SEL applySelector = NSSelectorFromString(@"applyPlaybackPreferencesWithDefaults:");
+    SEL applySelector = NSSelectorFromString(kApplyPlaybackPreferencesSelector);
     if ([self.sessionManager respondsToSelector:applySelector]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -447,7 +458,7 @@
     [self.mockDefaults setBool:NO forKey:@"AudioSpeakerPhoneMode"];
     
     // When: Applying playback preferences
-    SEL applySelector = NSSelectorFromString(@"applyPlaybackPreferencesWithDefaults:");
+    SEL applySelector = NSSelectorFromString(kApplyPlaybackPreferencesSelector);
     if ([self.sessionManager respondsToSelector:applySelector]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -469,7 +480,7 @@
     // (defaults to false/unset)
     
     // When: Applying playback preferences
-    SEL applySelector = NSSelectorFromString(@"applyPlaybackPreferencesWithDefaults:");
+    SEL applySelector = NSSelectorFromString(kApplyPlaybackPreferencesSelector);
     if ([self.sessionManager respondsToSelector:applySelector]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -494,16 +505,16 @@
     self.mockAudio.mockIsRunning = NO;
     
     // When: Binding and then refreshing
-    SEL bindSelector = NSSelectorFromString(@"bindToMumbleKitAudio:defaults:");
+    SEL bindSelector = NSSelectorFromString(kBindSelector);
     if ([self.sessionManager respondsToSelector:bindSelector]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
         [self.sessionManager performSelector:bindSelector withObject:self.mockAudio withObject:self.mockDefaults];
 #pragma clang diagnostic pop
     }
-    self.mockAudio.startCallCount = 0;  // Reset after bind
+    [self.mockAudio resetCallCounts];  // Reset after bind
     
-    SEL refreshSelector = NSSelectorFromString(@"refreshPlaybackChain");
+    SEL refreshSelector = NSSelectorFromString(kRefreshSelector);
     if ([self.sessionManager respondsToSelector:refreshSelector]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -524,7 +535,7 @@
     // Given: Audio is bound with speaker mode enabled
     [self.mockDefaults setBool:YES forKey:@"AudioSpeakerPhoneMode"];
     self.mockAudio.mockIsRunning = YES;
-    SEL bindSelector = NSSelectorFromString(@"bindToMumbleKitAudio:defaults:");
+    SEL bindSelector = NSSelectorFromString(kBindSelector);
     if ([self.sessionManager respondsToSelector:bindSelector]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
@@ -535,7 +546,7 @@
     // When: Route changes and preferences are updated
     [self.mockDefaults setBool:NO forKey:@"AudioSpeakerPhoneMode"];
     AVAudioSessionRouteChangeReason reason = AVAudioSessionRouteChangeReasonNewDeviceAvailable;
-    SEL handleSelector = NSSelectorFromString(@"handleRouteChangeWithReason:defaults:");
+    SEL handleSelector = NSSelectorFromString(kHandleRouteChangeSelector);
     if ([self.sessionManager respondsToSelector:handleSelector]) {
         NSMethodSignature *signature = [self.sessionManager methodSignatureForSelector:handleSelector];
         NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
