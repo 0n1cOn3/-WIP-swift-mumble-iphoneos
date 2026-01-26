@@ -19,6 +19,8 @@ Completed tasks
 - Converted most user interfaces from xib files to storyboards, including the former `MainWindow.xib`.
 - Converted the preferences UI to Swift (`MUPreferencesViewController`).
 - Added a centralized **AVAudioEngine** capture pipeline with push-to-talk and VAD metering support.
+- Migrated `MUAccessTokenViewController` to Swift 5.
+- Refined the Swift access token controller to persist edits on end-edit and use modern keyboard metrics.
 
 Open tasks
 ==========
@@ -92,7 +94,6 @@ Priority 5 (UI polish + supporting views)
    - `MUWelcomeScreenPhone`
    - `MUWelcomeScreenPad`
    - `MULegalViewController`
-   - `MUAccessTokenViewController`
 
 Priority 6 (Data/utilities & app entry)
 1. **Utilities & data**

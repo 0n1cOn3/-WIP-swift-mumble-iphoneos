@@ -168,7 +168,7 @@
 		28F79C69147966840003B8BA /* WelcomeScreenIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 28F79C68147966840003B8BA /* WelcomeScreenIcon.png */; };
 		28F79C6B147968C60003B8BA /* WelcomeScreenIcon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28F79C6A147968C60003B8BA /* WelcomeScreenIcon@2x.png */; };
 		28F79C70147973D60003B8BA /* MUUserStateAcessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F79C6F147973D50003B8BA /* MUUserStateAcessoryView.m */; };
-		28F79C73147991490003B8BA /* MUAccessTokenViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F79C72147991480003B8BA /* MUAccessTokenViewController.m */; };
+		28F79C73147991490003B8BA /* MUAccessTokenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28F79C72147991480003B8BA /* MUAccessTokenViewController.swift */; };
 		28F79CA11479C2180003B8BA /* BackgroundTextureBlackGradient@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28F79CA01479C2180003B8BA /* BackgroundTextureBlackGradient@2x.png */; };
 		28F79CA31479C23F0003B8BA /* BackgroundTextureBlackGradient.png in Resources */ = {isa = PBXBuildFile; fileRef = 28F79CA21479C23F0003B8BA /* BackgroundTextureBlackGradient.png */; };
 		28F79CA61479D7E80003B8BA /* MUTableViewHeaderLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 28F79CA51479D7E60003B8BA /* MUTableViewHeaderLabel.m */; };
@@ -499,8 +499,7 @@
 		28F79C6A147968C60003B8BA /* WelcomeScreenIcon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "WelcomeScreenIcon@2x.png"; path = "Resources/WelcomeScreenIcon@2x.png"; sourceTree = "<group>"; };
 		28F79C6E147973D40003B8BA /* MUUserStateAcessoryView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUUserStateAcessoryView.h; sourceTree = "<group>"; };
 		28F79C6F147973D50003B8BA /* MUUserStateAcessoryView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUUserStateAcessoryView.m; sourceTree = "<group>"; };
-		28F79C71147991480003B8BA /* MUAccessTokenViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUAccessTokenViewController.h; sourceTree = "<group>"; };
-		28F79C72147991480003B8BA /* MUAccessTokenViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUAccessTokenViewController.m; sourceTree = "<group>"; };
+		28F79C72147991480003B8BA /* MUAccessTokenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUAccessTokenViewController.swift; sourceTree = "<group>"; };
 		28F79CA01479C2180003B8BA /* BackgroundTextureBlackGradient@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "BackgroundTextureBlackGradient@2x.png"; path = "Resources/BackgroundTextureBlackGradient@2x.png"; sourceTree = "<group>"; };
 		28F79CA21479C23F0003B8BA /* BackgroundTextureBlackGradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BackgroundTextureBlackGradient.png; path = Resources/BackgroundTextureBlackGradient.png; sourceTree = "<group>"; };
 		28F79CA41479D7E00003B8BA /* MUTableViewHeaderLabel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUTableViewHeaderLabel.h; sourceTree = "<group>"; };
@@ -584,8 +583,7 @@
 				28A2AEC014788BE300F3B83F /* MUColor.m */,
 				28F79C6E147973D40003B8BA /* MUUserStateAcessoryView.h */,
 				28F79C6F147973D50003B8BA /* MUUserStateAcessoryView.m */,
-				28F79C71147991480003B8BA /* MUAccessTokenViewController.h */,
-				28F79C72147991480003B8BA /* MUAccessTokenViewController.m */,
+				28F79C72147991480003B8BA /* MUAccessTokenViewController.swift */,
 				28F79CA41479D7E00003B8BA /* MUTableViewHeaderLabel.h */,
 				28F79CA51479D7E60003B8BA /* MUTableViewHeaderLabel.m */,
 				28F79CA7147AB6260003B8BA /* MUNotificationController.h */,
@@ -1269,7 +1267,7 @@
                                 283363DB13EF154C00A04F04 /* MUAudioTransmissionPreferencesViewController.swift in Sources */,
 				28A2AEC114788BE300F3B83F /* MUColor.m in Sources */,
 				28F79C70147973D60003B8BA /* MUUserStateAcessoryView.m in Sources */,
-				28F79C73147991490003B8BA /* MUAccessTokenViewController.m in Sources */,
+				28F79C73147991490003B8BA /* MUAccessTokenViewController.swift in Sources */,
 				28F79CA61479D7E80003B8BA /* MUTableViewHeaderLabel.m in Sources */,
 				28F79CA9147AB62B0003B8BA /* MUNotificationController.m in Sources */,
 				28851B94147DC97E00088C4F /* MULegalViewController.m in Sources */,
