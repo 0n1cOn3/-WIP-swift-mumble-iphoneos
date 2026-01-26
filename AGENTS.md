@@ -9,6 +9,7 @@
 - **Submodules**: The repo contains git submodules (`MumbleKit`, `Dependencies/fmdb`). Do not modify submodule contents directly. Ensure they are updated and integrated with the Swift code.
 - **Testing**: Running `xcodebuild` or the iOS simulator is not possible in this Linux environment. Mark any instructions requiring Xcode as non-executable here.
 - **Style**: Follow Swift naming conventions, use optionals and enums where sensible, and drop C-style macros.
+- **Process**: Update this `AGENTS.md` after each change to keep the migration status current.
 
 Completed tasks
 ===============
@@ -24,3 +25,93 @@ Open tasks
 - Migrate the remaining Objective‑C controllers (for example `MUConnectionController` and the server list flows) to Swift 5 with ARC semantics.
 - Port the legacy Objective‑C preference and messaging screens (audio detail panels, server buttons, message bubbles) to Swift 5 while keeping storyboard/Auto Layout parity.
 - Trim the bridging header and delete unused Objective‑C shims once the last controllers are rewritten to Swift 5.
+
+Prioritized migration map
+=========================
+Priority 0 (Prerequisites & Guardrails)
+1. **Inventory & dependency graph**
+   - Confirm remaining Objective-C files under `Source/Classes`.
+   - Identify which Objective-C classes are referenced by Swift via the bridging header.
+   - Capture storyboard/xib references for legacy controllers before conversion.
+2. **Adopt Swift-friendly project settings**
+   - Ensure ARC is enabled for any remaining Objective-C targets.
+   - Keep deployment target at iOS 12; wrap newer APIs in availability checks.
+
+Priority 1 (Core app flows: connection + server lists)
+1. **Connection & root navigation**
+   - `MUConnectionController`
+   - `MUServerRootViewController`
+   - `MUServerViewController`
+2. **Server list flows**
+   - `MUFavouriteServerListController`
+   - `MULanServerListController`
+   - `MUCountryServerListController`
+   - `MUPublicServerListController`
+   - Supporting data models: `MUPublicServerList`, `MUFavouriteServer`
+
+Priority 2 (Messaging surface)
+1. **Message UI**
+   - `MUMessagesViewController`
+   - `MUMessageRecipientViewController`
+   - `MUMessageAttachmentViewController`
+   - `MUMessageBubbleTableViewCell`
+2. **Messaging data**
+   - `MUTextMessage`
+   - `MUTextMessageProcessor`
+   - `MUMessagesDatabase`
+
+Priority 3 (Preferences: audio panels & diagnostics)
+1. **Audio preference panels**
+   - `MUAdvancedAudioPreferencesViewController`
+   - `MUAudioQualityPreferencesViewController`
+   - `MUAudioSidetonePreferencesViewController`
+   - `MUVoiceActivitySetupViewController`
+2. **Diagnostics**
+   - `MUAudioMixerDebugViewController`
+
+Priority 4 (Certificates & trust UI parity)
+1. **Certificate preferences & trust**
+   - `MUCertificatePreferencesViewController`
+   - `MUServerCertificateTrustViewController`
+   - Supporting view cells: `MUCertificateCell`, `MUCertificateCreationProgressView`
+
+Priority 5 (UI polish + supporting views)
+1. **UI components**
+   - `MUAudioBarView`
+   - `MUAudioBarViewCell`
+   - `MUTableViewHeaderLabel`
+   - `MUUserStateAcessoryView`
+   - `MUServerTableViewCell`
+   - `MUServerCell`
+   - `MUServerButton`
+   - `MUPopoverBackgroundView`
+   - `MUBackgroundView`
+2. **Transitions & misc**
+   - `MUHorizontalFlipTransitionDelegate`
+   - `MUImageViewController`
+   - `MUWelcomeScreenPhone`
+   - `MUWelcomeScreenPad`
+   - `MULegalViewController`
+   - `MUAccessTokenViewController`
+
+Priority 6 (Data/utilities & app entry)
+1. **Utilities & data**
+   - `MUDatabase`
+   - `MUDataURL`
+   - `MUImage`
+   - `MUColor`
+   - `MUAudioCaptureManager`
+2. **App delegate & notifications**
+   - `MUApplicationDelegate`
+   - `MUNotificationController`
+   - `MURemoteControlServer`
+3. **Entry point**
+   - `main.m` (optional: move to Swift `@main` only after all controllers are in Swift)
+
+Cross-cutting guidance
+----------------------
+- **Replace deprecated APIs**: Migrate `UIAlertView` and other legacy APIs to `UIAlertController` or modern UIKit equivalents.
+- **Storyboard + Auto Layout parity**: Keep layout fidelity with existing storyboards and add constraints where needed.
+- **ARC & memory safety**: Remove manual retain/release patterns during Swift conversion.
+- **Submodules**: Do **not** edit `MumbleKit` or `Dependencies/fmdb`; keep integrations stable via bridging headers until Objective-C is fully removed.
+- **Bridging header cleanup**: Trim after each controller migration to minimize Objective-C surface area.
