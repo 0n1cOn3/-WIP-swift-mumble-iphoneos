@@ -5,7 +5,7 @@
 #import "MUServerRootViewController.h"
 #import "MUServerViewController.h"
 #import "MUServerCertificateTrustViewController.h"
-#import "MUAccessTokenViewController.h"
+#import "Mumble-Swift.h"
 #import "MUCertificateViewController.h"
 #import "MUNotificationController.h"
 #import "MUConnectionController.h"
