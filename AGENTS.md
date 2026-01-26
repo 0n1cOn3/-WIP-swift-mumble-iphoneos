@@ -19,6 +19,7 @@ Completed tasks
 - Converted most user interfaces from xib files to storyboards, including the former `MainWindow.xib`.
 - Converted the preferences UI to Swift (`MUPreferencesViewController`).
 - Added a centralized **AVAudioEngine** capture pipeline with push-to-talk and VAD metering support.
+- Installed the SwiftUI expert Codex skill (`swiftui-expert`) under `.codex/skills` for this workspace.
 
 Open tasks
 ==========
