@@ -20,11 +20,11 @@ class MUCertificateViewController: UITableViewController {
                 certs.append(first)
             }
             for (index, obj) in chains.enumerated() where index > 0 {
-                if let secCert = obj as? SecCertificate {
-                    let certData = SecCertificateCopyData(secCert) as Data
-                    if let cert = MKCertificate(certificate: certData, privateKey: nil) {
-                        certs.append(cert)
-                    }
+                // SecCertificate is a CoreFoundation type bridged as AnyObject
+                let secCert = obj as! SecCertificate
+                let certData = SecCertificateCopyData(secCert) as Data
+                if let cert = MKCertificate(certificate: certData, privateKey: nil) {
+                    certs.append(cert)
                 }
             }
             certificates = certs

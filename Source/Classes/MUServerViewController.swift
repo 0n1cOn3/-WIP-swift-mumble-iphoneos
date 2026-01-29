@@ -139,10 +139,8 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
     // MARK: - Index Lookup
 
     private func index(for user: MKUser) -> Int {
-        if let session = user.session() {
-            return userIndexMap[Int(session)] ?? NSNotFound
-        }
-        return NSNotFound
+        let session = user.session()
+        return userIndexMap[Int(session)] ?? NSNotFound
     }
 
     private func index(for channel: MKChannel) -> Int {
@@ -188,9 +186,8 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
         guard let channel = serverModel.connectedUser()?.channel() else { return }
         for user in channel.users() {
             guard let mkUser = user as? MKUser else { continue }
-            if let session = mkUser.session() {
-                userIndexMap[Int(session)] = modelItems.count
-            }
+            let session = mkUser.session()
+            userIndexMap[Int(session)] = modelItems.count
             modelItems.append(MUChannelNavigationItem.navigationItem(with: mkUser, indentLevel: 0))
         }
     }
@@ -201,9 +198,8 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
 
         for user in channel.users() {
             guard let mkUser = user as? MKUser else { continue }
-            if let session = mkUser.session() {
-                userIndexMap[Int(session)] = modelItems.count
-            }
+            let session = mkUser.session()
+            userIndexMap[Int(session)] = modelItems.count
             modelItems.append(MUChannelNavigationItem.navigationItem(with: mkUser, indentLevel: indentLevel + 1))
         }
 
