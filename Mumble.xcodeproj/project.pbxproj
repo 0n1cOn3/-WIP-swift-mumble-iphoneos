@@ -111,7 +111,6 @@
 		287172AB151A041A00153D74 /* certificatecell-intermediate.png in Resources */ = {isa = PBXBuildFile; fileRef = 287172A9151A041A00153D74 /* certificatecell-intermediate.png */; };
 		287172AC151A041A00153D74 /* certificatecell-intermediate@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 287172AA151A041A00153D74 /* certificatecell-intermediate@2x.png */; };
 		287639F911D29D99009DB8B6 /* MUCertificateCreationProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 287639F811D29D99009DB8B6 /* MUCertificateCreationProgressView.m */; };
-		287639FF11D2A242009DB8B6 /* MUCertificateCreationProgressView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 287639FE11D2A242009DB8B6 /* MUCertificateCreationProgressView.storyboard */; };
 		2879523714BF519A00567430 /* MUMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2879523614BF519A00567430 /* MUMessagesViewController.m */; };
 		2879525E14C0AFAC00567430 /* BlackToolbarPattern.png in Resources */ = {isa = PBXBuildFile; fileRef = 2879525C14C0AFAC00567430 /* BlackToolbarPattern.png */; };
 		2879525F14C0AFAC00567430 /* BlackToolbarPattern@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2879525D14C0AFAC00567430 /* BlackToolbarPattern@2x.png */; };
@@ -457,7 +456,6 @@
 		287172AA151A041A00153D74 /* certificatecell-intermediate@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "certificatecell-intermediate@2x.png"; path = "Resources/certificatecell-intermediate@2x.png"; sourceTree = "<group>"; };
 		287639F711D29D99009DB8B6 /* MUCertificateCreationProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUCertificateCreationProgressView.h; sourceTree = "<group>"; };
 		287639F811D29D99009DB8B6 /* MUCertificateCreationProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUCertificateCreationProgressView.m; sourceTree = "<group>"; };
-		287639FE11D2A242009DB8B6 /* MUCertificateCreationProgressView.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MUCertificateCreationProgressView.storyboard; sourceTree = "<group>"; };
 		2879523514BF519A00567430 /* MUMessagesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUMessagesViewController.h; sourceTree = "<group>"; };
 		2879523614BF519A00567430 /* MUMessagesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUMessagesViewController.m; sourceTree = "<group>"; };
 		2879525C14C0AFAC00567430 /* BlackToolbarPattern.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BlackToolbarPattern.png; path = Resources/BlackToolbarPattern.png; sourceTree = "<group>"; };
@@ -888,7 +886,6 @@
 			children = (
 				287639F711D29D99009DB8B6 /* MUCertificateCreationProgressView.h */,
 				287639F811D29D99009DB8B6 /* MUCertificateCreationProgressView.m */,
-						287639FE11D2A242009DB8B6 /* MUCertificateCreationProgressView.storyboard */,
 				2858A5AB123BA08D00A82155 /* MUCertificateCell.h */,
 				2858A5AC123BA08D00A82155 /* MUCertificateCell.m */,
 						2858A57F123B9E5700A82155 /* MUCertificateCell.storyboard */,
@@ -1239,7 +1236,6 @@
 			buildActionMask = 2147483647;
 			files = (
 					28BE999918CFED9A00910551 /* Balloon_2_Right.png in Resources */,
-						287639FF11D2A242009DB8B6 /* MUCertificateCreationProgressView.storyboard in Resources */,
 						2858A580123B9E5700A82155 /* MUCertificateCell.storyboard in Resources */,
 				28DC1C5C13DE596B0037CDC2 /* authenticated.png in Resources */,
 				28DC1C5D13DE596B0037CDC2 /* authenticated@2x.png in Resources */,
