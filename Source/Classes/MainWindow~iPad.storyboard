@@ -1,13 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard" version="3.0" toolsVersion="23504" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
-    <scenes>
-        <!-- Application Scene -->
-        <scene sceneID="AppScene">
-            <objects>
-                <placeholder placeholderIdentifier="IBFilesOwner" id="app" userLabel="File's Owner" customClass="UIApplication"/>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="FirstResponder" customClass="UIResponder"/>
-                <customObject id="delegate" customClass="MUApplicationDelegate" customModule="Mumble" customModuleProvider="target"/>
-            </objects>
-        </scene>
-    </scenes>
+    <scenes/>
 </document>
