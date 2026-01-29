@@ -647,7 +647,7 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
 
     func serverModel(_ model: MKServerModel!, userMoved user: MKUser!, to chan: MKChannel!, from prevChan: MKChannel!, by mover: MKUser!) {
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
+            guard let self = self, let model = model else { return }
             if user == model.connectedUser() {
                 // Are we in 'send to default channel mode'?
                 if self.user == nil && self.channel == nil && self.tree == nil {
@@ -661,7 +661,7 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
 
     func serverModel(_ model: MKServerModel!, userLeft user: MKUser!) {
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
+            guard let self = self, let model = model else { return }
             if user == self.user {
                 self.user = nil
             }
@@ -674,13 +674,13 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
 
     func serverModel(_ model: MKServerModel!, channelRenamed channel: MKChannel!) {
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
+            guard let self = self, let channel = channel else { return }
             if channel == self.tree {
                 self.setReceiverName(channel.channelName(), imageName: "channelmsg")
             } else if channel == self.channel {
                 self.setReceiverName(channel.channelName(), imageName: "channelmsg")
-            } else if self.channel == nil && self.tree == nil && self.user == nil && model.connectedUser()?.channel() == channel {
-                if let channelName = model.connectedUser()?.channel()?.channelName() {
+            } else if self.channel == nil && self.tree == nil && self.user == nil && model?.connectedUser()?.channel() == channel {
+                if let channelName = model?.connectedUser()?.channel()?.channelName() {
                     self.setReceiverName(channelName, imageName: "channelmsg")
                 }
             }
@@ -689,15 +689,15 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
 
     func serverModel(_ model: MKServerModel!, channelRemoved channel: MKChannel!) {
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
+            guard let self = self, let channel = channel else { return }
             if channel == self.tree {
                 self.tree = nil
-                if let channelName = model.connectedUser()?.channel()?.channelName() {
+                if let channelName = model?.connectedUser()?.channel()?.channelName() {
                     self.setReceiverName(channelName, imageName: "channelmsg")
                 }
             } else if channel == self.channel {
                 self.channel = nil
-                if let channelName = model.connectedUser()?.channel()?.channelName() {
+                if let channelName = model?.connectedUser()?.channel()?.channelName() {
                     self.setReceiverName(channelName, imageName: "channelmsg")
                 }
             }
