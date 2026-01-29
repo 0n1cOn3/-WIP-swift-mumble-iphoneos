@@ -73,7 +73,8 @@ final class MUAudioSessionManager: NSObject {
     private let frameDurationMs: Double = 10.0
     private let sampleRateThreshold: Int = 24000
 
-    private init() {
+    private override init() {
+        super.init()
     }
 
     /// Configures the AVAudioSession for Mumble voice communication.
