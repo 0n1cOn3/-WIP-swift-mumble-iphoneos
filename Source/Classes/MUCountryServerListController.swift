@@ -122,7 +122,7 @@ class MUCountryServerListController: UIViewController, UISearchBarDelegate, UITa
             hostName: serverItem["ip"] as? String,
             port: serverItem["port"] as? String
         )
-        cell?.selectionStyle = .gray
+        cell?.selectionStyle = .default
         return cell!
     }
 

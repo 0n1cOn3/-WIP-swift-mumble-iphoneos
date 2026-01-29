@@ -256,7 +256,7 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
                 cell?.textLabel?.font = UIFont.boldSystemFont(ofSize: 18)
             }
             cell?.accessoryView = nil
-            cell?.selectionStyle = .gray
+            cell?.selectionStyle = .default
 
         } else if let user = object as? MKUser {
             cell?.textLabel?.text = user.userName()

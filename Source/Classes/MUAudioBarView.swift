@@ -124,7 +124,7 @@ class MUAudioBarView: UIView {
     // MARK: - Timer
 
     @objc private func tickTock() {
-        let captureManager = MUAudioCaptureManager.sharedManager()
+        let captureManager = MUAudioCaptureManager.shared
         var kind = UserDefaults.standard.string(forKey: "AudioVADKind") ?? "amplitude"
 
         if !UserDefaults.standard.bool(forKey: "AudioPreprocessor") {

@@ -79,7 +79,7 @@ class MUMessageAttachmentViewController: UITableViewController {
 
         guard let cell = cell else { return UITableViewCell() }
 
-        cell.selectionStyle = .gray
+        cell.selectionStyle = .default
 
         let hasImages = !images.isEmpty
         if hasImages && indexPath.section == 0 {

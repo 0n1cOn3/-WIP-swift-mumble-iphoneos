@@ -64,7 +64,7 @@ class MUPreferencesViewController: UITableViewController {
         let identifier = "PreferencesCell"
         let cell = tableView.dequeueReusableCell(withIdentifier: identifier) ??
             UITableViewCell(style: .default, reuseIdentifier: identifier)
-        cell.selectionStyle = .gray
+        cell.selectionStyle = .default
         cell.accessoryType = .none
 
         if indexPath.section == 0 {
@@ -93,7 +93,7 @@ class MUPreferencesViewController: UITableViewController {
                 }
                 cell.detailTextLabel?.textColor = MUColor.selectedTextColor()
                 cell.accessoryType = .disclosureIndicator
-                cell.selectionStyle = .gray
+                cell.selectionStyle = .default
                 return cell
             default:
                 cell.textLabel?.text = NSLocalizedString("Advanced", comment: "Advanced settings option")
@@ -118,7 +118,7 @@ class MUPreferencesViewController: UITableViewController {
                 cell.detailTextLabel?.text = cert != nil ? cert?.subjectName() : NSLocalizedString("None", comment: "None (No certificate chosen)")
                 cell.detailTextLabel?.textColor = MUColor.selectedTextColor()
                 cell.accessoryType = .disclosureIndicator
-                cell.selectionStyle = .gray
+                cell.selectionStyle = .default
                 return cell
             #if ENABLE_REMOTE_CONTROL
             case 2:
@@ -129,7 +129,7 @@ class MUPreferencesViewController: UITableViewController {
                 cell.detailTextLabel?.text = isOn ? NSLocalizedString("On", comment: "Remote control is enabled") : NSLocalizedString("Off", comment: "Remote control is disabled")
                 cell.detailTextLabel?.textColor = MUColor.selectedTextColor()
                 cell.accessoryType = .disclosureIndicator
-                cell.selectionStyle = .gray
+                cell.selectionStyle = .default
                 return cell
             #endif
             default:

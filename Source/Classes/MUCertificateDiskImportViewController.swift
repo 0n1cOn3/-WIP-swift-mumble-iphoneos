@@ -58,7 +58,7 @@ class MUCertificateDiskImportViewController: UITableViewController, UITextFieldD
         cell.imageView?.image = UIImage(named: "certificatecell")
         cell.textLabel?.text = diskCertificates[indexPath.row]
         cell.accessoryType = .none
-        cell.selectionStyle = .gray
+        cell.selectionStyle = .default
         return cell
     }
 

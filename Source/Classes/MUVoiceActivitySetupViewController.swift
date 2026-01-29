@@ -91,7 +91,7 @@ class MUVoiceActivitySetupViewController: UITableViewController {
         cell.accessoryView = nil
         cell.accessoryType = .none
         cell.textLabel?.textColor = .black
-        cell.selectionStyle = .gray
+        cell.selectionStyle = .default
 
         let adjustedSection = adjustedSection(for: indexPath.section)
 

@@ -171,7 +171,7 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
             MUAudioCaptureManager.shared.start()
         }
 
-        if !connController.isConnected && !AVAudioSession.sharedInstance().isOtherAudioPlaying {
+        if !connController.isConnected() && !AVAudioSession.sharedInstance().isOtherAudioPlaying {
             NSLog("MumbleApplicationDelegate: Reactivating audio session after foregrounding.")
             activateAudioSession()
             MUAudioSessionManager.shared.refreshPlaybackChain()
@@ -413,7 +413,7 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
     @objc private func handleApplicationActivation(_ notification: Notification) {
         activateAudioSessionIfNeeded()
 
-        if let audio = MKAudio.shared(), !audio.isRunning {
+        if let audio = MKAudio.shared(), !audio.isRunning() {
             audio.start()
         }
     }
@@ -433,7 +433,7 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
 
         switch type {
         case .began:
-            audioWasRunningBeforeInterruption = MKAudio.shared()?.isRunning ?? false
+            audioWasRunningBeforeInterruption = MKAudio.shared()?.isRunning() ?? false
             if audioWasRunningBeforeInterruption {
                 MKAudio.shared()?.stop()
             }

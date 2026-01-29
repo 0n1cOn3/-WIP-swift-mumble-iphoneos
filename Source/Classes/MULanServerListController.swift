@@ -122,7 +122,7 @@ class MULanServerListController: UITableViewController, NetServiceBrowserDelegat
             hostName: netService.hostName,
             port: "\(netService.port)"
         )
-        cell?.selectionStyle = .gray
+        cell?.selectionStyle = .default
         return cell!
     }
 

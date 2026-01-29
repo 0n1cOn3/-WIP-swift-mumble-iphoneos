@@ -78,7 +78,7 @@ final class MUAudioTransmissionPreferencesViewController: UITableViewController 
         cell.accessoryView = nil
         cell.accessoryType = .none
         cell.textLabel?.textColor = .black
-        cell.selectionStyle = .gray
+        cell.selectionStyle = .default
 
         switch (indexPath.section, indexPath.row) {
         case (0, 0):
@@ -104,7 +104,7 @@ final class MUAudioTransmissionPreferencesViewController: UITableViewController 
                 cell.accessoryView = nil
                 cell.accessoryType = .disclosureIndicator
                 cell.textLabel?.text = NSLocalizedString("Voice Activity Configuration", comment: "Voice activity configuration")
-                cell.selectionStyle = .gray
+                cell.selectionStyle = .default
             }
         default:
             break

@@ -56,7 +56,7 @@ class MUAudioQualityPreferencesViewController: UITableViewController {
         let defaults = UserDefaults.standard
         let qualityKind = defaults.string(forKey: "AudioQualityKind") ?? ""
 
-        cell.selectionStyle = .gray
+        cell.selectionStyle = .default
         cell.accessoryView = nil
         cell.textLabel?.textColor = .black
 

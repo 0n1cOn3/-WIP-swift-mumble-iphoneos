@@ -119,7 +119,7 @@ class MUWelcomeScreenPad: UIViewController, UIPopoverControllerDelegate, UITable
 
         guard let cell = cell else { return UITableViewCell() }
 
-        cell.selectionStyle = .gray
+        cell.selectionStyle = .default
 
         switch indexPath.row {
         case 0:

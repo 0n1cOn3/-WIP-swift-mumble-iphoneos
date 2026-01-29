@@ -185,7 +185,7 @@ class MUCertificateViewController: UITableViewController {
                 cell.textLabel?.font = UIFont(name: "Courier", size: 16)
                 cell.textLabel?.numberOfLines = 0
                 cell.textLabel?.lineBreakMode = .byWordWrapping
-                cell.selectionStyle = .gray
+                cell.selectionStyle = .default
             }
         } else if section == 3 {
             let cert = certificates[curIdx]
@@ -195,7 +195,7 @@ class MUCertificateViewController: UITableViewController {
                 cell.textLabel?.font = UIFont(name: "Courier", size: 16)
                 cell.textLabel?.numberOfLines = 0
                 cell.textLabel?.lineBreakMode = .byWordWrapping
-                cell.selectionStyle = .gray
+                cell.selectionStyle = .default
             }
         } else {
             let item: [String]
@@ -205,7 +205,7 @@ class MUCertificateViewController: UITableViewController {
             cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 17)
             cell.detailTextLabel?.text = item[1]
             cell.detailTextLabel?.textColor = MUColor.selectedTextColor()
-            cell.selectionStyle = .gray
+            cell.selectionStyle = .default
         }
         return cell
     }

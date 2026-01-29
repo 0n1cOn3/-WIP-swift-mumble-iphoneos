@@ -87,7 +87,7 @@ class MUFavouriteServerListController: UITableViewController {
             cell = MUServerCell()
         }
         cell?.populate(from: favServ)
-        cell?.selectionStyle = .gray
+        cell?.selectionStyle = .default
         return cell!
     }
 

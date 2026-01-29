@@ -123,7 +123,7 @@ class MUPublicServerListController: UITableViewController {
             }
         }
 
-        cell?.selectionStyle = .gray
+        cell?.selectionStyle = .default
         return cell!
     }
 

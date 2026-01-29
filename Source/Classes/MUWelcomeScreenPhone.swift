@@ -85,7 +85,7 @@ class MUWelcomeScreenPhone: UITableViewController {
 
         guard let cell = cell else { return UITableViewCell() }
 
-        cell.selectionStyle = .gray
+        cell.selectionStyle = .default
 
         switch indexPath.row {
         case 0:

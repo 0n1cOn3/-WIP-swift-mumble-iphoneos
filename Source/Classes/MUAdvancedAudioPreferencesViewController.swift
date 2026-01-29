@@ -85,7 +85,7 @@ class MUAdvancedAudioPreferencesViewController: UITableViewController {
             cell.textLabel?.text = NSLocalizedString("Quality", comment: "")
             cell.detailTextLabel?.textColor = MUColor.selectedText()
             cell.accessoryType = .disclosureIndicator
-            cell.selectionStyle = .gray
+            cell.selectionStyle = .default
 
             let qualityKind = defaults.string(forKey: "AudioQualityKind") ?? ""
             switch qualityKind {
@@ -145,7 +145,7 @@ class MUAdvancedAudioPreferencesViewController: UITableViewController {
                 cell.textLabel?.text = NSLocalizedString("Sidetone", comment: "")
                 cell.detailTextLabel?.textColor = MUColor.selectedText()
                 cell.accessoryType = .disclosureIndicator
-                cell.selectionStyle = .gray
+                cell.selectionStyle = .default
 
                 if defaults.bool(forKey: "AudioSidetone") {
                     cell.detailTextLabel?.text = NSLocalizedString("On", comment: "")

@@ -181,7 +181,7 @@ class MUMessageRecipientViewController: UITableViewController, MKServerModelDele
         guard let cell = cell else { return UITableViewCell() }
 
         cell.textLabel?.font = UIFont.systemFont(ofSize: 18.0)
-        cell.selectionStyle = .gray
+        cell.selectionStyle = .default
 
         if indexPath.row == 0 {
             // "Current Channel" row
