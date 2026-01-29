@@ -7,13 +7,13 @@ on:
     branches: [ master, main ]
 
 jobs:
-  test:
-    name: Swift ${{ matrix.swift }} on ${{ matrix.os }}
-    runs-on: ${{ matrix.os }}
+  # Linux tests with swift-actions/setup-swift
+  test-linux:
+    name: Swift ${{ matrix.swift }} on Ubuntu
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
         swift: ['5.9', '5.10']
 
     steps:
@@ -29,9 +29,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .build
-          key: ${{ runner.os }}-swift-${{ matrix.swift }}-spm-${{ hashFiles('Package.swift') }}
+          key: Linux-swift-${{ matrix.swift }}-spm-${{ hashFiles('Package.swift') }}
           restore-keys: |
-            ${{ runner.os }}-swift-${{ matrix.swift }}-spm-
+            Linux-swift-${{ matrix.swift }}-spm-
 
       - name: Build
         run: swift build -v
@@ -39,7 +39,36 @@ jobs:
       - name: Run tests
         run: swift test -v
 
-  # iOS Build (nur auf macOS mit Xcode)
+  # macOS tests using Xcode's native Swift (avoids SDK incompatibility)
+  test-macos:
+    name: Swift (Xcode) on macOS
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Show Swift version
+        run: swift --version
+
+      - name: Cache SPM dependencies
+        uses: actions/cache@v4
+        with:
+          path: .build
+          key: macOS-xcode-spm-${{ hashFiles('Package.swift') }}
+          restore-keys: |
+            macOS-xcode-spm-
+
+      - name: Build
+        run: swift build -v
+
+      - name: Run tests
+        run: swift test -v
+
+  # iOS Build with Xcode
   build-ios:
     name: iOS Build
     runs-on: macos-latest
