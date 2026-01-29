@@ -263,21 +263,20 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
         settings.enableEchoCancellation = ObjCBool(preprocessorEnabled && defaults.bool(forKey: "AudioEchoCancel"))
         settings.enableSideTone = ObjCBool(defaults.bool(forKey: "AudioSidetone"))
         settings.sidetoneVolume = defaults.float(forKey: "AudioSidetoneVolume")
-        settings.preferReceiverOverSpeaker = !defaults.bool(forKey: "AudioSpeakerPhoneMode")
-        settings.opusForceCELTMode = defaults.bool(forKey: "AudioOpusCodecForceCELTMode")
-        settings.audioMixerDebug = defaults.bool(forKey: "AudioMixerDebug")
+        settings.preferReceiverOverSpeaker = ObjCBool(!defaults.bool(forKey: "AudioSpeakerPhoneMode"))
+        settings.opusForceCELTMode = ObjCBool(defaults.bool(forKey: "AudioOpusCodecForceCELTMode"))
+        settings.audioMixerDebug = ObjCBool(defaults.bool(forKey: "AudioMixerDebug"))
 
         MUAudioCaptureManager.shared.configureFromDefaults()
 
-        let audio = MKAudio.shared()
-        MUAudioSessionManager.shared.bind(toMumbleKitAudio: audio, defaults: defaults)
-        audio?.update(&settings)
+        if let audio = MKAudio.shared() {
+            MUAudioSessionManager.shared.bind(to: audio, defaults: defaults)
+            audio.update(&settings)
+        }
         MUAudioSessionManager.shared.refreshPlaybackChain()
 
-        // Only activate if not already active
-        if !AVAudioSession.sharedInstance().isActive {
-            activateAudioSession()
-        }
+        // Activate audio session
+        activateAudioSession()
     }
 
     @objc func reloadPreferences() {
