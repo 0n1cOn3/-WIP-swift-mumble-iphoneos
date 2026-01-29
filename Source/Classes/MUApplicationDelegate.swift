@@ -163,12 +163,15 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        let audio = MKAudio.shared()
         let connController = MUConnectionController.shared()
 
-        if audio?.isRunning() == false {
-            NSLog("MumbleApplicationDelegate: MKAudio not running. Starting it.")
-            audio?.start()
+        // Start audio on background queue to avoid blocking main thread.
+        // AudioOutputUnitStart() can block for several seconds waiting on audio daemon.
+        audioSessionQueue.async {
+            if let audio = MKAudio.shared(), !audio.isRunning() {
+                NSLog("MumbleApplicationDelegate: MKAudio not running. Starting it.")
+                audio.start()
+            }
             MUAudioCaptureManager.shared.start()
         }
 
@@ -427,8 +430,11 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
     @objc private func handleApplicationActivation(_ notification: Notification) {
         activateAudioSessionIfNeeded()
 
-        if let audio = MKAudio.shared(), !audio.isRunning() {
-            audio.start()
+        // Start audio on background queue to avoid blocking main thread
+        audioSessionQueue.async {
+            if let audio = MKAudio.shared(), !audio.isRunning() {
+                audio.start()
+            }
         }
     }
 
@@ -458,8 +464,12 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
                 let options = AVAudioSession.InterruptionOptions(rawValue: optionsValue)
                 if options.contains(.shouldResume) {
                     activateAudioSessionIfNeeded()
-                    if audioWasRunningBeforeInterruption {
-                        MKAudio.shared()?.start()
+                    // Capture value before async to avoid race condition
+                    let shouldRestart = audioWasRunningBeforeInterruption
+                    audioSessionQueue.async {
+                        if shouldRestart {
+                            MKAudio.shared()?.start()
+                        }
                     }
                 }
             }

@@ -51,6 +51,7 @@ final class MUAudioSessionManager: NSObject {
     private weak var mumbleKitAudio: MKAudio?
     private var prefersSpeaker: Bool = true
     private var lastCategoryOptions: AVAudioSession.CategoryOptions = []
+    private let audioQueue = DispatchQueue(label: "info.mumble.AudioSessionManager", qos: .userInitiated)
     
     /// The current audio transmission mode
     private(set) var transmitMode: MUAudioTransmitMode = .voiceActivity
@@ -360,16 +361,19 @@ final class MUAudioSessionManager: NSObject {
     }
 
     private func restartAudioSubsystemIfNeeded() {
-        if let audio = mumbleKitAudio {
-            if audio.isRunning() {
-                audio.restart()
-            } else {
-                audio.start()
+        // Dispatch audio operations to background queue to avoid blocking main thread.
+        // MKAudio.start()/restart() calls AudioOutputUnitStart() which can block for seconds.
+        audioQueue.async { [weak self] in
+            if let audio = self?.mumbleKitAudio {
+                if audio.isRunning() {
+                    audio.restart()
+                } else {
+                    audio.start()
+                }
             }
-        }
 
-        let captureManager = MUAudioCaptureManager.shared
-        captureManager.start()
+            MUAudioCaptureManager.shared.start()
+        }
     }
 
     private func applyCategoryOptions(_ options: AVAudioSession.CategoryOptions) {
