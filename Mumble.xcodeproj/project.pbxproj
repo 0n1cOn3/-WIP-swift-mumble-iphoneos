@@ -1361,6 +1361,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				PROVISIONING_PROFILE = "";
 						TARGETED_DEVICE_FAMILY = 1;
+				SWIFT_VERSION = 5.0;
 						SWIFT_OBJC_BRIDGING_HEADER = Source/Mumble-Bridging-Header.h;
 		       };
 		       name = Debug;
@@ -1372,6 +1373,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				PROVISIONING_PROFILE = "";
 						TARGETED_DEVICE_FAMILY = 1;
+				SWIFT_VERSION = 5.0;
 						SWIFT_OBJC_BRIDGING_HEADER = Source/Mumble-Bridging-Header.h;
 		       };
 		       name = Release;
@@ -1520,6 +1522,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				PROVISIONING_PROFILE = "";
 						TARGETED_DEVICE_FAMILY = 1;
+				SWIFT_VERSION = 5.0;
 						SWIFT_OBJC_BRIDGING_HEADER = Source/Mumble-Bridging-Header.h;
 		       };
 		       name = AppStore;
@@ -1541,6 +1544,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				PROVISIONING_PROFILE = "";
 						TARGETED_DEVICE_FAMILY = 1;
+				SWIFT_VERSION = 5.0;
 						SWIFT_OBJC_BRIDGING_HEADER = Source/Mumble-Bridging-Header.h;
 		       };
 		       name = BetaDist;
