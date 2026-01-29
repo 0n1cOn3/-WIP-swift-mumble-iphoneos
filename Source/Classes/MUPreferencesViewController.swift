@@ -125,7 +125,7 @@ class MUPreferencesViewController: UITableViewController {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "RemoteControlCell") ??
                     UITableViewCell(style: .value1, reuseIdentifier: "RemoteControlCell")
                 cell.textLabel?.text = NSLocalizedString("Remote Control", comment: "Remote control settings option")
-                let isOn = MURemoteControlServer.sharedRemoteControlServer().isRunning()
+                let isOn = MURemoteControlServer.sharedRemoteControlServer().isRunning
                 cell.detailTextLabel?.text = isOn ? NSLocalizedString("On", comment: "Remote control is enabled") : NSLocalizedString("Off", comment: "Remote control is disabled")
                 cell.detailTextLabel?.textColor = MUColor.selectedTextColor()
                 cell.accessoryType = .disclosureIndicator

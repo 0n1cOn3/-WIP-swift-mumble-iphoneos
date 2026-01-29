@@ -22,7 +22,9 @@ class MUCertificateViewController: UITableViewController {
             for (index, obj) in chains.enumerated() where index > 0 {
                 if let secCert = obj as? SecCertificate {
                     let certData = SecCertificateCopyData(secCert) as Data
-                    certs.append(MKCertificate(certificate: certData, privateKey: nil))
+                    if let cert = MKCertificate(certificate: certData, privateKey: nil) {
+                        certs.append(cert)
+                    }
                 }
             }
             certificates = certs
