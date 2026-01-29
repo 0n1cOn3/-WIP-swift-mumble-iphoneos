@@ -194,7 +194,7 @@ class MURemoteControlServer: NSObject {
             if code == 0 {
                 // PTT command
                 DispatchQueue.main.async {
-                    let audio = MKAudio.sharedAudio()
+                    let audio = MKAudio.shared()
                     let captureManager = MUAudioCaptureManager.shared
 
                     if on {
