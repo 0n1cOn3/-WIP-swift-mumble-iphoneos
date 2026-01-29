@@ -96,23 +96,28 @@ final class MUAudioSessionManager: NSObject {
 
         // Dispatch all AVAudioSession calls to background queue to avoid blocking main thread
         audioQueue.async { [weak self] in
-            guard let self = self else { return }
-            do {
-                // Explicitly set all required options from scratch for predictable behavior
-                var options: AVAudioSession.CategoryOptions = [.allowBluetooth]
-                if #available(iOS 12.0, *) {
-                    options.insert(.allowBluetoothA2DP)
-                }
-                if shouldPreferSpeaker {
-                    options.insert(.defaultToSpeaker)
-                }
-                try self.session.setCategory(.playAndRecord, mode: .voiceChat, options: options)
-                if activate {
-                    try self.session.setActive(true, options: [])
-                }
-            } catch {
-                NSLog("MUAudioSessionManager: Failed to configure audio session: %@", error.localizedDescription)
+            self?.configureSessionSync(activate: activate, preferSpeaker: shouldPreferSpeaker)
+        }
+    }
+
+    /// Synchronous version for use within audioQueue context
+    private func configureSessionSync(activate: Bool = true, preferSpeaker: Bool? = nil) {
+        let shouldPreferSpeaker = preferSpeaker ?? self.prefersSpeaker
+        do {
+            // Explicitly set all required options from scratch for predictable behavior
+            var options: AVAudioSession.CategoryOptions = [.allowBluetooth]
+            if #available(iOS 12.0, *) {
+                options.insert(.allowBluetoothA2DP)
             }
+            if shouldPreferSpeaker {
+                options.insert(.defaultToSpeaker)
+            }
+            try session.setCategory(.playAndRecord, mode: .voiceChat, options: options)
+            if activate {
+                try session.setActive(true, options: [])
+            }
+        } catch {
+            NSLog("MUAudioSessionManager: Failed to configure audio session: %@", error.localizedDescription)
         }
     }
 
@@ -142,44 +147,55 @@ final class MUAudioSessionManager: NSObject {
     ///   - defaults: Defaults containing user routing preferences.
     @objc(handleRouteChangeWithReason:defaults:)
     func handleRouteChange(reasonValue: UInt, defaults: UserDefaults = .standard) {
-        let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue) ?? .unknown
+        // Capture defaults values before async dispatch to avoid thread safety issues
+        let speakerPhoneMode = defaults.bool(forKey: "AudioSpeakerPhoneMode")
 
-        // Log route change for debugging
-        let reasonDescription: String
-        switch reason {
-        case .newDeviceAvailable:
-            reasonDescription = "new device available"
-        case .oldDeviceUnavailable:
-            reasonDescription = "old device unavailable"
-        case .categoryChange:
-            reasonDescription = "category change"
-        case .override:
-            reasonDescription = "override"
-        case .wakeFromSleep:
-            reasonDescription = "wake from sleep"
-        case .noSuitableRouteForCategory:
-            reasonDescription = "no suitable route"
-        case .routeConfigurationChange:
-            reasonDescription = "route configuration change"
-        default:
-            reasonDescription = "unknown (\(reasonValue))"
-        }
+        // Dispatch entire route change handling to background queue.
+        // AVAudioSession.currentRoute is a blocking XPC call that can take 800ms+
+        audioQueue.async { [weak self] in
+            guard let self = self else { return }
 
-        // Log current route info
-        let currentRoute = session.currentRoute
-        let outputPorts = currentRoute.outputs.map { $0.portName }.joined(separator: ", ")
-        let inputPorts = currentRoute.inputs.map { $0.portName }.joined(separator: ", ")
-        NSLog("MUAudioSessionManager: Route change - reason: %@, outputs: [%@], inputs: [%@]",
-              reasonDescription, outputPorts, inputPorts)
+            let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue) ?? .unknown
 
-        applyPlaybackPreferences(defaults: defaults)
-        configureSession()
+            // Log route change for debugging
+            let reasonDescription: String
+            switch reason {
+            case .newDeviceAvailable:
+                reasonDescription = "new device available"
+            case .oldDeviceUnavailable:
+                reasonDescription = "old device unavailable"
+            case .categoryChange:
+                reasonDescription = "category change"
+            case .override:
+                reasonDescription = "override"
+            case .wakeFromSleep:
+                reasonDescription = "wake from sleep"
+            case .noSuitableRouteForCategory:
+                reasonDescription = "no suitable route"
+            case .routeConfigurationChange:
+                reasonDescription = "route configuration change"
+            default:
+                reasonDescription = "unknown (\(reasonValue))"
+            }
 
-        switch reason {
-        case .newDeviceAvailable, .oldDeviceUnavailable, .categoryChange, .override, .wakeFromSleep:
-            restartAudioSubsystemIfNeeded()
-        default:
-            break
+            // Log current route info (this is the blocking call)
+            let currentRoute = self.session.currentRoute
+            let outputPorts = currentRoute.outputs.map { $0.portName }.joined(separator: ", ")
+            let inputPorts = currentRoute.inputs.map { $0.portName }.joined(separator: ", ")
+            NSLog("MUAudioSessionManager: Route change - reason: %@, outputs: [%@], inputs: [%@]",
+                  reasonDescription, outputPorts, inputPorts)
+
+            // Apply preferences inline since we're already on the audio queue
+            self.prefersSpeaker = speakerPhoneMode
+            self.applyPlaybackRouteSync(preferSpeaker: speakerPhoneMode)
+            self.configureSessionSync()
+
+            switch reason {
+            case .newDeviceAvailable, .oldDeviceUnavailable, .categoryChange, .override, .wakeFromSleep:
+                self.restartAudioSubsystemSync()
+            default:
+                break
+            }
         }
     }
 
@@ -394,38 +410,42 @@ final class MUAudioSessionManager: NSObject {
 
     private func applyPlaybackRoute(preferSpeaker: Bool) {
         audioQueue.async { [weak self] in
-            guard let self = self else { return }
-            do {
-                // Check if external audio device is connected (Bluetooth, USB-C, Lightning, etc.)
-                let currentRoute = self.session.currentRoute
-                let hasExternalOutput = currentRoute.outputs.contains { output in
-                    let portType = output.portType
-                    return portType == .bluetoothA2DP ||
-                           portType == .bluetoothHFP ||
-                           portType == .bluetoothLE ||
-                           portType == .headphones ||
-                           portType == .usbAudio ||
-                           portType == .carAudio ||
-                           portType == .airPlay
-                }
+            self?.applyPlaybackRouteSync(preferSpeaker: preferSpeaker)
+        }
+    }
 
-                if hasExternalOutput {
-                    // External device connected - don't override, let system handle routing
-                    // Clear any previous speaker override
-                    try self.session.overrideOutputAudioPort(.none)
-                    NSLog("MUAudioSessionManager: External audio device detected, using system routing")
-                } else if preferSpeaker {
-                    // No external device, user prefers speaker
-                    try self.session.overrideOutputAudioPort(.speaker)
-                    NSLog("MUAudioSessionManager: Routing to speaker")
-                } else {
-                    // No external device, user prefers receiver (earpiece)
-                    try self.session.overrideOutputAudioPort(.none)
-                    NSLog("MUAudioSessionManager: Routing to receiver")
-                }
-            } catch {
-                NSLog("MUAudioSessionManager: Failed to update playback route: %@", error.localizedDescription)
+    /// Synchronous version for use within audioQueue context
+    private func applyPlaybackRouteSync(preferSpeaker: Bool) {
+        do {
+            // Check if external audio device is connected (Bluetooth, USB-C, Lightning, etc.)
+            let currentRoute = session.currentRoute
+            let hasExternalOutput = currentRoute.outputs.contains { output in
+                let portType = output.portType
+                return portType == .bluetoothA2DP ||
+                       portType == .bluetoothHFP ||
+                       portType == .bluetoothLE ||
+                       portType == .headphones ||
+                       portType == .usbAudio ||
+                       portType == .carAudio ||
+                       portType == .airPlay
             }
+
+            if hasExternalOutput {
+                // External device connected - don't override, let system handle routing
+                // Clear any previous speaker override
+                try session.overrideOutputAudioPort(.none)
+                NSLog("MUAudioSessionManager: External audio device detected, using system routing")
+            } else if preferSpeaker {
+                // No external device, user prefers speaker
+                try session.overrideOutputAudioPort(.speaker)
+                NSLog("MUAudioSessionManager: Routing to speaker")
+            } else {
+                // No external device, user prefers receiver (earpiece)
+                try session.overrideOutputAudioPort(.none)
+                NSLog("MUAudioSessionManager: Routing to receiver")
+            }
+        } catch {
+            NSLog("MUAudioSessionManager: Failed to update playback route: %@", error.localizedDescription)
         }
     }
 
@@ -433,16 +453,20 @@ final class MUAudioSessionManager: NSObject {
         // Dispatch audio operations to background queue to avoid blocking main thread.
         // MKAudio.start()/restart() calls AudioOutputUnitStart() which can block for seconds.
         audioQueue.async { [weak self] in
-            if let audio = self?.mumbleKitAudio {
-                if audio.isRunning() {
-                    audio.restart()
-                } else {
-                    audio.start()
-                }
-            }
-
-            MUAudioCaptureManager.shared.start()
+            self?.restartAudioSubsystemSync()
         }
+    }
+
+    /// Synchronous version for use within audioQueue context
+    private func restartAudioSubsystemSync() {
+        if let audio = mumbleKitAudio {
+            if audio.isRunning() {
+                audio.restart()
+            } else {
+                audio.start()
+            }
+        }
+        MUAudioCaptureManager.shared.start()
     }
 
     private func applyCategoryOptions(_ options: AVAudioSession.CategoryOptions) {
