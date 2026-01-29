@@ -19,8 +19,8 @@
 #import "../MumbleKit/src/MumbleKit/MKChannelGroup.h"
 
 // FMDB headers
-#import "../Dependencies/fmdb/FMDatabase.h"
-#import "../Dependencies/fmdb/FMResultSet.h"
+#import "../Dependencies/fmdb/src/fmdb/FMDatabase.h"
+#import "../Dependencies/fmdb/src/fmdb/FMResultSet.h"
 
 // Expose Objective-C headers to Swift
 #import "MKNumberBadgeView.h"
