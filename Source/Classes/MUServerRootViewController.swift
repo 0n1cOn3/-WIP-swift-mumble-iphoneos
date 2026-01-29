@@ -35,7 +35,7 @@ class MUServerRootViewController: UINavigationController, MKConnectionDelegate, 
         self.connection = connection
         self.model = model
         super.init(nibName: nil, bundle: nil)
-        self.model.add(self)
+        self.model.addDelegate(self)
 
         unreadMessages = 0
 
@@ -55,12 +55,12 @@ class MUServerRootViewController: UINavigationController, MKConnectionDelegate, 
     }
 
     deinit {
-        model.remove(self)
-        connection.delegate = nil
+        model.removeDelegate(self)
+        connection.setDelegate(nil)
     }
 
     @objc func takeOwnershipOfConnectionDelegate() {
-        connection.delegate = self
+        connection.setDelegate(self)
     }
 
     // MARK: - View Lifecycle
@@ -141,8 +141,8 @@ class MUServerRootViewController: UINavigationController, MKConnectionDelegate, 
 
         segmentedControl.perform(#selector(UIView.bringSubviewToFront(_:)), with: numberBadgeView, afterDelay: 0.0)
 
-        MUAudioCaptureManager.shared().endPushToTalk()
-        MKAudio.sharedAudio()?.setForceTransmit(false)
+        MUAudioCaptureManager.shared.endPushToTalk()
+        MKAudio.shared()?.setForceTransmit(false)
     }
 
     // MARK: - MKConnectionDelegate

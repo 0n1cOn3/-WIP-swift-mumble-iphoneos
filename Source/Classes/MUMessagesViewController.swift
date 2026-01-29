@@ -244,8 +244,8 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
         tableView?.reloadData()
     }
 
-    override func viewIsAppearing(_ animated: Bool) {
-        super.viewIsAppearing(animated)
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
 
         let textBarHeight: CGFloat = 44
 
@@ -324,7 +324,11 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
 
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if UIMenuController.shared.isMenuVisible {
-            UIMenuController.shared.hideMenu()
+            if #available(iOS 13.0, *) {
+                UIMenuController.shared.hideMenu()
+            } else {
+                UIMenuController.shared.setMenuVisible(false, animated: true)
+            }
         }
     }
 
@@ -388,10 +392,10 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
             }
         }
 
-        return MUMessageBubbleTableViewCell.height(
-            forCellWithHeading: txtMsg.heading(),
+        return MUMessageBubbleTableViewCell.heightForCell(
+            withHeading: txtMsg.heading(),
             message: txtMsg.message(),
-            images: txtMsg.embeddedImages(),
+            images: txtMsg.embeddedImages() as? [UIImage],
             footer: footer,
             date: txtMsg.date()
         )
@@ -576,7 +580,7 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
                 links: links
             )
             navigationController?.pushViewController(attachmentViewController, animated: true)
-        } else if let images = txtMsg.embeddedImages() {
+        } else if let images = txtMsg.embeddedImages() as? [UIImage], !images.isEmpty {
             let imgViewController = MUImageViewController(images: images)
             navigationController?.pushViewController(imgViewController, animated: true)
         }

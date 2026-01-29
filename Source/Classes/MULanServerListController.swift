@@ -195,7 +195,7 @@ class MULanServerListController: UITableViewController, NetServiceBrowserDelegat
             guard let self = self else { return }
             let username = alertCtrl.textFields?.first?.text
             let connCtrlr = MUConnectionController.shared()
-            connCtrlr?.connet(
+            connCtrlr.connet(
                 toHostname: netService.hostName,
                 port: UInt(netService.port),
                 withUsername: username,
@@ -216,11 +216,11 @@ class MULanServerListController: UITableViewController, NetServiceBrowserDelegat
         favServ.hostName = netService.hostName
         favServ.port = UInt(netService.port)
         if let hostName = netService.hostName {
-            favServ.userName = MUDatabase.username(forServerWithHostname: hostName, port: UInt(netService.port))
+            favServ.userName = MUDatabase.usernameForServer(withHostname: hostName, port: Int(netService.port))
         }
 
         let modalNav = UINavigationController()
-        let editView = MUFavouriteServerEditViewController(inEditMode: false, withContentOf: favServ)
+        let editView = MUFavouriteServerEditViewController(inEditMode: false, withContentOfFavouriteServer: favServ)
 
         editView.setTarget(self)
         editView.setDoneAction(#selector(doneButtonClicked(_:)))
@@ -231,7 +231,7 @@ class MULanServerListController: UITableViewController, NetServiceBrowserDelegat
 
     @objc private func doneButtonClicked(_ sender: Any) {
         guard let editView = sender as? MUFavouriteServerEditViewController else { return }
-        guard let favServ = editView.copyFavouriteFromContent() else { return }
+        let favServ = editView.copyFavouriteFromContent()
 
         MUDatabase.storeFavourite(favServ)
 

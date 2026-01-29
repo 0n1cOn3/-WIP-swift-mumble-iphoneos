@@ -203,7 +203,7 @@ class MURemoteControlServer: NSObject {
                         captureManager.endPushToTalk()
                     }
 
-                    audio?.forceTransmit = on
+                    audio?.setForceTransmit(on)
                 }
             }
         }

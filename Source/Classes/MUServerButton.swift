@@ -53,7 +53,7 @@ class MUServerButton: UIControl, MKServerPingerDelegate {
         if let hostName = hostName, !hostName.isEmpty {
             self.hostname = hostName
             pinger = MKServerPinger(hostname: hostName, port: port)
-            pinger?.delegate = self
+            pinger?.setDelegate(self)
         } else {
             self.hostname = NSLocalizedString("(No Server)", comment: "")
         }
@@ -75,7 +75,7 @@ class MUServerButton: UIControl, MKServerPingerDelegate {
         pinger = nil
         if let hostname = hostname, !hostname.isEmpty {
             pinger = MKServerPinger(hostname: hostname, port: port)
-            pinger?.delegate = self
+            pinger?.setDelegate(self)
         } else {
             self.hostname = NSLocalizedString("(No Server)", comment: "")
         }

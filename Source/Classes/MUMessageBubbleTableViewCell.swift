@@ -406,7 +406,11 @@ private class MUMessageBubbleView: UIView {
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if isFirstResponder {
-            UIMenuController.shared.hideMenu()
+            if #available(iOS 13.0, *) {
+                UIMenuController.shared.hideMenu()
+            } else {
+                UIMenuController.shared.setMenuVisible(false, animated: true)
+            }
         }
     }
 
@@ -539,7 +543,12 @@ class MUMessageBubbleTableViewCell: UITableViewCell {
         bubbleView.setSelectedState(true)
 
         let menuController = UIMenuController.shared
-        menuController.showMenu(from: bubbleView, rect: bubbleView.selectionRect())
+        if #available(iOS 13.0, *) {
+            menuController.showMenu(from: bubbleView, rect: bubbleView.selectionRect())
+        } else {
+            menuController.setTargetRect(bubbleView.selectionRect(), in: bubbleView)
+            menuController.setMenuVisible(true, animated: true)
+        }
 
         NotificationCenter.default.addObserver(
             self,

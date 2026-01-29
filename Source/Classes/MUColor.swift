@@ -58,4 +58,30 @@ class MUColor: NSObject {
     @objc class func backgroundViewiOS7() -> UIColor {
         return backgroundViewiOS7Color()
     }
+
+    // MARK: - Short Aliases (for callers using short names)
+
+    @objc class func selectedText() -> UIColor {
+        return selectedTextColor()
+    }
+
+    @objc class func goodPing() -> UIColor {
+        return goodPingColor()
+    }
+
+    @objc class func mediumPing() -> UIColor {
+        return mediumPingColor()
+    }
+
+    @objc class func badPing() -> UIColor {
+        return badPingColor()
+    }
+
+    @objc class func userCount() -> UIColor {
+        return userCountColor()
+    }
+
+    @objc class func verifiedCertificateChain() -> UIColor {
+        return verifiedCertificateChainColor()
+    }
 }
