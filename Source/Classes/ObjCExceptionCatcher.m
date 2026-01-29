@@ -6,24 +6,12 @@
 
 @implementation ObjCExceptionCatcher
 
-+ (BOOL)tryBlock:(void(NS_NOESCAPE ^)(void))block error:(NSError * _Nullable __autoreleasing * _Nullable)error {
++ (nullable NSString *)tryBlock:(void(NS_NOESCAPE ^)(void))block {
     @try {
         block();
-        return YES;
+        return nil;
     } @catch (NSException *exception) {
-        if (error) {
-            NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
-            if (exception.reason) {
-                userInfo[NSLocalizedDescriptionKey] = exception.reason;
-            }
-            if (exception.userInfo) {
-                userInfo[NSUnderlyingErrorKey] = exception.userInfo;
-            }
-            *error = [NSError errorWithDomain:@"ObjCExceptionDomain"
-                                         code:1
-                                     userInfo:userInfo];
-        }
-        return NO;
+        return exception.reason ?: exception.name;
     }
 }
 

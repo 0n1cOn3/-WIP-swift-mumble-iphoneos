@@ -11,10 +11,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface ObjCExceptionCatcher : NSObject
 
 /// Executes a block and catches any NSException thrown.
+/// Returns nil on success, or the exception reason string on failure.
 /// @param block The block to execute
-/// @param error On return, contains an NSError if an exception was thrown
-/// @return YES if the block executed successfully, NO if an exception was thrown
-+ (BOOL)tryBlock:(void(NS_NOESCAPE ^)(void))block error:(NSError * _Nullable __autoreleasing * _Nullable)error;
+/// @return nil if successful, or the exception reason if an exception was thrown
++ (nullable NSString *)tryBlock:(void(NS_NOESCAPE ^)(void))block;
 
 @end
 

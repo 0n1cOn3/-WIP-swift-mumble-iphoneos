@@ -218,13 +218,12 @@ class MUAudioCaptureManager: NSObject {
 
         // Accessing inputNode can throw NSException if audio session isn't properly configured
         var input: AVAudioInputNode?
-        var inputError: NSError?
-        let gotInput = ObjCExceptionCatcher.tryBlock({
+        let inputError = ObjCExceptionCatcher.tryBlock {
             input = self.engine.inputNode
-        }, error: &inputError)
+        }
 
-        guard gotInput, let input = input else {
-            NSLog("MUAudioCaptureManager: Failed to get input node: %@", inputError?.localizedDescription ?? "unknown error")
+        guard inputError == nil, let input = input else {
+            NSLog("MUAudioCaptureManager: Failed to get input node: %@", inputError ?? "unknown error")
             return
         }
 
@@ -240,17 +239,16 @@ class MUAudioCaptureManager: NSObject {
 
         // installTap can throw NSException if format is incompatible or tap already exists
         // We need to catch this at the Objective-C level since Swift can't catch NSExceptions
-        var installError: NSError?
-        let success = ObjCExceptionCatcher.tryBlock({
+        let installError = ObjCExceptionCatcher.tryBlock {
             input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
                 self?.processBuffer(buffer)
             }
-        }, error: &installError)
+        }
 
-        if success {
+        if installError == nil {
             tapInstalled = true
         } else {
-            NSLog("MUAudioCaptureManager: Failed to install tap: %@", installError?.localizedDescription ?? "unknown error")
+            NSLog("MUAudioCaptureManager: Failed to install tap: %@", installError ?? "unknown error")
         }
     }
 
