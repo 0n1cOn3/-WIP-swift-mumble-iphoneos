@@ -258,9 +258,10 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
         settings.volume = defaults.float(forKey: "AudioOutputVolume")
         settings.outputDelay = 0
         settings.micBoost = defaults.float(forKey: "AudioMicBoost")
-        settings.enablePreprocessor = defaults.bool(forKey: "AudioPreprocessor")
-        settings.enableEchoCancellation = settings.enablePreprocessor && defaults.bool(forKey: "AudioEchoCancel")
-        settings.enableSideTone = defaults.bool(forKey: "AudioSidetone")
+        let preprocessorEnabled = defaults.bool(forKey: "AudioPreprocessor")
+        settings.enablePreprocessor = ObjCBool(preprocessorEnabled)
+        settings.enableEchoCancellation = ObjCBool(preprocessorEnabled && defaults.bool(forKey: "AudioEchoCancel"))
+        settings.enableSideTone = ObjCBool(defaults.bool(forKey: "AudioSidetone"))
         settings.sidetoneVolume = defaults.float(forKey: "AudioSidetoneVolume")
         settings.preferReceiverOverSpeaker = !defaults.bool(forKey: "AudioSpeakerPhoneMode")
         settings.opusForceCELTMode = defaults.bool(forKey: "AudioOpusCodecForceCELTMode")
@@ -460,7 +461,7 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
 
         switch reason {
         case .newDeviceAvailable, .oldDeviceUnavailable, .categoryChange, .override, .wakeFromSleep:
-            MUAudioSessionManager.shared.handleRouteChange(withReason: reason, defaults: UserDefaults.standard)
+            MUAudioSessionManager.shared.handleRouteChange(reasonValue: reasonValue, defaults: UserDefaults.standard)
         default:
             break
         }
