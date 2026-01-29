@@ -100,13 +100,13 @@ class MUCertificateViewController: UITableViewController {
         var issuer: [[String]] = []
         let cn = NSLocalizedString("Common Name", comment: "Common Name (CN) of an X.509 certificate")
         let org = NSLocalizedString("Organization", comment: "Organization (O) of an X.509 certificate")
-        if let str = cert.subjectItem(.commonName) {
+        if let str = cert.subjectItem(MKCertificateItemCommonName) {
             subject.append([cn, str])
             certTitle = str
         } else {
             certTitle = NSLocalizedString("Unknown Certificate", comment: "Title shown when viewing a certificate without a Subject Common Name (CN)")
         }
-        if let str = cert.subjectItem(.organization) { subject.append([org, str]) }
+        if let str = cert.subjectItem(MKCertificateItemOrganization) { subject.append([org, str]) }
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         if let date = cert.notBefore() {
@@ -123,8 +123,8 @@ class MUCertificateViewController: UITableViewController {
             let emailAddr = NSLocalizedString("Email", comment: "Email address of an X.509 certificate")
             subject.append([emailAddr, str])
         }
-        if let str = cert.issuerItem(.commonName) { issuer.append([cn, str]) }
-        if let str = cert.issuerItem(.organization) { issuer.append([org, str]) }
+        if let str = cert.issuerItem(MKCertificateItemCommonName) { issuer.append([cn, str]) }
+        if let str = cert.issuerItem(MKCertificateItemOrganization) { issuer.append([org, str]) }
         subjectItems = subject
         issuerItems = issuer
         tableView.reloadData()
@@ -294,7 +294,7 @@ class MUCertificateViewController: UITableViewController {
                 let exportFailedTitle = NSLocalizedString("Export Failed", comment: "Title for UIAlertView when a certificate export fails")
                 let cancelButtonText = NSLocalizedString("OK", comment: "Default Cancel button text for UIAlertViews that are shown when certificate export fails.")
                 guard let password = alert.textFields?[1].text else { return }
-                let data = MKCertificate.exportCertificateChainAsPKCS12(self.certificates, withPassword: password)
+                let data = MKCertificate.exportChain(asPKCS12: self.certificates, withPassword: password)
                 guard let pkcsData = data else {
                     let unknown = NSLocalizedString("Mumble was unable to export the certificate.", comment: "Error message shown for a failed export, cause unknown.")
                     let errorAlert = UIAlertController(title: exportFailedTitle, message: unknown, preferredStyle: .alert)

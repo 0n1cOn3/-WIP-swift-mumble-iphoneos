@@ -88,13 +88,12 @@ class MUCertificateDiskImportViewController: UITableViewController, UITextFieldD
         let dirs = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
         let file = (dirs.first! as NSString).appendingPathComponent(fileName)
         guard let pkcs12Data = try? Data(contentsOf: URL(fileURLWithPath: file)) else { return }
-        let chain = MKCertificate.certificates(withPKCS12: pkcs12Data, password: password)
-        if chain.isEmpty {
+        guard let chain = MKCertificate.certificates(withPKCS12: pkcs12Data, password: password), !chain.isEmpty else {
             showPasswordDialog()
             tableView.deselectRow(at: attemptIndexPath!, animated: true)
             return
         }
-        let leaf = chain[0]
+        let leaf = chain[0] as! MKCertificate
         guard let transformedData = leaf.exportPKCS12(withPassword: "") else {
             showAlertDialog(title: NSLocalizedString("Import Error", comment: "Error title for certificate import failure"), msg: NSLocalizedString("Mumble was unable to export the specified certificate.", comment: "Error message when certificate export fails"))
             tableView.deselectRow(at: attemptIndexPath!, animated: true)
@@ -104,8 +103,9 @@ class MUCertificateDiskImportViewController: UITableViewController, UITextFieldD
         var items: CFArray?
         let err = SecPKCS12Import(transformedData as CFData, dict as CFDictionary, &items)
         if err == errSecSuccess, let arr = items as? [[String: Any]] {
-            for cert in chain.dropFirst() {
-                if let secCert = SecCertificateCreateWithData(nil, cert.certificate as CFData) {
+            for certObj in chain.dropFirst() {
+                guard let cert = certObj as? MKCertificate else { continue }
+                if let secCert = SecCertificateCreateWithData(nil, cert.certificate() as CFData) {
                     let op = [kSecValueRef as String: secCert] as CFDictionary
                     let r = SecItemAdd(op, nil)
                     if r != errSecSuccess && r != errSecDuplicateItem {

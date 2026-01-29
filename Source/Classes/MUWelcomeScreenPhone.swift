@@ -31,7 +31,7 @@ class MUWelcomeScreenPhone: UITableViewController {
         tableView.backgroundView = MUBackgroundView.backgroundView()
         tableView.separatorStyle = .singleLine
         tableView.separatorInset = .zero
-        tableView.scrollEnabled = false
+        tableView.isScrollEnabled = false
 
         let about = UIBarButtonItem(
             title: NSLocalizedString("About", comment: ""),

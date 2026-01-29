@@ -46,7 +46,7 @@ class MUWelcomeScreenPad: UIViewController, UIPopoverControllerDelegate, UITable
         serverTableView.backgroundColor = .clear
         serverTableView.isOpaque = false
         serverTableView.backgroundView = nil
-        serverTableView.scrollEnabled = false
+        serverTableView.isScrollEnabled = false
         serverTableView.separatorStyle = .none
         containerView.addSubview(serverTableView)
     }
@@ -205,7 +205,7 @@ class MUWelcomeScreenPad: UIViewController, UIPopoverControllerDelegate, UITable
         let prefs = MUPreferencesViewController()
         let navCtrl = UINavigationController(rootViewController: prefs)
         let popOver = UIPopoverController(contentViewController: navCtrl)
-        popOver.popoverBackgroundViewClass = MUPopoverBackgroundView.self
+        popOver.backgroundViewClass = MUPopoverBackgroundView.self
         popOver.delegate = self
 
         if let barButtonItem = sender as? UIBarButtonItem {

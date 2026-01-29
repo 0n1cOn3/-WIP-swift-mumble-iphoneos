@@ -165,12 +165,13 @@ class MUPreferencesViewController: UITableViewController {
             if indexPath.row == 1 {
                 let certPref = MUCertificatePreferencesViewController()
                 navigationController?.pushViewController(certPref, animated: true)
+            }
             #if ENABLE_REMOTE_CONTROL
-            } else if indexPath.row == 2 {
+            if indexPath.row == 2 {
                 let remote = MURemoteControlPreferencesViewController()
                 navigationController?.pushViewController(remote, animated: true)
-            #endif
             }
+            #endif
         }
     }
 

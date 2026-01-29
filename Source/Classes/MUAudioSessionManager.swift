@@ -291,7 +291,7 @@ final class MUAudioSessionManager: NSObject {
             resolvedPreset = .balanced
         }
 
-        codecQualityPreset = resolvedPreset
+        codecQuality = resolvedPreset
         UserDefaults.standard.set(value(for: resolvedPreset), forKey: "AudioQualityKind")
         applyQualityPresetSettings(for: resolvedPreset)
         return value(for: resolvedPreset)
@@ -361,15 +361,15 @@ final class MUAudioSessionManager: NSObject {
 
     private func restartAudioSubsystemIfNeeded() {
         if let audio = mumbleKitAudio {
-            if audio.isRunning {
+            if audio.isRunning() {
                 audio.restart()
             } else {
                 audio.start()
             }
         }
 
-        let captureManager = MUAudioCaptureManager.sharedManager()
-        captureManager?.start()
+        let captureManager = MUAudioCaptureManager.shared
+        captureManager.start()
     }
 
     private func applyCategoryOptions(_ options: AVAudioSession.CategoryOptions) {

@@ -47,7 +47,7 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
     init(serverModel: MKServerModel) {
         self.serverModel = serverModel
         super.init(style: .plain)
-        self.serverModel.add(self)
+        self.serverModel.addDelegate(self)
         viewMode = .server
     }
 
@@ -56,7 +56,7 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
     }
 
     deinit {
-        serverModel.remove(self)
+        serverModel.removeDelegate(self)
     }
 
     // MARK: - View Lifecycle
@@ -83,7 +83,7 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
-        if MKAudio.sharedAudio()?.transmitType() == .toggle {
+        if MKAudio.shared()?.transmitType() == MKTransmitTypeToggle {
             guard let onImage = UIImage(named: "talkbutton_on"),
                   let offImage = UIImage(named: "talkbutton_off") else { return }
 
@@ -139,7 +139,7 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
     // MARK: - Index Lookup
 
     private func index(for user: MKUser) -> Int {
-        if let session = user.session?() {
+        if let session = user.session() {
             return userIndexMap[Int(session)] ?? NSNotFound
         }
         return NSNotFound
@@ -188,7 +188,7 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
         guard let channel = serverModel.connectedUser()?.channel() else { return }
         for user in channel.users() {
             guard let mkUser = user as? MKUser else { continue }
-            if let session = mkUser.session?() {
+            if let session = mkUser.session() {
                 userIndexMap[Int(session)] = modelItems.count
             }
             modelItems.append(MUChannelNavigationItem.navigationItem(with: mkUser, indentLevel: 0))
@@ -201,7 +201,7 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
 
         for user in channel.users() {
             guard let mkUser = user as? MKUser else { continue }
-            if let session = mkUser.session?() {
+            if let session = mkUser.session() {
                 userIndexMap[Int(session)] = modelItems.count
             }
             modelItems.append(MUChannelNavigationItem.navigationItem(with: mkUser, indentLevel: indentLevel + 1))
@@ -271,27 +271,27 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
             var talkImageName = "talking_off"
             let talkState = user.talkState()
             switch talkState {
-            case .passive:
+            case MKTalkStatePassive:
                 talkImageName = "talking_off"
-            case .talking:
+            case MKTalkStateTalking:
                 talkImageName = "talking_on"
-            case .whispering:
+            case MKTalkStateWhispering:
                 talkImageName = "talking_whisper"
-            case .shouting:
+            case MKTalkStateShouting:
                 talkImageName = "talking_alt"
-            @unknown default:
+            default:
                 talkImageName = "talking_off"
             }
 
             // Check if the user should be shown as not talking when PTT is released
-            if user === connectedUser && MKAudio.sharedAudio()?.transmitType() == .toggle {
-                if MKAudio.sharedAudio()?.forceTransmit() == false {
+            if user === connectedUser && MKAudio.shared()?.transmitType() == MKTransmitTypeToggle {
+                if MKAudio.shared()?.forceTransmit() == false {
                     talkImageName = "talking_off"
                 }
             }
 
             cell?.imageView?.image = UIImage(named: talkImageName)
-            cell?.accessoryView = MUUserStateAcessoryView.view(for: user)
+            cell?.accessoryView = MUUserStateAcessoryView.view(forUser: user)
             cell?.selectionStyle = .none
         }
 
@@ -305,7 +305,7 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let navItem = modelItems[indexPath.row]
         if let channel = navItem.object as? MKChannel {
-            serverModel.joinChannel(channel)
+            serverModel.join(channel)
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -352,15 +352,15 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
         var talkImageName = "talking_off"
         let talkState = user.talkState()
         switch talkState {
-        case .passive:
+        case MKTalkStatePassive:
             talkImageName = "talking_off"
-        case .talking:
+        case MKTalkStateTalking:
             talkImageName = "talking_on"
-        case .whispering:
+        case MKTalkStateWhispering:
             talkImageName = "talking_whisper"
-        case .shouting:
+        case MKTalkStateShouting:
             talkImageName = "talking_alt"
-        @unknown default:
+        default:
             talkImageName = "talking_off"
         }
 
@@ -516,14 +516,14 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
 
     @objc private func talkOn(_ button: UIButton) {
         button.alpha = 1.0
-        MUAudioCaptureManager.shared().beginPushToTalk()
-        MKAudio.sharedAudio()?.setForceTransmit(true)
+        MUAudioCaptureManager.shared.beginPushToTalk()
+        MKAudio.shared()?.setForceTransmit(true)
     }
 
     @objc private func talkOff(_ button: UIButton) {
         button.alpha = 0.80
-        MUAudioCaptureManager.shared().endPushToTalk()
-        MKAudio.sharedAudio()?.setForceTransmit(false)
+        MUAudioCaptureManager.shared.endPushToTalk()
+        MKAudio.shared()?.setForceTransmit(false)
     }
 
     // MARK: - Mode Switch
@@ -531,11 +531,11 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
     @objc func toggleMode() {
         if viewMode == .server {
             let msg = NSLocalizedString("Switched to channel view mode.", comment: "")
-            MUNotificationController.shared().addNotification(msg)
+            MUNotificationController.shared.addNotification(msg)
             switchToChannelMode()
         } else if viewMode == .channel {
             let msg = NSLocalizedString("Switched to server view mode.", comment: "")
-            MUNotificationController.shared().addNotification(msg)
+            MUNotificationController.shared.addNotification(msg)
             switchToServerMode()
         }
 
@@ -555,8 +555,8 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
 
     @objc private func appDidEnterBackground(_ notification: Notification) {
         // Force Push-to-Talk to stop when the app is backgrounded
-        MUAudioCaptureManager.shared().endPushToTalk()
-        MKAudio.sharedAudio()?.setForceTransmit(false)
+        MUAudioCaptureManager.shared.endPushToTalk()
+        MKAudio.shared()?.setForceTransmit(false)
 
         // Reload the table view to re-render the talk state
         tableView.reloadData()
