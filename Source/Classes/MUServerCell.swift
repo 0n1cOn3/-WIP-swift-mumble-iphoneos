@@ -3,7 +3,6 @@
 // license that can be found in the LICENSE file.
 
 import UIKit
-import MumbleKit
 
 /// Table view cell for displaying server information with ping and user count.
 /// Uses MKServerPinger to fetch server status and displays a color-coded indicator.

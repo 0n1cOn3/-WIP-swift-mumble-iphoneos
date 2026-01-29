@@ -1,5 +1,4 @@
 import UIKit
-import MumbleKit
 
 class MUPreferencesViewController: UITableViewController {
     private weak var activeTextField: UITextField?

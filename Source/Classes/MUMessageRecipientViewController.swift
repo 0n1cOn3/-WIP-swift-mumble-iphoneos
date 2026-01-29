@@ -3,7 +3,6 @@
 // license that can be found in the LICENSE file.
 
 import UIKit
-import MumbleKit
 
 /// Protocol for handling message recipient selection.
 @objc protocol MUMessageRecipientViewControllerDelegate: AnyObject {

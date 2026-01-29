@@ -3,7 +3,6 @@
 // license that can be found in the LICENSE file.
 
 import UIKit
-import MumbleKit
 
 /// Root navigation controller for the connected server view.
 /// Contains a segmented control to switch between Server view and Messages view.

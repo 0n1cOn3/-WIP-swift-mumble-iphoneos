@@ -3,7 +3,6 @@
 // license that can be found in the LICENSE file.
 
 import UIKit
-import MumbleKit
 
 /// Factory class for creating accessory views showing user state icons.
 /// Displays icons for authenticated, muted, deafened, suppressed, etc.

@@ -1,5 +1,4 @@
 import Foundation
-import MumbleKit
 
 fileprivate func findValidParents(for cert: SecCertificate) -> [SecCertificate]? {
     guard let attrs = getAttrs(for: cert),

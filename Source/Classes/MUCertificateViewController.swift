@@ -1,6 +1,5 @@
 import UIKit
 import CoreServices
-import MumbleKit
 
 class MUCertificateViewController: UITableViewController {
     private var curIdx = 0

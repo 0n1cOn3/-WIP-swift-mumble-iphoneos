@@ -3,7 +3,6 @@
 // license that can be found in the LICENSE file.
 
 import UIKit
-import MumbleKit
 
 /// Debug view controller for inspecting audio mixer state.
 /// Shows active sources, removed sources, and updates in real-time.

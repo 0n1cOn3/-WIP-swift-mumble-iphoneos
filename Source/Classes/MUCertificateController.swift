@@ -1,5 +1,4 @@
 import Foundation
-import MumbleKit
 
 class MUCertificateController: NSObject {
     class func certificate(withPersistentRef persistentRef: Data) -> MKCertificate? {

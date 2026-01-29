@@ -1,6 +1,5 @@
 import Foundation
 import AVFoundation
-import MumbleKit
 
 /// Defines the mode used for transmitting audio in a Mumble session.
 ///

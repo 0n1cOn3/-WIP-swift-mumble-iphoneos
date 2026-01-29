@@ -3,7 +3,6 @@
 // license that can be found in the LICENSE file.
 
 import UIKit
-import MumbleKit
 
 /// Advanced audio preferences controller for configuring audio quality,
 /// input processing, output settings, and codec options.

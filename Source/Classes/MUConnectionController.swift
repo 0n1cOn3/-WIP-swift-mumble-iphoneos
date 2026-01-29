@@ -3,7 +3,6 @@
 // license that can be found in the LICENSE file.
 
 import UIKit
-import MumbleKit
 
 /// Notification posted when a connection is opened
 @objc let MUConnectionOpenedNotification = "MUConnectionOpenedNotification"

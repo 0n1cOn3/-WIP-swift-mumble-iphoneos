@@ -3,7 +3,6 @@
 // license that can be found in the LICENSE file.
 
 import UIKit
-import MumbleKit
 import UserNotifications
 import UniformTypeIdentifiers
 

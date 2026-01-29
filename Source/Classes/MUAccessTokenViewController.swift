@@ -1,5 +1,4 @@
 import UIKit
-import MumbleKit
 
 @objc(MUAccessTokenViewController)
 class MUAccessTokenViewController: UITableViewController {

@@ -3,7 +3,6 @@
 // license that can be found in the LICENSE file.
 
 import Foundation
-import MumbleKit
 
 /// Fetches the latest public server list XML from Mumble's regional server list URL.
 @objc(MUPublicServerListFetcher)

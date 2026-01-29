@@ -3,7 +3,6 @@
 // license that can be found in the LICENSE file.
 
 import UIKit
-import MumbleKit
 
 /// Manages temporary storage of messages during a session.
 /// Uses SQLite (via FMDB) for persistence with caching for performance.

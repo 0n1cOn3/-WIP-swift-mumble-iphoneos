@@ -1,5 +1,4 @@
 import UIKit
-import MumbleKit
 
 private func showAlertDialog(title: String, msg: String) {
     DispatchQueue.main.async {

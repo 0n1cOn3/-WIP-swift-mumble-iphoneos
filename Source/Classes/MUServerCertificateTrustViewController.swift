@@ -3,7 +3,6 @@
 // license that can be found in the LICENSE file.
 
 import UIKit
-import MumbleKit
 
 /// Protocol for handling server certificate trust view controller dismissal.
 @objc protocol MUServerCertificateTrustViewControllerProtocol: AnyObject {
