@@ -16,13 +16,15 @@ fileprivate func findValidParents(for cert: SecCertificate) -> [SecCertificate]?
 
     var validParents: [SecCertificate] = []
     for parentAttr in attrsArray {
-        guard let parentRef = parentAttr[kSecValueRef as String] as? SecCertificate else { continue }
-        let parentData = SecCertificateCopyData(parentRef) as Data
-        let parent = MKCertificate(certificate: parentData, privateKey: nil)
+        guard let parentRef = parentAttr[kSecValueRef as String] else { continue }
+        // SecCertificate is a CoreFoundation type - use unsafeBitCast
+        let parentCert = unsafeBitCast(parentRef, to: SecCertificate.self)
+        let parentData = SecCertificateCopyData(parentCert) as Data
         let childData = SecCertificateCopyData(cert) as Data
-        let child = MKCertificate(certificate: childData, privateKey: nil)
+        guard let parent = MKCertificate(certificate: parentData, privateKey: nil),
+              let child = MKCertificate(certificate: childData, privateKey: nil) else { continue }
         if parent.isValid(on: Date()) && child.isSigned(by: parent) {
-            validParents.append(parentRef)
+            validParents.append(parentCert)
         }
     }
     return validParents.isEmpty ? nil : validParents
@@ -47,15 +49,16 @@ fileprivate func certIsSelfSignedAndValid(_ cert: SecCertificate) -> Bool {
           let issuer = attrs[kSecAttrIssuer as String] as? Data,
           subject == issuer else { return false }
     let data = SecCertificateCopyData(cert) as Data
-    let selfSigned = MKCertificate(certificate: data, privateKey: nil)
+    guard let selfSigned = MKCertificate(certificate: data, privateKey: nil) else { return false }
     return selfSigned.isValid(on: Date()) && selfSigned.isSigned(by: selfSigned)
 }
 
 fileprivate func buildCertChain(from cert: SecCertificate) -> [SecCertificate]? {
-    return buildCertChain(from: cert, isFullChain: nil)
+    var ignored: Bool = false
+    return buildCertChain(from: cert, isFullChain: &ignored)
 }
 
-fileprivate func buildCertChain(from cert: SecCertificate, isFullChain: inout Bool?) -> [SecCertificate]? {
+fileprivate func buildCertChain(from cert: SecCertificate, isFullChain: inout Bool) -> [SecCertificate]? {
     if certIsSelfSignedAndValid(cert) {
         isFullChain = true
         return nil
