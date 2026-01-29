@@ -162,7 +162,8 @@ class MUAudioCaptureManager: NSObject {
     /// Stops the audio engine/recorder backing the capture pipeline.
     @objc func stop() {
         if tapInstalled {
-            engine.inputNode.removeTap(onBus: 0)
+            // Use safe removal to avoid potential exceptions
+            _ = ObjCExceptionCatcher.safelyRemoveTap(onNode: engine.inputNode, bus: 0)
             tapInstalled = false
         }
 
@@ -237,11 +238,23 @@ class MUAudioCaptureManager: NSObject {
             return
         }
 
-        // installTap can throw NSException if format is incompatible or tap already exists
-        // We need to catch this at the Objective-C level since Swift can't catch NSExceptions
-        let installError = ObjCExceptionCatcher.try {
-            input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
-                self?.processBuffer(buffer)
+        // Safely remove any existing tap first to avoid "tap already exists" exception
+        let removeError = ObjCExceptionCatcher.safelyRemoveTap(onNode: input, bus: 0)
+        if let removeError = removeError {
+            NSLog("MUAudioCaptureManager: Note - remove tap returned: %@", removeError)
+        }
+
+        // Use the safe Objective-C method to install the tap.
+        // This ensures exceptions are caught properly - Swift closures don't support
+        // ObjC exception unwinding, causing crashes when exceptions are thrown.
+        let installError = ObjCExceptionCatcher.safelyInstallTap(
+            onNode: input,
+            bus: 0,
+            bufferSize: 1024,
+            format: format
+        ) { [weak self] buffer, _ in
+            if let pcmBuffer = buffer as? AVAudioPCMBuffer {
+                self?.processBuffer(pcmBuffer)
             }
         }
 
