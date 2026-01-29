@@ -138,7 +138,6 @@
 		287BA3A611B996D90010E031 /* MUFavouriteServerEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BA3A511B996D90010E031 /* MUFavouriteServerEditViewController.m */; };
 		2882858118CE40C80034F319 /* MUBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2882858018CE40C80034F319 /* MUBackgroundView.m */; };
 		28851B94147DC97E00088C4F /* MULegalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28851B92147DC97D00088C4F /* MULegalViewController.m */; };
-		28851B95147DC97E00088C4F /* MULegalViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28851B93147DC97D00088C4F /* MULegalViewController.storyboard */; };
 		288B55E01252903300563A28 /* MUServerCertificateTrustViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 288B55DF1252903300563A28 /* MUServerCertificateTrustViewController.m */; };
 		288D6B60123D08EE00D37EDE /* MUCertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288D6B5F123D08EE00D37EDE /* MUCertificateViewController.swift */; };
 		28942D7C12456F9200C63A07 /* MUCertificateCreationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28942D7B12456F9200C63A07 /* MUCertificateCreationView.swift */; };
@@ -495,7 +494,6 @@
 		2882858018CE40C80034F319 /* MUBackgroundView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUBackgroundView.m; sourceTree = "<group>"; };
 		28851B91147DC97D00088C4F /* MULegalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MULegalViewController.h; sourceTree = "<group>"; };
 		28851B92147DC97D00088C4F /* MULegalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MULegalViewController.m; sourceTree = "<group>"; };
-		28851B93147DC97D00088C4F /* MULegalViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MULegalViewController.storyboard; sourceTree = "<group>"; };
 		288B55DE1252903300563A28 /* MUServerCertificateTrustViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUServerCertificateTrustViewController.h; sourceTree = "<group>"; };
 		288B55DF1252903300563A28 /* MUServerCertificateTrustViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUServerCertificateTrustViewController.m; sourceTree = "<group>"; };
 		288D6B5F123D08EE00D37EDE /* MUCertificateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUCertificateViewController.swift; sourceTree = "<group>"; };
@@ -681,7 +679,6 @@
 				28F79CA8147AB6280003B8BA /* MUNotificationController.m */,
 				28851B91147DC97D00088C4F /* MULegalViewController.h */,
 				28851B92147DC97D00088C4F /* MULegalViewController.m */,
-						28851B93147DC97D00088C4F /* MULegalViewController.storyboard */,
 				28F08360147F263B00DC126F /* MUAudioBarView.h */,
 				28F08361147F263B00DC126F /* MUAudioBarView.m */,
 				28F08363147F369100DC126F /* MUAudioBarViewCell.h */,
@@ -1299,7 +1296,6 @@
 				28F79C6B147968C60003B8BA /* WelcomeScreenIcon@2x.png in Resources */,
 				28F79CA11479C2180003B8BA /* BackgroundTextureBlackGradient@2x.png in Resources */,
 				28F79CA31479C23F0003B8BA /* BackgroundTextureBlackGradient.png in Resources */,
-						28851B95147DC97E00088C4F /* MULegalViewController.storyboard in Resources */,
 				28BE998218CFA8B900910551 /* BlackToolbarPatterniOS7.png in Resources */,
 				28F0835F147F102F00DC126F /* publist.xml in Resources */,
 				2879525E14C0AFAC00567430 /* BlackToolbarPattern.png in Resources */,

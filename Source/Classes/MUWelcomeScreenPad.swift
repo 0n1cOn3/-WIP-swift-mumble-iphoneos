@@ -180,12 +180,9 @@ class MUWelcomeScreenPad: UIViewController, UIPopoverControllerDelegate, UITable
         })
 
         aboutAlert.addAction(UIAlertAction(title: NSLocalizedString("Legal", comment: ""), style: .default) { [weak self] _ in
-            let sb = UIStoryboard(name: "MULegalViewController", bundle: nil)
-            if let legalView = sb.instantiateInitialViewController() as? MULegalViewController {
-                let navController = UINavigationController()
-                navController.pushViewController(legalView, animated: false)
-                self?.navigationController?.present(navController, animated: true, completion: nil)
-            }
+            let legalView = MULegalViewController()
+            let navController = UINavigationController(rootViewController: legalView)
+            self?.navigationController?.present(navController, animated: true, completion: nil)
         })
 
         aboutAlert.addAction(UIAlertAction(title: NSLocalizedString("Support", comment: ""), style: .default) { _ in
