@@ -216,7 +216,17 @@ class MUAudioCaptureManager: NSObject {
             return
         }
 
-        let input = engine.inputNode
+        // Accessing inputNode can throw NSException if audio session isn't properly configured
+        var input: AVAudioInputNode?
+        var inputError: NSError?
+        let gotInput = ObjCExceptionCatcher.tryBlock({
+            input = self.engine.inputNode
+        }, error: &inputError)
+
+        guard gotInput, let input = input else {
+            NSLog("MUAudioCaptureManager: Failed to get input node: %@", inputError?.localizedDescription ?? "unknown error")
+            return
+        }
 
         // Use the input node's native output format to avoid format mismatch exceptions.
         // Passing a custom format that doesn't match hardware capabilities causes a crash.
@@ -228,10 +238,20 @@ class MUAudioCaptureManager: NSObject {
             return
         }
 
-        input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
-            self?.processBuffer(buffer)
+        // installTap can throw NSException if format is incompatible or tap already exists
+        // We need to catch this at the Objective-C level since Swift can't catch NSExceptions
+        var installError: NSError?
+        let success = ObjCExceptionCatcher.tryBlock({
+            input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
+                self?.processBuffer(buffer)
+            }
+        }, error: &installError)
+
+        if success {
+            tapInstalled = true
+        } else {
+            NSLog("MUAudioCaptureManager: Failed to install tap: %@", installError?.localizedDescription ?? "unknown error")
         }
-        tapInstalled = true
     }
 
     private func processBuffer(_ buffer: AVAudioPCMBuffer) {
