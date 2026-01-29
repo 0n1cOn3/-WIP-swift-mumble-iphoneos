@@ -143,6 +143,35 @@ final class MUAudioSessionManager: NSObject {
     @objc(handleRouteChangeWithReason:defaults:)
     func handleRouteChange(reasonValue: UInt, defaults: UserDefaults = .standard) {
         let reason = AVAudioSession.RouteChangeReason(rawValue: reasonValue) ?? .unknown
+
+        // Log route change for debugging
+        let reasonDescription: String
+        switch reason {
+        case .newDeviceAvailable:
+            reasonDescription = "new device available"
+        case .oldDeviceUnavailable:
+            reasonDescription = "old device unavailable"
+        case .categoryChange:
+            reasonDescription = "category change"
+        case .override:
+            reasonDescription = "override"
+        case .wakeFromSleep:
+            reasonDescription = "wake from sleep"
+        case .noSuitableRouteForCategory:
+            reasonDescription = "no suitable route"
+        case .routeConfigurationChange:
+            reasonDescription = "route configuration change"
+        default:
+            reasonDescription = "unknown (\(reasonValue))"
+        }
+
+        // Log current route info
+        let currentRoute = session.currentRoute
+        let outputPorts = currentRoute.outputs.map { $0.portName }.joined(separator: ", ")
+        let inputPorts = currentRoute.inputs.map { $0.portName }.joined(separator: ", ")
+        NSLog("MUAudioSessionManager: Route change - reason: %@, outputs: [%@], inputs: [%@]",
+              reasonDescription, outputPorts, inputPorts)
+
         applyPlaybackPreferences(defaults: defaults)
         configureSession()
 
@@ -367,10 +396,32 @@ final class MUAudioSessionManager: NSObject {
         audioQueue.async { [weak self] in
             guard let self = self else { return }
             do {
-                if preferSpeaker {
-                    try self.session.overrideOutputAudioPort(.speaker)
-                } else {
+                // Check if external audio device is connected (Bluetooth, USB-C, Lightning, etc.)
+                let currentRoute = self.session.currentRoute
+                let hasExternalOutput = currentRoute.outputs.contains { output in
+                    let portType = output.portType
+                    return portType == .bluetoothA2DP ||
+                           portType == .bluetoothHFP ||
+                           portType == .bluetoothLE ||
+                           portType == .headphones ||
+                           portType == .usbAudio ||
+                           portType == .carAudio ||
+                           portType == .airPlay
+                }
+
+                if hasExternalOutput {
+                    // External device connected - don't override, let system handle routing
+                    // Clear any previous speaker override
                     try self.session.overrideOutputAudioPort(.none)
+                    NSLog("MUAudioSessionManager: External audio device detected, using system routing")
+                } else if preferSpeaker {
+                    // No external device, user prefers speaker
+                    try self.session.overrideOutputAudioPort(.speaker)
+                    NSLog("MUAudioSessionManager: Routing to speaker")
+                } else {
+                    // No external device, user prefers receiver (earpiece)
+                    try self.session.overrideOutputAudioPort(.none)
+                    NSLog("MUAudioSessionManager: Routing to receiver")
                 }
             } catch {
                 NSLog("MUAudioSessionManager: Failed to update playback route: %@", error.localizedDescription)

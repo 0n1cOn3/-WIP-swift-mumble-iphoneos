@@ -311,12 +311,17 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
     }
 
     // MARK: - MKServerModelDelegate
+    // Note: All delegate methods dispatch to main thread since MKServerModel
+    // callbacks may be invoked from background threads (network layer).
 
     func serverModel(_ model: MKServerModel, joinedServerAs user: MKUser) {
-        if let rootChannel = model.rootChannel() {
-            rebuildModelArray(from: rootChannel)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            if let rootChannel = model.rootChannel() {
+                self.rebuildModelArray(from: rootChannel)
+            }
+            self.tableView.reloadData()
         }
-        tableView.reloadData()
     }
 
     func serverModel(_ model: MKServerModel, userJoined user: MKUser) {
@@ -326,77 +331,95 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
     }
 
     func serverModel(_ model: MKServerModel, userLeft user: MKUser) {
-        let idx = index(for: user)
-        if idx != NSNotFound {
-            if viewMode == .server {
-                if let rootChannel = model.rootChannel() {
-                    rebuildModelArray(from: rootChannel)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            let idx = self.index(for: user)
+            if idx != NSNotFound {
+                if self.viewMode == .server {
+                    if let rootChannel = model.rootChannel() {
+                        self.rebuildModelArray(from: rootChannel)
+                    }
+                } else {
+                    self.switchToChannelMode()
                 }
-            } else {
-                switchToChannelMode()
+                self.tableView.deleteRows(at: [IndexPath(row: idx, section: 0)], with: .none)
             }
-            tableView.deleteRows(at: [IndexPath(row: idx, section: 0)], with: .none)
         }
     }
 
     func serverModel(_ model: MKServerModel, userTalkStateChanged user: MKUser) {
-        let userIndex = index(for: user)
-        if userIndex == NSNotFound { return }
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            let userIndex = self.index(for: user)
+            if userIndex == NSNotFound { return }
 
-        guard let cell = tableView.cellForRow(at: IndexPath(row: userIndex, section: 0)) else { return }
+            guard let cell = self.tableView.cellForRow(at: IndexPath(row: userIndex, section: 0)) else { return }
 
-        var talkImageName = "talking_off"
-        let talkState = user.talkState()
-        switch talkState {
-        case MKTalkStatePassive:
-            talkImageName = "talking_off"
-        case MKTalkStateTalking:
-            talkImageName = "talking_on"
-        case MKTalkStateWhispering:
-            talkImageName = "talking_whisper"
-        case MKTalkStateShouting:
-            talkImageName = "talking_alt"
-        default:
-            talkImageName = "talking_off"
+            var talkImageName = "talking_off"
+            let talkState = user.talkState()
+            switch talkState {
+            case MKTalkStatePassive:
+                talkImageName = "talking_off"
+            case MKTalkStateTalking:
+                talkImageName = "talking_on"
+            case MKTalkStateWhispering:
+                talkImageName = "talking_whisper"
+            case MKTalkStateShouting:
+                talkImageName = "talking_alt"
+            default:
+                talkImageName = "talking_off"
+            }
+
+            cell.imageView?.image = UIImage(named: talkImageName)
         }
-
-        cell.imageView?.image = UIImage(named: talkImageName)
     }
 
     func serverModel(_ model: MKServerModel, channelAdded channel: MKChannel) {
-        if viewMode == .server {
-            if let rootChannel = model.rootChannel() {
-                rebuildModelArray(from: rootChannel)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            if self.viewMode == .server {
+                if let rootChannel = model.rootChannel() {
+                    self.rebuildModelArray(from: rootChannel)
+                }
+                let idx = self.index(for: channel)
+                self.tableView.insertRows(at: [IndexPath(row: idx, section: 0)], with: .none)
             }
-            let idx = index(for: channel)
-            tableView.insertRows(at: [IndexPath(row: idx, section: 0)], with: .none)
         }
     }
 
     func serverModel(_ model: MKServerModel, channelRemoved channel: MKChannel) {
-        if viewMode == .server {
-            if let rootChannel = model.rootChannel() {
-                rebuildModelArray(from: rootChannel)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            if self.viewMode == .server {
+                if let rootChannel = model.rootChannel() {
+                    self.rebuildModelArray(from: rootChannel)
+                }
+                self.tableView.reloadData()
+            } else if self.viewMode == .channel {
+                self.switchToChannelMode()
+                self.tableView.reloadData()
             }
-            tableView.reloadData()
-        } else if viewMode == .channel {
-            switchToChannelMode()
-            tableView.reloadData()
         }
     }
 
     func serverModel(_ model: MKServerModel, channelMoved channel: MKChannel) {
-        if viewMode == .server {
-            if let rootChannel = model.rootChannel() {
-                rebuildModelArray(from: rootChannel)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            if self.viewMode == .server {
+                if let rootChannel = model.rootChannel() {
+                    self.rebuildModelArray(from: rootChannel)
+                }
+                self.tableView.reloadData()
             }
-            tableView.reloadData()
         }
     }
 
     func serverModel(_ model: MKServerModel, channelRenamed channel: MKChannel) {
-        if viewMode == .server {
-            reloadChannel(channel)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            if self.viewMode == .server {
+                self.reloadChannel(channel)
+            }
         }
     }
 
@@ -407,101 +430,106 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
         from prevChan: MKChannel?,
         by mover: MKUser?
     ) {
-        if viewMode == .server {
-            tableView.beginUpdates()
-            if user === model.connectedUser() {
-                reloadChannel(chan)
-                if let prevChan = prevChan {
-                    reloadChannel(prevChan)
-                }
-            }
-
-            if prevChan != nil {
-                let prevIdx = index(for: user)
-                if prevIdx != NSNotFound {
-                    tableView.deleteRows(at: [IndexPath(row: prevIdx, section: 0)], with: .none)
-                }
-            }
-
-            if let rootChannel = model.rootChannel() {
-                rebuildModelArray(from: rootChannel)
-            }
-            let newIdx = index(for: user)
-            if newIdx != NSNotFound {
-                tableView.insertRows(at: [IndexPath(row: newIdx, section: 0)], with: .none)
-            }
-            tableView.endUpdates()
-
-        } else if viewMode == .channel {
-            let userIdx = index(for: user)
-            let curChan = model.connectedUser()?.channel()
-
-            if user === model.connectedUser() {
-                switchToChannelMode()
-                tableView.reloadData()
-            } else {
-                tableView.beginUpdates()
-                if prevChan === curChan && userIdx != NSNotFound {
-                    switchToChannelMode()
-                    tableView.deleteRows(at: [IndexPath(row: userIdx, section: 0)], with: .none)
-                } else if chan === curChan && userIdx == NSNotFound {
-                    switchToChannelMode()
-                    let newUserIdx = index(for: user)
-                    if newUserIdx != NSNotFound {
-                        tableView.insertRows(at: [IndexPath(row: newUserIdx, section: 0)], with: .none)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            if self.viewMode == .server {
+                self.tableView.beginUpdates()
+                if user === model.connectedUser() {
+                    self.reloadChannel(chan)
+                    if let prevChan = prevChan {
+                        self.reloadChannel(prevChan)
                     }
                 }
-                tableView.endUpdates()
+
+                if prevChan != nil {
+                    let prevIdx = self.index(for: user)
+                    if prevIdx != NSNotFound {
+                        self.tableView.deleteRows(at: [IndexPath(row: prevIdx, section: 0)], with: .none)
+                    }
+                }
+
+                if let rootChannel = model.rootChannel() {
+                    self.rebuildModelArray(from: rootChannel)
+                }
+                let newIdx = self.index(for: user)
+                if newIdx != NSNotFound {
+                    self.tableView.insertRows(at: [IndexPath(row: newIdx, section: 0)], with: .none)
+                }
+                self.tableView.endUpdates()
+
+            } else if self.viewMode == .channel {
+                let userIdx = self.index(for: user)
+                let curChan = model.connectedUser()?.channel()
+
+                if user === model.connectedUser() {
+                    self.switchToChannelMode()
+                    self.tableView.reloadData()
+                } else {
+                    self.tableView.beginUpdates()
+                    if prevChan === curChan && userIdx != NSNotFound {
+                        self.switchToChannelMode()
+                        self.tableView.deleteRows(at: [IndexPath(row: userIdx, section: 0)], with: .none)
+                    } else if chan === curChan && userIdx == NSNotFound {
+                        self.switchToChannelMode()
+                        let newUserIdx = self.index(for: user)
+                        if newUserIdx != NSNotFound {
+                            self.tableView.insertRows(at: [IndexPath(row: newUserIdx, section: 0)], with: .none)
+                        }
+                    }
+                    self.tableView.endUpdates()
+                }
             }
         }
     }
 
     func serverModel(_ model: MKServerModel, userSelfMuteDeafenStateChanged user: MKUser) {
-        reloadUser(user)
+        DispatchQueue.main.async { [weak self] in
+            self?.reloadUser(user)
+        }
     }
 
     func serverModel(_ model: MKServerModel, userMutedAndDeafened user: MKUser, by actor: MKUser?) {
-        reloadUser(user)
+        DispatchQueue.main.async { [weak self] in self?.reloadUser(user) }
     }
 
     func serverModel(_ model: MKServerModel, userUnmutedAndUndeafened user: MKUser, by actor: MKUser?) {
-        reloadUser(user)
+        DispatchQueue.main.async { [weak self] in self?.reloadUser(user) }
     }
 
     func serverModel(_ model: MKServerModel, userMuted user: MKUser, by actor: MKUser?) {
-        reloadUser(user)
+        DispatchQueue.main.async { [weak self] in self?.reloadUser(user) }
     }
 
     func serverModel(_ model: MKServerModel, userUnmuted user: MKUser, by actor: MKUser?) {
-        reloadUser(user)
+        DispatchQueue.main.async { [weak self] in self?.reloadUser(user) }
     }
 
     func serverModel(_ model: MKServerModel, userDeafened user: MKUser, by actor: MKUser?) {
-        reloadUser(user)
+        DispatchQueue.main.async { [weak self] in self?.reloadUser(user) }
     }
 
     func serverModel(_ model: MKServerModel, userUndeafened user: MKUser, by actor: MKUser?) {
-        reloadUser(user)
+        DispatchQueue.main.async { [weak self] in self?.reloadUser(user) }
     }
 
     func serverModel(_ model: MKServerModel, userSuppressed user: MKUser, by actor: MKUser?) {
-        reloadUser(user)
+        DispatchQueue.main.async { [weak self] in self?.reloadUser(user) }
     }
 
     func serverModel(_ model: MKServerModel, userUnsuppressed user: MKUser, by actor: MKUser?) {
-        reloadUser(user)
+        DispatchQueue.main.async { [weak self] in self?.reloadUser(user) }
     }
 
     func serverModel(_ model: MKServerModel, userMuteStateChanged user: MKUser) {
-        reloadUser(user)
+        DispatchQueue.main.async { [weak self] in self?.reloadUser(user) }
     }
 
     func serverModel(_ model: MKServerModel, userAuthenticatedStateChanged user: MKUser) {
-        reloadUser(user)
+        DispatchQueue.main.async { [weak self] in self?.reloadUser(user) }
     }
 
     func serverModel(_ model: MKServerModel, userPrioritySpeakerChanged user: MKUser) {
-        reloadUser(user)
+        DispatchQueue.main.async { [weak self] in self?.reloadUser(user) }
     }
 
     // MARK: - Push-to-Talk

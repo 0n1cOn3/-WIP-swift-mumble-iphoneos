@@ -269,8 +269,11 @@ class MUAdvancedAudioPreferencesViewController: UITableViewController {
     }
 
     @objc private func audioSubsystemRestarted(_ notification: Notification) {
-        if UserDefaults.standard.bool(forKey: "AudioPreprocessor") {
-            tableView.reloadSections(IndexSet(integer: 1), with: .none)
+        // Dispatch to main thread since MKAudioDidRestartNotification may be posted from background queue
+        DispatchQueue.main.async { [weak self] in
+            if UserDefaults.standard.bool(forKey: "AudioPreprocessor") {
+                self?.tableView.reloadSections(IndexSet(integer: 1), with: .none)
+            }
         }
     }
 }

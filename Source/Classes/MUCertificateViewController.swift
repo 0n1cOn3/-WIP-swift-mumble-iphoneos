@@ -61,7 +61,9 @@ class MUCertificateViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if arrows == nil {
-            let control = UISegmentedControl(items: [UIImage(named: "up.png")!, UIImage(named: "down.png")!])
+            let upImage = UIImage(named: "up.png") ?? UIImage(systemName: "chevron.up")
+            let downImage = UIImage(named: "down.png") ?? UIImage(systemName: "chevron.down")
+            let control = UISegmentedControl(items: [upImage as Any, downImage as Any])
             control.isMomentary = true
             control.addTarget(self, action: #selector(certificateSwitch(_:)), for: .valueChanged)
             arrows = control

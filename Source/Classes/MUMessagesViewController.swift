@@ -284,7 +284,11 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
             )
             textBarView = UIView(frame: textBarFrame)
             textBarView.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
-            textBarView.backgroundColor = UIColor(patternImage: UIImage(named: "BlackToolbarPatterniOS7")!)
+            if let patternImage = UIImage(named: "BlackToolbarPatterniOS7") {
+                textBarView.backgroundColor = UIColor(patternImage: patternImage)
+            } else {
+                textBarView.backgroundColor = .darkGray
+            }
 
             // Create text field
             let textFieldMargin: CGFloat = 6
@@ -617,109 +621,128 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
     // MARK: - MKServerModelDelegate
 
     func serverModel(_ model: MKServerModel!, joinedServerAs user: MKUser!, withWelcome msg: MKTextMessage!) {
-        msgdb.addMessage(msg, withHeading: NSLocalizedString("Welcome Message", comment: "Title for welcome message"), andSentBySelf: false)
+        // Dispatch to main thread since MKServerModel delegates may be called from background
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            self.msgdb.addMessage(msg, withHeading: NSLocalizedString("Welcome Message", comment: "Title for welcome message"), andSentBySelf: false)
 
-        let indexPath = IndexPath(row: msgdb.count() - 1, section: 0)
-        tableView.insertRows(at: [indexPath], with: .fade)
-        if !tableView.isDragging && !UIMenuController.shared.isMenuVisible {
-            tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+            let indexPath = IndexPath(row: self.msgdb.count() - 1, section: 0)
+            self.tableView.insertRows(at: [indexPath], with: .fade)
+            if !self.tableView.isDragging && !UIMenuController.shared.isMenuVisible {
+                self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+            }
         }
     }
 
     func serverModel(_ model: MKServerModel!, userMoved user: MKUser!, to chan: MKChannel!, from prevChan: MKChannel!, by mover: MKUser!) {
-        if user == model.connectedUser() {
-            // Are we in 'send to default channel mode'?
-            if self.user == nil && channel == nil && tree == nil {
-                if let channelName = model.connectedUser()?.channel()?.channelName() {
-                    setReceiverName(channelName, imageName: "channelmsg")
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            if user == model.connectedUser() {
+                // Are we in 'send to default channel mode'?
+                if self.user == nil && self.channel == nil && self.tree == nil {
+                    if let channelName = model.connectedUser()?.channel()?.channelName() {
+                        self.setReceiverName(channelName, imageName: "channelmsg")
+                    }
                 }
             }
         }
     }
 
     func serverModel(_ model: MKServerModel!, userLeft user: MKUser!) {
-        if user == self.user {
-            self.user = nil
-        }
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            if user == self.user {
+                self.user = nil
+            }
 
-        if let channelName = model.connectedUser()?.channel()?.channelName() {
-            setReceiverName(channelName, imageName: "channelmsg")
+            if let channelName = model.connectedUser()?.channel()?.channelName() {
+                self.setReceiverName(channelName, imageName: "channelmsg")
+            }
         }
     }
 
     func serverModel(_ model: MKServerModel!, channelRenamed channel: MKChannel!) {
-        if channel == tree {
-            setReceiverName(channel.channelName(), imageName: "channelmsg")
-        } else if channel == self.channel {
-            setReceiverName(channel.channelName(), imageName: "channelmsg")
-        } else if self.channel == nil && tree == nil && user == nil && model.connectedUser()?.channel() == channel {
-            if let channelName = model.connectedUser()?.channel()?.channelName() {
-                setReceiverName(channelName, imageName: "channelmsg")
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            if channel == self.tree {
+                self.setReceiverName(channel.channelName(), imageName: "channelmsg")
+            } else if channel == self.channel {
+                self.setReceiverName(channel.channelName(), imageName: "channelmsg")
+            } else if self.channel == nil && self.tree == nil && self.user == nil && model.connectedUser()?.channel() == channel {
+                if let channelName = model.connectedUser()?.channel()?.channelName() {
+                    self.setReceiverName(channelName, imageName: "channelmsg")
+                }
             }
         }
     }
 
     func serverModel(_ model: MKServerModel!, channelRemoved channel: MKChannel!) {
-        if channel == tree {
-            tree = nil
-            if let channelName = model.connectedUser()?.channel()?.channelName() {
-                setReceiverName(channelName, imageName: "channelmsg")
-            }
-        } else if channel == self.channel {
-            self.channel = nil
-            if let channelName = model.connectedUser()?.channel()?.channelName() {
-                setReceiverName(channelName, imageName: "channelmsg")
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            if channel == self.tree {
+                self.tree = nil
+                if let channelName = model.connectedUser()?.channel()?.channelName() {
+                    self.setReceiverName(channelName, imageName: "channelmsg")
+                }
+            } else if channel == self.channel {
+                self.channel = nil
+                if let channelName = model.connectedUser()?.channel()?.channelName() {
+                    self.setReceiverName(channelName, imageName: "channelmsg")
+                }
             }
         }
     }
 
     func serverModel(_ model: MKServerModel!, textMessageReceived msg: MKTextMessage!, from user: MKUser!) {
-        var heading = NSLocalizedString("Server Message", comment: "A message sent from the server itself")
-        if let user = user {
-            heading = String(format: NSLocalizedString("From %@", comment: "Message sender title"), user.userName())
-        }
-        msgdb.addMessage(msg, withHeading: heading, andSentBySelf: false)
-
-        let indexPath = IndexPath(row: msgdb.count() - 1, section: 0)
-        tableView.insertRows(at: [indexPath], with: .fade)
-        if !tableView.isDragging && !UIMenuController.shared.isMenuVisible {
-            tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
-        }
-
-        // Send local notification if app is in background
-        let app = UIApplication.shared
-        if app.applicationState == .background {
-            var trimSet = CharacterSet.whitespaces
-            trimSet.formUnion(.newlines)
-
-            var msgText = (msg.plainTextString() ?? "").trimmingCharacters(in: trimSet)
-            let numImages = msg.embeddedImages()?.count ?? 0
-
-            if msgText.isEmpty {
-                if numImages == 0 {
-                    msgText = NSLocalizedString("(Empty body)", comment: "")
-                } else if numImages == 1 {
-                    msgText = NSLocalizedString("(Message with image attachment)", comment: "")
-                } else {
-                    msgText = NSLocalizedString("(Message with image attachments)", comment: "")
-                }
-            } else {
-                msgText = msg.plainTextString() ?? ""
-            }
-
-            let content = UNMutableNotificationContent()
-            content.body = msgText
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            var heading = NSLocalizedString("Server Message", comment: "A message sent from the server itself")
             if let user = user {
-                content.title = user.userName()
+                heading = String(format: NSLocalizedString("From %@", comment: "Message sender title"), user.userName())
+            }
+            self.msgdb.addMessage(msg, withHeading: heading, andSentBySelf: false)
+
+            let indexPath = IndexPath(row: self.msgdb.count() - 1, section: 0)
+            self.tableView.insertRows(at: [indexPath], with: .fade)
+            if !self.tableView.isDragging && !UIMenuController.shared.isMenuVisible {
+                self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
             }
 
-            let request = UNNotificationRequest(
-                identifier: "info.mumble.Mumble.TextMessageNotification",
-                content: content,
-                trigger: nil
-            )
-            UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
-            app.applicationIconBadgeNumber += 1
+            // Send local notification if app is in background
+            let app = UIApplication.shared
+            if app.applicationState == .background {
+                var trimSet = CharacterSet.whitespaces
+                trimSet.formUnion(.newlines)
+
+                var msgText = (msg.plainTextString() ?? "").trimmingCharacters(in: trimSet)
+                let numImages = msg.embeddedImages()?.count ?? 0
+
+                if msgText.isEmpty {
+                    if numImages == 0 {
+                        msgText = NSLocalizedString("(Empty body)", comment: "")
+                    } else if numImages == 1 {
+                        msgText = NSLocalizedString("(Message with image attachment)", comment: "")
+                    } else {
+                        msgText = NSLocalizedString("(Message with image attachments)", comment: "")
+                    }
+                } else {
+                    msgText = msg.plainTextString() ?? ""
+                }
+
+                let content = UNMutableNotificationContent()
+                content.body = msgText
+                if let user = user {
+                    content.title = user.userName()
+                }
+
+                let request = UNNotificationRequest(
+                    identifier: "info.mumble.Mumble.TextMessageNotification",
+                    content: content,
+                    trigger: nil
+                )
+                UNUserNotificationCenter.current().add(request, withCompletionHandler: nil)
+                app.applicationIconBadgeNumber += 1
+            }
         }
     }
 }

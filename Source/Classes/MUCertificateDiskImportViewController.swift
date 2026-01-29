@@ -4,7 +4,18 @@ private func showAlertDialog(title: String, msg: String) {
     DispatchQueue.main.async {
         let alert = UIAlertController(title: title, message: msg, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-        UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true)
+
+        // Get key window using iOS 13+ compatible method
+        var keyWindow: UIWindow?
+        if #available(iOS 13.0, *) {
+            keyWindow = UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .flatMap { $0.windows }
+                .first { $0.isKeyWindow }
+        } else {
+            keyWindow = UIApplication.shared.keyWindow
+        }
+        keyWindow?.rootViewController?.present(alert, animated: true)
     }
 }
 
@@ -84,19 +95,23 @@ class MUCertificateDiskImportViewController: UITableViewController, UITextFieldD
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat { showHelp ? 80.0 : 0.0 }
 
     private func tryImportCertificate(password: String?) {
-        guard let fileName = diskCertificates[attemptIndexPath?.row ?? 0] as String? else { return }
-        let dirs = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        let file = (dirs.first! as NSString).appendingPathComponent(fileName)
+        guard let fileName = diskCertificates[attemptIndexPath?.row ?? 0] as String?,
+              let documentsDir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first else { return }
+        let file = (documentsDir as NSString).appendingPathComponent(fileName)
         guard let pkcs12Data = try? Data(contentsOf: URL(fileURLWithPath: file)) else { return }
         guard let chain = MKCertificate.certificates(withPKCS12: pkcs12Data, password: password), !chain.isEmpty else {
             showPasswordDialog()
-            tableView.deselectRow(at: attemptIndexPath!, animated: true)
+            if let indexPath = attemptIndexPath {
+                tableView.deselectRow(at: indexPath, animated: true)
+            }
             return
         }
-        let leaf = chain[0] as! MKCertificate
+        guard let leaf = chain[0] as? MKCertificate else { return }
         guard let transformedData = leaf.exportPKCS12(withPassword: "") else {
             showAlertDialog(title: NSLocalizedString("Import Error", comment: "Error title for certificate import failure"), msg: NSLocalizedString("Mumble was unable to export the specified certificate.", comment: "Error message when certificate export fails"))
-            tableView.deselectRow(at: attemptIndexPath!, animated: true)
+            if let indexPath = attemptIndexPath {
+                tableView.deselectRow(at: indexPath, animated: true)
+            }
             return
         }
         let dict = [kSecImportExportPassphrase as String: ""]

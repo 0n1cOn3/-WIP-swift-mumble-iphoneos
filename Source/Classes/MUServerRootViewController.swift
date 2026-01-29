@@ -176,97 +176,124 @@ class MUServerRootViewController: UINavigationController, MKConnectionDelegate, 
     }
 
     // MARK: - MKServerModelDelegate
+    // Note: All delegate methods dispatch to main thread since MKServerModel
+    // callbacks may be invoked from background threads (network layer).
 
     func serverModel(_ model: MKServerModel, userKicked user: MKUser, by actor: MKUser?, forReason reason: String?) {
         guard user == model.connectedUser() else { return }
 
-        let reasonMsg = reason ?? NSLocalizedString("(No reason)", comment: "")
-        let title = NSLocalizedString("You were kicked", comment: "")
-        let alertMsg = String(
-            format: NSLocalizedString("Kicked by %@ for reason: \"%@\"", comment: "Kicked by user for reason"),
-            actor?.userName() ?? "", reasonMsg
-        )
+        DispatchQueue.main.async { [weak self] in
+            let reasonMsg = reason ?? NSLocalizedString("(No reason)", comment: "")
+            let title = NSLocalizedString("You were kicked", comment: "")
+            let alertMsg = String(
+                format: NSLocalizedString("Kicked by %@ for reason: \"%@\"", comment: "Kicked by user for reason"),
+                actor?.userName() ?? "", reasonMsg
+            )
 
-        let alertCtrl = UIAlertController(title: title, message: alertMsg, preferredStyle: .alert)
-        alertCtrl.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .cancel))
-        present(alertCtrl, animated: true)
+            let alertCtrl = UIAlertController(title: title, message: alertMsg, preferredStyle: .alert)
+            alertCtrl.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .cancel))
+            self?.present(alertCtrl, animated: true)
 
-        MUConnectionController.shared().disconnectFromServer()
+            MUConnectionController.shared().disconnectFromServer()
+        }
     }
 
     func serverModel(_ model: MKServerModel, userBanned user: MKUser, by actor: MKUser?, forReason reason: String?) {
         guard user == model.connectedUser() else { return }
 
-        let reasonMsg = reason ?? NSLocalizedString("(No reason)", comment: "")
-        let title = NSLocalizedString("You were banned", comment: "")
-        let alertMsg = String(
-            format: NSLocalizedString("Banned by %@ for reason: \"%@\"", comment: ""),
-            actor?.userName() ?? "", reasonMsg
-        )
+        DispatchQueue.main.async { [weak self] in
+            let reasonMsg = reason ?? NSLocalizedString("(No reason)", comment: "")
+            let title = NSLocalizedString("You were banned", comment: "")
+            let alertMsg = String(
+                format: NSLocalizedString("Banned by %@ for reason: \"%@\"", comment: ""),
+                actor?.userName() ?? "", reasonMsg
+            )
 
-        let alertCtrl = UIAlertController(title: title, message: alertMsg, preferredStyle: .alert)
-        alertCtrl.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .cancel))
-        present(alertCtrl, animated: true)
+            let alertCtrl = UIAlertController(title: title, message: alertMsg, preferredStyle: .alert)
+            alertCtrl.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .cancel))
+            self?.present(alertCtrl, animated: true)
 
-        MUConnectionController.shared().disconnectFromServer()
+            MUConnectionController.shared().disconnectFromServer()
+        }
     }
 
     func serverModel(_ model: MKServerModel!, permissionDenied perm: MKPermission, for user: MKUser!, in channel: MKChannel!) {
-        MUNotificationController.shared.addNotification(NSLocalizedString("Permission denied", comment: ""))
-    }
-
-    func serverModelInvalidChannelNameError(_ model: MKServerModel) {
-        MUNotificationController.shared.addNotification(NSLocalizedString("Invalid channel name", comment: ""))
-    }
-
-    func serverModelModifySuperUserError(_ model: MKServerModel) {
-        MUNotificationController.shared.addNotification(NSLocalizedString("Cannot modify SuperUser", comment: ""))
-    }
-
-    func serverModelTextMessageTooLongError(_ model: MKServerModel) {
-        MUNotificationController.shared.addNotification(NSLocalizedString("Message too long", comment: ""))
-    }
-
-    func serverModelTemporaryChannelError(_ model: MKServerModel) {
-        MUNotificationController.shared.addNotification(NSLocalizedString("Not permitted in temporary channel", comment: ""))
-    }
-
-    func serverModel(_ model: MKServerModel!, missingCertificateErrorFor user: MKUser!) {
-        if user == nil {
-            MUNotificationController.shared.addNotification(NSLocalizedString("Missing certificate", comment: ""))
-        } else {
-            MUNotificationController.shared.addNotification(NSLocalizedString("Missing certificate for user", comment: ""))
-        }
-    }
-
-    func serverModel(_ model: MKServerModel, invalidUsernameErrorForName name: String?) {
-        if let name = name {
-            MUNotificationController.shared.addNotification("Invalid username: \(name)")
-        } else {
-            MUNotificationController.shared.addNotification("Invalid username")
-        }
-    }
-
-    func serverModelChannelFullError(_ model: MKServerModel) {
-        MUNotificationController.shared.addNotification(NSLocalizedString("Channel is full", comment: ""))
-    }
-
-    func serverModel(_ model: MKServerModel, permissionDeniedForReason reason: String?) {
-        if let reason = reason {
-            MUNotificationController.shared.addNotification(String(
-                format: NSLocalizedString("Permission denied: %@", comment: "Permission denied with reason"),
-                reason
-            ))
-        } else {
+        DispatchQueue.main.async {
             MUNotificationController.shared.addNotification(NSLocalizedString("Permission denied", comment: ""))
         }
     }
 
+    func serverModelInvalidChannelNameError(_ model: MKServerModel) {
+        DispatchQueue.main.async {
+            MUNotificationController.shared.addNotification(NSLocalizedString("Invalid channel name", comment: ""))
+        }
+    }
+
+    func serverModelModifySuperUserError(_ model: MKServerModel) {
+        DispatchQueue.main.async {
+            MUNotificationController.shared.addNotification(NSLocalizedString("Cannot modify SuperUser", comment: ""))
+        }
+    }
+
+    func serverModelTextMessageTooLongError(_ model: MKServerModel) {
+        DispatchQueue.main.async {
+            MUNotificationController.shared.addNotification(NSLocalizedString("Message too long", comment: ""))
+        }
+    }
+
+    func serverModelTemporaryChannelError(_ model: MKServerModel) {
+        DispatchQueue.main.async {
+            MUNotificationController.shared.addNotification(NSLocalizedString("Not permitted in temporary channel", comment: ""))
+        }
+    }
+
+    func serverModel(_ model: MKServerModel!, missingCertificateErrorFor user: MKUser!) {
+        DispatchQueue.main.async {
+            if user == nil {
+                MUNotificationController.shared.addNotification(NSLocalizedString("Missing certificate", comment: ""))
+            } else {
+                MUNotificationController.shared.addNotification(NSLocalizedString("Missing certificate for user", comment: ""))
+            }
+        }
+    }
+
+    func serverModel(_ model: MKServerModel, invalidUsernameErrorForName name: String?) {
+        DispatchQueue.main.async {
+            if let name = name {
+                MUNotificationController.shared.addNotification("Invalid username: \(name)")
+            } else {
+                MUNotificationController.shared.addNotification("Invalid username")
+            }
+        }
+    }
+
+    func serverModelChannelFullError(_ model: MKServerModel) {
+        DispatchQueue.main.async {
+            MUNotificationController.shared.addNotification(NSLocalizedString("Channel is full", comment: ""))
+        }
+    }
+
+    func serverModel(_ model: MKServerModel, permissionDeniedForReason reason: String?) {
+        DispatchQueue.main.async {
+            if let reason = reason {
+                MUNotificationController.shared.addNotification(String(
+                    format: NSLocalizedString("Permission denied: %@", comment: "Permission denied with reason"),
+                    reason
+                ))
+            } else {
+                MUNotificationController.shared.addNotification(NSLocalizedString("Permission denied", comment: ""))
+            }
+        }
+    }
+
     func serverModel(_ model: MKServerModel, textMessageReceived msg: MKTextMessage, from user: MKUser?) {
-        if segmentedControl.selectedSegmentIndex != 1 { // When not in messages view
-            unreadMessages += 1
-            numberBadgeView.value = UInt(unreadMessages)
-            numberBadgeView.isHidden = false
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            if self.segmentedControl.selectedSegmentIndex != 1 { // When not in messages view
+                self.unreadMessages += 1
+                self.numberBadgeView.value = UInt(self.unreadMessages)
+                self.numberBadgeView.isHidden = false
+            }
         }
     }
 

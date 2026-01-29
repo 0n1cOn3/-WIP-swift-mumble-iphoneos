@@ -189,7 +189,61 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
 
     // MARK: - Audio Setup
 
+    /// Requests microphone permission if not already granted.
+    /// Shows an alert if permission is denied.
+    private func requestMicrophonePermissionIfNeeded(completion: @escaping (Bool) -> Void) {
+        let session = AVAudioSession.sharedInstance()
+
+        switch session.recordPermission {
+        case .granted:
+            completion(true)
+        case .denied:
+            DispatchQueue.main.async { [weak self] in
+                self?.showMicrophonePermissionDeniedAlert()
+            }
+            completion(false)
+        case .undetermined:
+            session.requestRecordPermission { granted in
+                if !granted {
+                    DispatchQueue.main.async { [weak self] in
+                        self?.showMicrophonePermissionDeniedAlert()
+                    }
+                }
+                completion(granted)
+            }
+        @unknown default:
+            completion(false)
+        }
+    }
+
+    private func showMicrophonePermissionDeniedAlert() {
+        let title = NSLocalizedString("Microphone Access Required", comment: "Alert title for microphone permission")
+        let message = NSLocalizedString("Mumble needs microphone access for voice chat. Please enable it in Settings.", comment: "Alert message for microphone permission")
+
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Settings", comment: ""), style: .default) { _ in
+            if let url = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(url)
+            }
+        })
+
+        navigationController?.present(alert, animated: true)
+    }
+
     private func setupAudio() {
+        // Request microphone permission before configuring audio
+        requestMicrophonePermissionIfNeeded { [weak self] granted in
+            guard granted else {
+                NSLog("MUApplicationDelegate: Microphone permission not granted")
+                return
+            }
+
+            self?.configureAudioSubsystem()
+        }
+    }
+
+    private func configureAudioSubsystem() {
         let defaults = UserDefaults.standard
 
         // Configure AVAudioSession

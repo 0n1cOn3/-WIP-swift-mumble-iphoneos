@@ -5,7 +5,18 @@ private func showAlertDialog(title: String, msg: String) {
         let ok = NSLocalizedString("OK", comment: "OK button text for alert dialogs")
         let alert = UIAlertController(title: title, message: msg, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: ok, style: .cancel, handler: nil))
-        UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true)
+
+        // Get key window using iOS 13+ compatible method
+        var keyWindow: UIWindow?
+        if #available(iOS 13.0, *) {
+            keyWindow = UIApplication.shared.connectedScenes
+                .compactMap { $0 as? UIWindowScene }
+                .flatMap { $0.windows }
+                .first { $0.isKeyWindow }
+        } else {
+            keyWindow = UIApplication.shared.keyWindow
+        }
+        keyWindow?.rootViewController?.present(alert, animated: true)
     }
 }
 
