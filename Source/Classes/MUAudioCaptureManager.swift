@@ -46,7 +46,6 @@ class MUAudioCaptureManager: NSObject {
 
     private var engine: AVAudioEngine
     private var recorder: AVAudioRecorder?
-    private var inputFormat: AVAudioFormat?
     private var tapInstalled: Bool = false
     private var meteringHandler: (() -> Void)?
 
@@ -55,7 +54,6 @@ class MUAudioCaptureManager: NSObject {
     private override init() {
         engine = AVAudioEngine()
         super.init()
-        inputFormat = engine.inputNode.inputFormat(forBus: 0)
     }
 
     // MARK: - Configuration
@@ -113,8 +111,6 @@ class MUAudioCaptureManager: NSObject {
         } catch {
             NSLog("MUAudioCaptureManager: failed to configure audio session: %@", error.localizedDescription)
         }
-
-        inputFormat = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1)
 
         let settings: [String: Any] = [
             AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
@@ -207,7 +203,16 @@ class MUAudioCaptureManager: NSObject {
         let input = engine.inputNode
 
         guard !tapInstalled else { return }
-        guard let format = inputFormat else { return }
+
+        // Use the input node's native output format to avoid format mismatch exceptions.
+        // Passing a custom format that doesn't match hardware capabilities causes a crash.
+        let format = input.outputFormat(forBus: 0)
+
+        // Verify the format is valid (channels > 0) before installing tap
+        guard format.channelCount > 0 else {
+            NSLog("MUAudioCaptureManager: Invalid input format (0 channels), skipping tap installation")
+            return
+        }
 
         input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
             self?.processBuffer(buffer)
