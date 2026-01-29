@@ -54,8 +54,8 @@ A modern Swift 5 port of the Mumble voice chat client for iOS.
 Clone with submodules:
 
 ```bash
-git clone --recursive https://github.com/0n1cOn3/-WIP-swift-mumble-iphoneos.git
-cd -WIP-swift-mumble-iphoneos
+git clone --recursive https://github.com/0n1cOn3/mumble-iphoneos-swift.git
+cd mumble-iphoneos-swift
 ```
 
 If you already cloned without `--recursive`:
