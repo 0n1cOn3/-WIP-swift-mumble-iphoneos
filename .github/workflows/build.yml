@@ -17,3 +17,16 @@ jobs:
         run: |
           gem install xcpretty
           set -o pipefail && xcodebuild -configuration Release -target "Mumble" CONFIGURATION_BUILD_DIR="${PWD}/__build__" CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO -sdk iphoneos | xcpretty
+
+      - name: Create unsigned IPA
+        run: |
+          mkdir -p Payload
+          cp -r __build__/Mumble.app Payload/
+          zip -r Mumble-unsigned.ipa Payload
+          rm -rf Payload
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mumble-${{ github.sha }}-unsigned
+          path: Mumble-unsigned.ipa
