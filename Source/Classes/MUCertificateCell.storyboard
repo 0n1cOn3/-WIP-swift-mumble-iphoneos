@@ -8,7 +8,7 @@
                     <tableView key="view" contentMode="scaleToFill" id="tableView">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" reuseIdentifier="CertificateCell" id="CertCell" customClass="MUCertificateCell">
+                            <tableViewCell contentMode="scaleToFill" reuseIdentifier="CertificateCell" id="CertCell" customClass="MUCertificateCell" customModule="Mumble" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="0.0" width="385" height="84"/>
                                 <subviews>
                                     <imageView id="cellImage">

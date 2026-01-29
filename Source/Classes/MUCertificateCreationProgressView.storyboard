@@ -4,7 +4,7 @@
         <!-- MUCertificateCreationProgressView -->
         <scene sceneID="CertProgressScene">
             <objects>
-                <viewController id="CertProgressVC" customClass="MUCertificateCreationProgressView" sceneMemberID="viewController" isInitialViewController="YES">
+                <viewController id="CertProgressVC" customClass="MUCertificateCreationProgressView" customModule="Mumble" customModuleProvider="target" sceneMemberID="viewController" isInitialViewController="YES">
                     <view key="view" contentMode="scaleToFill" id="CertProgressView">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <userGuides>

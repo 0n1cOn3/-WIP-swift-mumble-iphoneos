@@ -4,7 +4,7 @@
         <!-- MULegalViewController -->
         <scene sceneID="MULegalScene">
             <objects>
-                <viewController id="MULegalVC" customClass="MULegalViewController" sceneMemberID="viewController" isInitialViewController="YES">
+                <viewController id="MULegalVC" customClass="MULegalViewController" customModule="Mumble" customModuleProvider="target" sceneMemberID="viewController" isInitialViewController="YES">
                     <view key="view" contentMode="scaleToFill" id="MULegalView">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
                         <subviews>
