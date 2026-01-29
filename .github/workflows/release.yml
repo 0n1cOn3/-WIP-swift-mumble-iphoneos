@@ -1,0 +1,120 @@
+name: Build and Release IPA
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version tag (e.g., v1.0.0)'
+        required: true
+        default: 'v0.0.0-dev'
+
+jobs:
+  build-ipa:
+    name: Build IPA
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Set version from tag or input
+        id: version
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+          GIT_REF: ${{ github.ref }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" == "workflow_dispatch" ]; then
+            # Sanitize version input - only allow alphanumeric, dots, and hyphens
+            CLEAN_VERSION=$(echo "$INPUT_VERSION" | tr -cd '[:alnum:].-')
+            echo "VERSION=$CLEAN_VERSION" >> $GITHUB_OUTPUT
+          else
+            # Extract tag from ref
+            TAG_VERSION="${GIT_REF#refs/tags/}"
+            echo "VERSION=$TAG_VERSION" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build Archive
+        run: |
+          xcodebuild archive \
+            -project Mumble.xcodeproj \
+            -scheme Mumble \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/Mumble.xcarchive \
+            -configuration Release \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            DEVELOPMENT_TEAM="" \
+            | xcpretty || true
+
+      - name: Create ExportOptions.plist
+        run: |
+          cat > build/ExportOptions.plist << 'EOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+              <key>method</key>
+              <string>development</string>
+              <key>compileBitcode</key>
+              <false/>
+              <key>signingStyle</key>
+              <string>automatic</string>
+          </dict>
+          </plist>
+          EOF
+
+      - name: Create unsigned IPA manually
+        env:
+          VERSION: ${{ steps.version.outputs.VERSION }}
+        run: |
+          mkdir -p build/Payload
+          cp -r build/Mumble.xcarchive/Products/Applications/Mumble.app build/Payload/
+          cd build
+          zip -r "Mumble-${VERSION}-unsigned.ipa" Payload
+          rm -rf Payload
+
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Mumble-${{ steps.version.outputs.VERSION }}-unsigned
+          path: build/Mumble-${{ steps.version.outputs.VERSION }}-unsigned.ipa
+
+      - name: Create Release (tag push)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Mumble ${{ steps.version.outputs.VERSION }}
+          draft: false
+          prerelease: ${{ contains(steps.version.outputs.VERSION, '-') }}
+          generate_release_notes: true
+          files: |
+            build/Mumble-${{ steps.version.outputs.VERSION }}-unsigned.ipa
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release (manual trigger)
+        if: github.event_name == 'workflow_dispatch'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.VERSION }}
+          name: Mumble ${{ steps.version.outputs.VERSION }}
+          draft: true
+          prerelease: true
+          generate_release_notes: true
+          files: |
+            build/Mumble-${{ steps.version.outputs.VERSION }}-unsigned.ipa
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
