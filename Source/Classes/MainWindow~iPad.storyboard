@@ -4,7 +4,7 @@
         <!-- Application Scene -->
         <scene sceneID="AppScene">
             <objects>
-                <placeholder placeholderIdentifier="IBFilesOwner" id="app" userLabel="File's Owner" customClass="MUApplication">
+                <placeholder placeholderIdentifier="IBFilesOwner" id="app" userLabel="File's Owner" customClass="UIApplication">
                     <connections>
                         <outlet property="delegate" destination="delegate" id="appdel"/>
                     </connections>
