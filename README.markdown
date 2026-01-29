@@ -1,126 +1,267 @@
-# Mumble for iOS – Swift 5 WIP Fork
+# Mumble for iOS – Swift 5 Migration
 
-This repository is an experimental fork of the original **Mumble for iOS** client.  
-The goal is to gradually migrate the codebase to **Swift 5** and modern iOS APIs.
+A modern Swift 5 port of the Mumble voice chat client for iOS.
 
-> [!WARNING]  
-> This fork is **work in progress**, **does not compile**, and is **not usable in production**.  
-> Expect broken builds, incomplete features, and frequent changes.
-
----
-
-## Project status
-
-- Experimental Swift 5 migration of the legacy Objective-C iOS client
-- Target platform: **iOS 12+**
-- Current state: **broken / unfinished / non-compiling**
-- No releases, no App Store build, no support guarantees
-
-If you need a working Mumble client, use the official stable releases or the upstream projects instead.
+> [!NOTE]
+> This fork has been **successfully migrated to Swift 5** and now compiles with Xcode 16.2.
+> Currently in **alpha testing** phase – ready for testing on real iOS devices.
 
 ---
 
-## Upstream projects
+## Project Status
 
-This fork is based on the original, unmaintained iOS client:
+| Metric | Status |
+|--------|--------|
+| Build Status | **Compiling** |
+| Swift Version | Swift 5 |
+| iOS Target | iOS 12.0+ |
+| Xcode | 16.2+ |
+| Stage | **Alpha Testing** |
 
-- Original iOS repo: <https://github.com/mumble-voip/mumble-iphoneos>  
-- Desktop Mumble (Windows, macOS, Linux, *BSD, etc.): <https://github.com/mumble-voip/mumble>
-- Project website: <https://mumble.info/>
+### Migration Progress
 
-The upstream iOS app itself is currently unmaintained. This fork is an independent experiment and not an official continuation.
-
----
-
-## Goals of this fork
-
-The long-term goals are:
-
-- Migrate the codebase to **Swift 5** (while keeping a controlled amount of Objective-C via bridging headers).
-- Raise minimum iOS version and clean up deprecated APIs.
-- Modernize the UI layer (storyboards, Auto Layout, trait collections).
-- Replace legacy and deprecated frameworks where possible (e.g. old WebView, outdated audio APIs).
-- Make the project buildable and maintainable on current Xcode versions.
-
-At the moment, many of these goals are only partially attempted or not yet implemented.
+- **Complete:** All Objective-C view controllers migrated to Swift
+- **Complete:** Storyboards converted to programmatic UI
+- **Complete:** Audio session management modernized
+- **Complete:** Certificate handling updated
+- **Complete:** MumbleKit integration working
+- **Testing:** Real device functionality
 
 ---
 
-## Work in progress
+## Features
 
-The migration is ongoing and very incomplete. Examples of planned or partially tackled areas:
-
-- Converting controllers and views from Objective-C to Swift.
-- Replacing legacy web views with `WKWebView`.
-- Converting old test targets and frameworks to modern Xcode testing infrastructure.
-- Updating audio handling to more modern APIs (e.g. `AVAudioSession`, `AVAudioEngine`).
-
-Nothing in this list should be considered “done” or “stable” yet.
+- Voice chat with Mumble servers
+- Push-to-Talk and Voice Activity Detection
+- Server favorites and public server browser
+- Certificate-based authentication
+- Text messaging
+- Channel navigation
+- iPad and iPhone support
 
 ---
 
-## Building (currently fails)
-
-> [!IMPORTANT]  
-> The current state of this fork **does not build successfully**, even with a recent Xcode toolchain.  
-> The instructions below describe the *intended* build setup once the migration progresses.
+## Building
 
 ### Requirements
 
-- macOS with a recent Xcode version (e.g. Xcode 16 or newer)
-- Latest iOS SDK provided by Xcode
+- macOS with **Xcode 16.2** or newer
+- iOS SDK (included with Xcode)
 - Git with submodule support
 
-### Getting the source
+### Getting the Source
 
-Clone this fork with submodules:
+Clone with submodules:
 
 ```bash
-git clone --recursive https://github.com/0n1cOn3/mumble-iphoneos.git
-cd mumble-iphoneos
+git clone --recursive https://github.com/0n1cOn3/-WIP-swift-mumble-iphoneos.git
+cd -WIP-swift-mumble-iphoneos
 ```
 
-If you already cloned without `--recursive`, initialize submodules with:
+If you already cloned without `--recursive`:
 
 ```bash
 git submodule update --init --recursive
 ```
 
-### Opening in Xcode
+### Building in Xcode
 
-1. Open `Mumble.xcodeproj` in Xcode.
-2. Select the **Mumble** scheme.
-3. Choose a suitable iOS Simulator or device target.
+1. Open `Mumble.xcodeproj` in Xcode
+2. Select the **Mumble** scheme
+3. Choose your target device or simulator
+4. Build with **Cmd+B** or run with **Cmd+R**
 
-At this time, the project will **not** build successfully. The migration must progress further before a clean build can be expected.
+### Building via Command Line
+
+```bash
+xcodebuild -configuration Release \
+  -target "Mumble" \
+  CONFIGURATION_BUILD_DIR="${PWD}/__build__" \
+  CODE_SIGN_IDENTITY="" \
+  CODE_SIGNING_REQUIRED=NO \
+  -sdk iphoneos
+```
+
+The `.app` bundle will be in the `__build__` directory.
 
 ---
 
-## Xcode schemes and configurations
+## Installing on Device (Sideloading)
 
-Once the project reaches a buildable state, you may want to:
+Since this app is not on the App Store, you need to sideload it to your iOS device. The easiest method is using **Sideloadly**.
 
-- Keep only the **Mumble** scheme enabled to reduce clutter.
-- Adjust build configurations for your workflow (for example, a faster configuration for device builds, or a dedicated configuration for archives).
+### Option 1: Sideloadly (Recommended)
 
-Currently, scheme and configuration tuning is secondary to getting the project to compile at all.
+[Sideloadly](https://sideloadly.io/) is a free tool for sideloading apps to iOS devices.
+
+#### Download Sideloadly
+
+Get Sideloadly from: **https://github.com/SideloadlyiOS/Sideloadly-Download**
+
+Available for:
+- Windows
+- macOS (Intel & Apple Silicon)
+
+#### Installation Steps
+
+1. **Download and install Sideloadly** from the link above
+
+2. **Build the IPA** (if you don't have one):
+   ```bash
+   # After building the .app, create an IPA
+   mkdir -p Payload
+   cp -r __build__/Mumble.app Payload/
+   zip -r Mumble.ipa Payload
+   rm -rf Payload
+   ```
+
+3. **Connect your iOS device** to your computer via USB
+
+4. **Open Sideloadly** and:
+   - Drag the `Mumble.ipa` file into Sideloadly
+   - Enter your Apple ID (used for signing)
+   - Click "Start" to begin installation
+
+5. **Trust the developer certificate** on your device:
+   - Go to **Settings > General > VPN & Device Management**
+   - Tap on your Apple ID email
+   - Tap **Trust** to allow apps from this developer
+
+6. **Launch Mumble** from your home screen
+
+#### Notes on Sideloadly
+
+- Free Apple IDs require re-signing every 7 days
+- Paid Apple Developer accounts ($99/year) allow 1-year certificates
+- The app may need to be re-installed after the certificate expires
+
+### Option 2: Xcode Direct Install
+
+If you have Xcode and an Apple Developer account:
+
+1. Open the project in Xcode
+2. Connect your iOS device
+3. Select your device as the build target
+4. Go to **Signing & Capabilities** and select your team
+5. Click **Run** (Cmd+R) to build and install directly
+
+### Option 3: AltStore
+
+[AltStore](https://altstore.io/) is an alternative sideloading solution that automatically refreshes apps.
+
+---
+
+## Configuration
+
+### Audio Settings
+
+The app supports various audio configurations:
+
+- **Transmission Mode:** Voice Activity Detection (VAD), Push-to-Talk, or Continuous
+- **Audio Quality:** Low (16kbps), Balanced (40kbps), or High (72kbps)
+- **Codec:** Opus (recommended) or CELT
+- **Echo Cancellation:** Enabled by default
+- **Sidetone:** Optional audio feedback
+
+### Server Connection
+
+Connect to Mumble servers using:
+- Direct hostname/IP and port
+- Server favorites
+- Public server browser
+
+Default port: `64738`
+
+---
+
+## Troubleshooting
+
+### App Won't Install
+
+- Ensure your device is trusted on your computer
+- Check that your Apple ID is valid
+- Try rebooting both your device and computer
+
+### App Crashes on Launch
+
+- Verify the IPA was built for the correct architecture (arm64)
+- Check that all frameworks are properly embedded
+- Review device logs in Xcode Organizer
+
+### Audio Issues
+
+- Grant microphone permission when prompted
+- Check audio route settings (speaker vs. receiver)
+- Ensure the server supports the selected codec
+
+### Certificate Errors
+
+- The app uses self-signed certificates for authentication
+- Generate a new certificate in Settings if needed
+- Export/import certificates for use on multiple devices
+
+---
+
+## Architecture
+
+### Swift Migration
+
+This fork migrated all view controllers from Objective-C to Swift 5:
+
+- `MUApplicationDelegate` – App lifecycle and audio setup
+- `MUConnectionController` – Server connection management
+- `MUServerViewController` – Connected server UI
+- `MUPreferencesViewController` – Settings screens
+- `MUCertificate*` – Certificate management
+- `MUMessages*` – Text messaging
+- And 50+ more files
+
+### Dependencies
+
+- **MumbleKit** – Core Mumble protocol implementation (submodule)
+- **FMDB** – SQLite database wrapper (submodule)
+- **OpenSSL** – Cryptographic functions (submodule)
 
 ---
 
 ## Contributing
 
-This fork is experimental and highly unstable. If you want to help with the Swift 5 migration:
+Contributions are welcome! Areas that need work:
 
-- Focus on **small, self-contained changes** (e.g. converting a single controller or utility).
-- Avoid large refactors that touch everything at once.
-- Keep Objective-C interop via bridging headers where needed instead of rewriting everything in one go.
-- Clearly document any API replacements (especially for audio and networking).
+- UI modernization (SwiftUI migration planned)
+- iOS 17+ features (Interactive Widgets, Live Activities)
+- Accessibility improvements
+- Localization updates
+- Bug fixes and testing
 
-Bug reports about “it doesn’t build” are expected at this stage; detailed, reproducible issues and concrete migration contributions are more useful than general breakage reports.
+### Development Guidelines
+
+- Follow Swift API Design Guidelines
+- Use `@objcMembers` for classes called from Objective-C
+- Maintain iOS 12 compatibility with `#available` checks
+- Keep MumbleKit submodule unchanged
+
+---
+
+## Upstream Projects
+
+This fork is based on the original Mumble iOS client:
+
+- Original iOS repo: https://github.com/mumble-voip/mumble-iphoneos
+- Desktop Mumble: https://github.com/mumble-voip/mumble
+- Mumble website: https://mumble.info/
 
 ---
 
 ## License
 
-The licensing model is inherited from the upstream `mumble-iphoneos` project.  
-Refer to the license file(s) in this repository and the upstream project for details.
+This project inherits licensing from the upstream `mumble-iphoneos` project.
+See the [LICENSE](LICENSE) file for details.
+
+---
+
+## Acknowledgments
+
+- The Mumble development team for the original iOS client
+- MumbleKit contributors for the protocol implementation
+- All contributors to this Swift migration effort
