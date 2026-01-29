@@ -6,6 +6,11 @@ A modern Swift 5 port of the Mumble voice chat client for iOS.
 > This fork has been **successfully migrated to Swift 5** and now compiles with Xcode 16.2.
 > Currently in **alpha testing** phase – ready for testing on real iOS devices.
 
+> [!CAUTION]
+> - The app is **NOT YET** production ready to be used and still needs a lot of improvements and bug fixes. 
+> 
+> Feel free to send a [PR](https://github.com/mumble-voip/mumble-iphoneos/compare/master...0n1cOn3:mumble-iphoneos-swift:master) if you wanna help on this project! **:D**
+
 ---
 
 ## Project Status
@@ -26,6 +31,15 @@ A modern Swift 5 port of the Mumble voice chat client for iOS.
 - **Complete:** Certificate handling updated
 - **Complete:** MumbleKit integration working
 - **Testing:** Real device functionality
+
+---
+
+> [!CAUTION]
+> ### Known bugs
+> - Checking a large number of servers can cause the app to crash.
+> - Connecting to a server either causes the app to crash, or, if the connection succeeds, the microphone does not work at all.
+> - The app does not allow you to check the sound level of your microphone in the settings.
+
 
 ---
 
