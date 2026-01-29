@@ -148,7 +148,6 @@
 		28A2AEBC14786E6000F3B83F /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28A2AEB814786E6000F3B83F /* icon@2x.png */; };
 		28A2AEC114788BE300F3B83F /* MUColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A2AEC014788BE300F3B83F /* MUColor.m */; };
 		28ADA303148A3E3B00C55E51 /* MUAudioQualityPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ADA302148A3E3B00C55E51 /* MUAudioQualityPreferencesViewController.m */; };
-		28B034961F5354C3008E51C7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28B034951F5354C3008E51C7 /* LaunchScreen.storyboard */; };
 		28BE998018CFA83800910551 /* BlackToolbarPatterniOS7@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28BE997F18CFA83800910551 /* BlackToolbarPatterniOS7@2x.png */; };
 		28BE998218CFA8B900910551 /* BlackToolbarPatterniOS7.png in Resources */ = {isa = PBXBuildFile; fileRef = 28BE998118CFA8B900910551 /* BlackToolbarPatterniOS7.png */; };
 		28BE998518CFB96A00910551 /* MUHorizontalFlipTransitionDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 28BE998418CFB96A00910551 /* MUHorizontalFlipTransitionDelegate.m */; };
@@ -507,7 +506,6 @@
 		28A2AEC014788BE300F3B83F /* MUColor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUColor.m; sourceTree = "<group>"; };
 		28ADA301148A3E3B00C55E51 /* MUAudioQualityPreferencesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUAudioQualityPreferencesViewController.h; sourceTree = "<group>"; };
 		28ADA302148A3E3B00C55E51 /* MUAudioQualityPreferencesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUAudioQualityPreferencesViewController.m; sourceTree = "<group>"; };
-		28B034951F5354C3008E51C7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		28BE997F18CFA83800910551 /* BlackToolbarPatterniOS7@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "BlackToolbarPatterniOS7@2x.png"; path = "Resources/BlackToolbarPatterniOS7@2x.png"; sourceTree = "<group>"; };
 		28BE998118CFA8B900910551 /* BlackToolbarPatterniOS7.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BlackToolbarPatterniOS7.png; path = Resources/BlackToolbarPatterniOS7.png; sourceTree = "<group>"; };
 		28BE998318CFB96A00910551 /* MUHorizontalFlipTransitionDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUHorizontalFlipTransitionDelegate.h; sourceTree = "<group>"; };
@@ -633,7 +631,6 @@
 				2872F7C4124668880078C0B1 /* Certificates */,
 				28BF8E1C11D93A1900B72770 /* Database */,
 				2838EA0C1293165700035C5D /* Preferences */,
-				28B034951F5354C3008E51C7 /* LaunchScreen.storyboard */,
 				2861C25D116BE905002B8514 /* MUApplicationDelegate.h */,
 				2861C25E116BE905002B8514 /* MUApplicationDelegate.m */,
 				2861C25F116BE905002B8514 /* MUCountryServerListController.h */,
@@ -1304,7 +1301,6 @@
 				28BE999A18CFED9A00910551 /* Balloon_2_Right@2x.png in Resources */,
 				2879528514C2687D00567430 /* Balloon_Blue@2x.png in Resources */,
 				2879528A14C3874C00567430 /* LeftBalloonSelected.png in Resources */,
-				28B034961F5354C3008E51C7 /* LaunchScreen.storyboard in Resources */,
 				2879528B14C3874C00567430 /* LeftBalloonSelected@2x.png in Resources */,
 				2879528C14C3874C00567430 /* RightBalloonSelected.png in Resources */,
 				2879528D14C3874C00567430 /* RightBalloonSelected@2x.png in Resources */,
