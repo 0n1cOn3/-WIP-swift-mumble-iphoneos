@@ -280,7 +280,7 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
         }
         let showCertsHandler: (UIAlertAction) -> Void = { [weak self] _ in
             guard let self = self else { return }
-            if let certs = self.connection?.peerCertificates() {
+            if let certs = self.connection?.peerCertificates() as? [MKCertificate] {
                 let certTrustView = MUServerCertificateTrustViewController(certificates: certs)
                 certTrustView.delegate = self
                 let navCtrl = UINavigationController(rootViewController: certTrustView)
@@ -336,17 +336,17 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
 
         let cancelHandler: (UIAlertAction) -> Void = { [weak self] _ in
             guard let self = self else { return }
-            if self.rejectReason == .invalidUsername || self.rejectReason == .usernameInUse {
+            if self.rejectReason == MKRejectReasonInvalidUsername || self.rejectReason == MKRejectReasonUsernameInUse {
                 self.username = self.rejectAlertCtrl?.textFields?.first?.text
-            } else if self.rejectReason == .wrongServerPassword || self.rejectReason == .wrongUserPassword {
+            } else if self.rejectReason == MKRejectReasonWrongServerPassword || self.rejectReason == MKRejectReasonWrongUserPassword {
                 self.password = self.rejectAlertCtrl?.textFields?.first?.text
             }
         }
         let reconnectHandler: (UIAlertAction) -> Void = { [weak self] _ in
             guard let self = self else { return }
-            if self.rejectReason == .invalidUsername || self.rejectReason == .usernameInUse {
+            if self.rejectReason == MKRejectReasonInvalidUsername || self.rejectReason == MKRejectReasonUsernameInUse {
                 self.username = self.rejectAlertCtrl?.textFields?.first?.text
-            } else if self.rejectReason == .wrongServerPassword || self.rejectReason == .wrongUserPassword {
+            } else if self.rejectReason == MKRejectReasonWrongServerPassword || self.rejectReason == MKRejectReasonWrongUserPassword {
                 self.password = self.rejectAlertCtrl?.textFields?.first?.text
             }
             self.establishConnection()
@@ -361,55 +361,55 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
         }
 
         switch reason {
-        case .none:
+        case MKRejectReasonNone:
             msg = NSLocalizedString("No reason", comment: "")
             alertCtrl = UIAlertController(title: title, message: msg, preferredStyle: .alert)
             alertCtrl?.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .cancel, handler: cancelHandler))
 
-        case .wrongVersion:
+        case MKRejectReasonWrongVersion:
             msg = "Client/server version mismatch"
             alertCtrl = UIAlertController(title: title, message: msg, preferredStyle: .alert)
             alertCtrl?.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .cancel, handler: cancelHandler))
 
-        case .invalidUsername:
+        case MKRejectReasonInvalidUsername:
             msg = NSLocalizedString("Invalid username", comment: "")
             alertCtrl = UIAlertController(title: title, message: msg, preferredStyle: .alert)
             alertCtrl?.addTextField(configurationHandler: usernameConfigHandler)
             alertCtrl?.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: cancelHandler))
             alertCtrl?.addAction(UIAlertAction(title: NSLocalizedString("Reconnect", comment: ""), style: .default, handler: reconnectHandler))
 
-        case .wrongUserPassword:
+        case MKRejectReasonWrongUserPassword:
             msg = NSLocalizedString("Wrong certificate or password for existing user", comment: "")
             alertCtrl = UIAlertController(title: title, message: msg, preferredStyle: .alert)
             alertCtrl?.addTextField(configurationHandler: passwordConfigHandler)
             alertCtrl?.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: cancelHandler))
             alertCtrl?.addAction(UIAlertAction(title: NSLocalizedString("Reconnect", comment: ""), style: .default, handler: reconnectHandler))
 
-        case .wrongServerPassword:
+        case MKRejectReasonWrongServerPassword:
             msg = NSLocalizedString("Wrong server password", comment: "")
             alertCtrl = UIAlertController(title: title, message: msg, preferredStyle: .alert)
             alertCtrl?.addTextField(configurationHandler: passwordConfigHandler)
             alertCtrl?.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: cancelHandler))
             alertCtrl?.addAction(UIAlertAction(title: NSLocalizedString("Reconnect", comment: ""), style: .default, handler: reconnectHandler))
 
-        case .usernameInUse:
+        case MKRejectReasonUsernameInUse:
             msg = NSLocalizedString("Username already in use", comment: "")
             alertCtrl = UIAlertController(title: title, message: msg, preferredStyle: .alert)
             alertCtrl?.addTextField(configurationHandler: usernameConfigHandler)
             alertCtrl?.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: cancelHandler))
             alertCtrl?.addAction(UIAlertAction(title: NSLocalizedString("Reconnect", comment: ""), style: .default, handler: reconnectHandler))
 
-        case .serverIsFull:
+        case MKRejectReasonServerFull:
             msg = NSLocalizedString("Server is full", comment: "")
             alertCtrl = UIAlertController(title: title, message: msg, preferredStyle: .alert)
             alertCtrl?.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .cancel, handler: cancelHandler))
 
-        case .noCertificate:
+        case MKRejectReasonNoCertificate:
             msg = NSLocalizedString("A certificate is needed to connect to this server", comment: "")
             alertCtrl = UIAlertController(title: title, message: msg, preferredStyle: .alert)
             alertCtrl?.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .cancel, handler: cancelHandler))
 
-        @unknown default:
+        default:
             msg = NSLocalizedString("Unknown rejection reason", comment: "")
             alertCtrl = UIAlertController(title: title, message: msg, preferredStyle: .alert)
             alertCtrl?.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .cancel, handler: cancelHandler))

@@ -175,7 +175,7 @@ class MUCountryServerListController: UIViewController, UISearchBarDelegate, UITa
         alertCtrl.addTextField { textField in
             let ip = serverItem["ip"] as? String ?? ""
             let port = (serverItem["port"] as? String).flatMap { Int($0) } ?? 0
-            textField.text = MUDatabase.username(forServerWithHostname: ip, port: UInt(port))
+            textField.text = MUDatabase.usernameForServer(withHostname: ip, port: port)
         }
 
         alertCtrl.addAction(UIAlertAction(
@@ -193,7 +193,7 @@ class MUCountryServerListController: UIViewController, UISearchBarDelegate, UITa
             let username = alertCtrl.textFields?.first?.text
 
             let connCtrlr = MUConnectionController.shared()
-            connCtrlr?.connet(
+            connCtrlr.connet(
                 toHostname: ip,
                 port: port,
                 withUsername: username,

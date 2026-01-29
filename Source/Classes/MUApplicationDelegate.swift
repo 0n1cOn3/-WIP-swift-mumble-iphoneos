@@ -35,10 +35,10 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
 
         // Set MumbleKit release string
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? ""
-        MKVersion.sharedVersion()?.setOverrideReleaseString("Mumble for iOS \(version)")
+        MKVersion.shared()?.setOverrideRelease("Mumble for iOS \(version)")
 
         // Enable Opus unconditionally
-        MKVersion.sharedVersion()?.setOpusEnabled(true)
+        MKVersion.shared()?.setOpusEnabled(true)
 
         // Register default settings
         UserDefaults.standard.register(defaults: [
