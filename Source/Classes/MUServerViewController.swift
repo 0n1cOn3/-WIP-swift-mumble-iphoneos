@@ -89,7 +89,7 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
 
             guard let window = UIApplication.shared.windows.first else { return }
             let windowRect = window.frame
-            var buttonRect = CGRect(
+            let buttonRect = CGRect(
                 x: (windowRect.width - onImage.size.width) / 2,
                 y: windowRect.height - (onImage.size.height + 40),
                 width: onImage.size.width,
