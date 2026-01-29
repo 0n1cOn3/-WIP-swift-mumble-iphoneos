@@ -212,53 +212,53 @@ class MUServerRootViewController: UINavigationController, MKConnectionDelegate, 
     }
 
     func serverModel(_ model: MKServerModel!, permissionDenied perm: MKPermission, for user: MKUser!, in channel: MKChannel!) {
-        MUNotificationController.shared().addNotification(NSLocalizedString("Permission denied", comment: ""))
+        MUNotificationController.shared.addNotification(NSLocalizedString("Permission denied", comment: ""))
     }
 
     func serverModelInvalidChannelNameError(_ model: MKServerModel) {
-        MUNotificationController.shared().addNotification(NSLocalizedString("Invalid channel name", comment: ""))
+        MUNotificationController.shared.addNotification(NSLocalizedString("Invalid channel name", comment: ""))
     }
 
     func serverModelModifySuperUserError(_ model: MKServerModel) {
-        MUNotificationController.shared().addNotification(NSLocalizedString("Cannot modify SuperUser", comment: ""))
+        MUNotificationController.shared.addNotification(NSLocalizedString("Cannot modify SuperUser", comment: ""))
     }
 
     func serverModelTextMessageTooLongError(_ model: MKServerModel) {
-        MUNotificationController.shared().addNotification(NSLocalizedString("Message too long", comment: ""))
+        MUNotificationController.shared.addNotification(NSLocalizedString("Message too long", comment: ""))
     }
 
     func serverModelTemporaryChannelError(_ model: MKServerModel) {
-        MUNotificationController.shared().addNotification(NSLocalizedString("Not permitted in temporary channel", comment: ""))
+        MUNotificationController.shared.addNotification(NSLocalizedString("Not permitted in temporary channel", comment: ""))
     }
 
     func serverModel(_ model: MKServerModel!, missingCertificateErrorFor user: MKUser!) {
         if user == nil {
-            MUNotificationController.shared().addNotification(NSLocalizedString("Missing certificate", comment: ""))
+            MUNotificationController.shared.addNotification(NSLocalizedString("Missing certificate", comment: ""))
         } else {
-            MUNotificationController.shared().addNotification(NSLocalizedString("Missing certificate for user", comment: ""))
+            MUNotificationController.shared.addNotification(NSLocalizedString("Missing certificate for user", comment: ""))
         }
     }
 
     func serverModel(_ model: MKServerModel, invalidUsernameErrorForName name: String?) {
         if let name = name {
-            MUNotificationController.shared().addNotification("Invalid username: \(name)")
+            MUNotificationController.shared.addNotification("Invalid username: \(name)")
         } else {
-            MUNotificationController.shared().addNotification("Invalid username")
+            MUNotificationController.shared.addNotification("Invalid username")
         }
     }
 
     func serverModelChannelFullError(_ model: MKServerModel) {
-        MUNotificationController.shared().addNotification(NSLocalizedString("Channel is full", comment: ""))
+        MUNotificationController.shared.addNotification(NSLocalizedString("Channel is full", comment: ""))
     }
 
     func serverModel(_ model: MKServerModel, permissionDeniedForReason reason: String?) {
         if let reason = reason {
-            MUNotificationController.shared().addNotification(String(
+            MUNotificationController.shared.addNotification(String(
                 format: NSLocalizedString("Permission denied: %@", comment: "Permission denied with reason"),
                 reason
             ))
         } else {
-            MUNotificationController.shared().addNotification(NSLocalizedString("Permission denied", comment: ""))
+            MUNotificationController.shared.addNotification(NSLocalizedString("Permission denied", comment: ""))
         }
     }
 
@@ -312,7 +312,7 @@ class MUServerRootViewController: UINavigationController, MKConnectionDelegate, 
                 style: .default
             ) { [weak self] _ in
                 guard let self = self else { return }
-                if let certs = self.model.serverCertificates() {
+                if let certs = self.model.serverCertificates() as? [MKCertificate] {
                     let certView = MUCertificateViewController(certificates: certs)
                     let navCtrl = UINavigationController(rootViewController: certView)
                     let doneButton = UIBarButtonItem(
@@ -330,8 +330,8 @@ class MUServerRootViewController: UINavigationController, MKConnectionDelegate, 
             sheetCtrl.addAction(UIAlertAction(
                 title: NSLocalizedString("Self-Register", comment: ""),
                 style: .default
-            ) { [weak self] _ in
-                guard let self = self, let connUser = connUser else { return }
+            ) { [weak self, connUser] _ in
+                guard let self = self else { return }
 
                 let title = NSLocalizedString("User Registration", comment: "")
                 let msg = String(

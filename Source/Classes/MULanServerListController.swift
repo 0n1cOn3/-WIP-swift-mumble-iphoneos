@@ -177,7 +177,7 @@ class MULanServerListController: UITableViewController, NetServiceBrowserDelegat
 
         alertCtrl.addTextField { textField in
             if let hostName = netService.hostName {
-                textField.text = MUDatabase.username(forServerWithHostname: hostName, port: UInt(netService.port))
+                textField.text = MUDatabase.usernameForServer(withHostname: hostName, port: netService.port)
             }
         }
 
