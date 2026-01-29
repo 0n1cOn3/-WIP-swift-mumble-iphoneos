@@ -91,21 +91,28 @@ final class MUAudioSessionManager: NSObject {
     /// - Parameter activate: Whether to activate the audio session after configuration.
     ///                       Defaults to `true` for backward compatibility.
     func configureSession(activate: Bool = true) {
-        do {
-            // Explicitly set all required options from scratch for predictable behavior
-            var options: AVAudioSession.CategoryOptions = [.allowBluetooth]
-            if #available(iOS 12.0, *) {
-                options.insert(.allowBluetoothA2DP)
+        // Capture state before async dispatch
+        let shouldPreferSpeaker = prefersSpeaker
+
+        // Dispatch all AVAudioSession calls to background queue to avoid blocking main thread
+        audioQueue.async { [weak self] in
+            guard let self = self else { return }
+            do {
+                // Explicitly set all required options from scratch for predictable behavior
+                var options: AVAudioSession.CategoryOptions = [.allowBluetooth]
+                if #available(iOS 12.0, *) {
+                    options.insert(.allowBluetoothA2DP)
+                }
+                if shouldPreferSpeaker {
+                    options.insert(.defaultToSpeaker)
+                }
+                try self.session.setCategory(.playAndRecord, mode: .voiceChat, options: options)
+                if activate {
+                    try self.session.setActive(true, options: [])
+                }
+            } catch {
+                NSLog("MUAudioSessionManager: Failed to configure audio session: %@", error.localizedDescription)
             }
-            if prefersSpeaker {
-                options.insert(.defaultToSpeaker)
-            }
-            applyCategoryOptions(options)
-            if activate {
-                try session.setActive(true, options: [])
-            }
-        } catch {
-            NSLog("MUAudioSessionManager: Failed to configure audio session: %@", error.localizedDescription)
         }
     }
 
@@ -210,10 +217,14 @@ final class MUAudioSessionManager: NSObject {
         transmitMode = resolvedMode
         UserDefaults.standard.set(value(for: resolvedMode), forKey: "AudioTransmitMethod")
 
-        do {
-            try session.setMode(.voiceChat)
-        } catch {
-            NSLog("MUAudioSessionManager: Failed to update transmit mode: %@", error.localizedDescription)
+        // Dispatch blocking AVAudioSession call to background queue
+        audioQueue.async { [weak self] in
+            guard let self = self else { return }
+            do {
+                try self.session.setMode(.voiceChat)
+            } catch {
+                NSLog("MUAudioSessionManager: Failed to update transmit mode: %@", error.localizedDescription)
+            }
         }
 
         return value(for: resolvedMode)
@@ -340,23 +351,30 @@ final class MUAudioSessionManager: NSObject {
             AVLinearPCMIsNonInterleaved: false
         ]
 
-        do {
-            try session.setPreferredSampleRate(sampleRate)
-            try session.setPreferredIOBufferDuration(packetDuration)
-        } catch {
-            NSLog("MUAudioSessionManager: Failed to apply codec settings: %@", error.localizedDescription)
+        // Dispatch blocking AVAudioSession calls to background queue
+        audioQueue.async { [weak self] in
+            guard let self = self else { return }
+            do {
+                try self.session.setPreferredSampleRate(sampleRate)
+                try self.session.setPreferredIOBufferDuration(packetDuration)
+            } catch {
+                NSLog("MUAudioSessionManager: Failed to apply codec settings: %@", error.localizedDescription)
+            }
         }
     }
 
     private func applyPlaybackRoute(preferSpeaker: Bool) {
-        do {
-            if preferSpeaker {
-                try session.overrideOutputAudioPort(.speaker)
-            } else {
-                try session.overrideOutputAudioPort(.none)
+        audioQueue.async { [weak self] in
+            guard let self = self else { return }
+            do {
+                if preferSpeaker {
+                    try self.session.overrideOutputAudioPort(.speaker)
+                } else {
+                    try self.session.overrideOutputAudioPort(.none)
+                }
+            } catch {
+                NSLog("MUAudioSessionManager: Failed to update playback route: %@", error.localizedDescription)
             }
-        } catch {
-            NSLog("MUAudioSessionManager: Failed to update playback route: %@", error.localizedDescription)
         }
     }
 
@@ -377,11 +395,13 @@ final class MUAudioSessionManager: NSObject {
     }
 
     private func applyCategoryOptions(_ options: AVAudioSession.CategoryOptions) {
-        do {
-            // Removed unused assignment to lastCategoryOptions
-            try session.setCategory(.playAndRecord, mode: .voiceChat, options: options)
-        } catch {
-            NSLog("MUAudioSessionManager: Failed to update category options: %@", error.localizedDescription)
+        audioQueue.async { [weak self] in
+            guard let self = self else { return }
+            do {
+                try self.session.setCategory(.playAndRecord, mode: .voiceChat, options: options)
+            } catch {
+                NSLog("MUAudioSessionManager: Failed to update category options: %@", error.localizedDescription)
+            }
         }
     }
 
