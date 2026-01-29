@@ -53,7 +53,8 @@ class MUAccessTokenViewController: UITableViewController {
             object: nil
         )
 
-        if let dbTokens = MUDatabase.accessTokensForServer(withHostname: model.hostname(), port: Int(model.port())) as? [String] {
+        if let hostname = model.hostname(),
+           let dbTokens = MUDatabase.accessTokensForServer(withHostname: hostname, port: Int(model.port())) as? [String] {
             tokens = dbTokens
         } else {
             tokens = []
@@ -66,7 +67,9 @@ class MUAccessTokenViewController: UITableViewController {
         NotificationCenter.default.removeObserver(self)
 
         model.setAccessTokens(tokens)
-        MUDatabase.storeAccessTokens(tokens, forServerWithHostname: model.hostname(), port: Int(model.port()))
+        if let hostname = model.hostname() {
+            MUDatabase.storeAccessTokens(tokens, forServerWithHostname: hostname, port: Int(model.port()))
+        }
     }
 
     // MARK: - Table view data source

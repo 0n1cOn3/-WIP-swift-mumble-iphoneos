@@ -203,7 +203,10 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
     // MARK: - MKConnectionDelegate
 
     func connectionOpened(_ conn: MKConnection) {
-        let tokens = MUDatabase.accessTokensForServer(withHostname: conn.hostname(), port: Int(conn.port())) as? [String]
+        var tokens: [String]? = nil
+        if let hostname = conn.hostname() {
+            tokens = MUDatabase.accessTokensForServer(withHostname: hostname, port: Int(conn.port())) as? [String]
+        }
         conn.authenticate(withUsername: username, password: password, accessTokens: tokens)
     }
 
@@ -256,7 +259,10 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
 
     func connection(_ conn: MKConnection, trustFailureInCertificateChain chain: [Any]) {
         // Check the database whether the user trusts the leaf certificate of this server.
-        let storedDigest = MUDatabase.digestForServer(withHostname: conn.hostname(), port: Int(conn.port()))
+        var storedDigest: String? = nil
+        if let hostname = conn.hostname() {
+            storedDigest = MUDatabase.digestForServer(withHostname: hostname, port: Int(conn.port()))
+        }
         let cert = conn.peerCertificates()?.first as? MKCertificate
         let serverDigest = cert?.hexDigest()
 
