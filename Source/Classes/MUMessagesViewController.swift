@@ -602,7 +602,7 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
         self.channel = channel
         user = nil
 
-        setReceiverName(channel.channelName(), imageName: "channelmsg")
+        setReceiverName(channel.channelName() ?? "", imageName: "channelmsg")
     }
 
     func messageRecipientViewController(_ viewCtrlr: MUMessageRecipientViewController, didSelectUser user: MKUser) {
@@ -610,7 +610,7 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
         channel = nil
         self.user = user
 
-        setReceiverName(user.userName(), imageName: "usermsg")
+        setReceiverName(user.userName() ?? "", imageName: "usermsg")
     }
 
     func messageRecipientViewControllerDidSelectCurrentChannel(_ viewCtrlr: MUMessageRecipientViewController) {
@@ -676,9 +676,9 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
         DispatchQueue.main.async { [weak self] in
             guard let self = self, let channel = channel else { return }
             if channel == self.tree {
-                self.setReceiverName(channel.channelName(), imageName: "channelmsg")
+                self.setReceiverName(channel.channelName() ?? "", imageName: "channelmsg")
             } else if channel == self.channel {
-                self.setReceiverName(channel.channelName(), imageName: "channelmsg")
+                self.setReceiverName(channel.channelName() ?? "", imageName: "channelmsg")
             } else if self.channel == nil && self.tree == nil && self.user == nil && model?.connectedUser()?.channel() == channel {
                 if let channelName = model?.connectedUser()?.channel()?.channelName() {
                     self.setReceiverName(channelName, imageName: "channelmsg")
@@ -709,8 +709,8 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
             guard let self = self, let msg = msg else { return }
 
             var heading = NSLocalizedString("Server Message", comment: "A message sent from the server itself")
-            if let user = user {
-                heading = String(format: NSLocalizedString("From %@", comment: "Message sender title"), user.userName())
+            if let user = user, let userName = user.userName() {
+                heading = String(format: NSLocalizedString("From %@", comment: "Message sender title"), userName)
             }
 
             let countBefore = self.msgdb.count()
@@ -749,8 +749,8 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
 
                 let content = UNMutableNotificationContent()
                 content.body = msgText
-                if let user = user {
-                    content.title = user.userName()
+                if let user = user, let userName = user.userName() {
+                    content.title = userName
                 }
 
                 let request = UNNotificationRequest(

@@ -427,7 +427,9 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
     // MARK: - MKServerModelDelegate
 
     func serverModel(_ model: MKServerModel, joinedServerAs user: MKUser) {
-        MUDatabase.storeUsername(user.userName(), forServerWithHostname: model.hostname(), port: model.port())
+        if let username = user.userName(), let hostname = model.hostname() {
+            MUDatabase.storeUsername(username, forServerWithHostname: hostname, port: model.port())
+        }
 
         hideConnectingView { [weak self] in
             guard let self = self else { return }
