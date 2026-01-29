@@ -194,7 +194,7 @@ class MUFavouriteServerListController: UITableViewController {
         }
 
         let connCtrlr = MUConnectionController.shared()
-        connCtrlr?.connet(
+        connCtrlr.connet(
             toHostname: favServ.hostName,
             port: favServ.port,
             withUsername: userName,
@@ -207,7 +207,7 @@ class MUFavouriteServerListController: UITableViewController {
 
     @objc func presentNewFavouriteDialog() {
         let modalNav = UINavigationController()
-        let editView = MUFavouriteServerEditViewController()
+        let editView = MUFavouriteServerEditViewController(inEditMode: false, withContentOfFavouriteServer: nil)
 
         editMode = false
         editedServer = nil
@@ -222,7 +222,7 @@ class MUFavouriteServerListController: UITableViewController {
 
     @objc func presentEditDialog(for favServ: MUFavouriteServer) {
         let modalNav = UINavigationController()
-        let editView = MUFavouriteServerEditViewController(inEditMode: true, withContentOf: favServ)
+        let editView = MUFavouriteServerEditViewController(inEditMode: true, withContentOfFavouriteServer: favServ)
 
         editMode = true
         editedServer = favServ
@@ -243,7 +243,7 @@ class MUFavouriteServerListController: UITableViewController {
 
     @objc private func doneButtonClicked(_ sender: Any) {
         guard let editView = sender as? MUFavouriteServerEditViewController else { return }
-        guard let newServer = editView.copyFavouriteFromContent() else { return }
+        let newServer = editView.copyFavouriteFromContent()
 
         MUDatabase.storeFavourite(newServer)
 

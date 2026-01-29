@@ -168,7 +168,7 @@ class MUDatabase: NSObject {
 
             if let res = database.executeQuery("SELECT last_insert_rowid()", withArgumentsIn: []) {
                 if res.next() {
-                    favServ.primaryKey = res.int(forColumnIndex: 0)
+                    favServ.primaryKey = Int(res.int(forColumnIndex: 0))
                 }
                 res.close()
             }
@@ -207,7 +207,7 @@ class MUDatabase: NSObject {
         ) {
             while res.next() {
                 let fs = MUFavouriteServer()
-                fs.primaryKey = res.int(forColumnIndex: 0)
+                fs.primaryKey = Int(res.int(forColumnIndex: 0))
                 fs.displayName = res.string(forColumnIndex: 1)
                 fs.hostName = res.string(forColumnIndex: 2)
                 fs.port = UInt(res.int(forColumnIndex: 3))

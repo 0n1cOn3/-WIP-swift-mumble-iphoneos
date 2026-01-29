@@ -35,10 +35,10 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
 
         // Set MumbleKit release string
         let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as? String ?? ""
-        MKVersion.sharedVersion().overrideReleaseString = "Mumble for iOS \(version)"
+        MKVersion.sharedVersion()?.setOverrideReleaseString("Mumble for iOS \(version)")
 
         // Enable Opus unconditionally
-        MKVersion.sharedVersion().opusEnabled = true
+        MKVersion.sharedVersion()?.setOpusEnabled(true)
 
         // Register default settings
         UserDefaults.standard.register(defaults: [
@@ -87,9 +87,8 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
         UINavigationBar.appearance().barStyle = .black
 
         // Add background view for prettier transitions
-        if let bgView = MUBackgroundView.backgroundView() {
-            window?.addSubview(bgView)
-        }
+        let bgView = MUBackgroundView.backgroundView()
+        window?.addSubview(bgView)
 
         // Add default navigation controller
         navigationController = UINavigationController()

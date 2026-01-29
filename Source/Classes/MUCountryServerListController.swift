@@ -214,12 +214,12 @@ class MUCountryServerListController: UIViewController, UISearchBarDelegate, UITa
         if let portStr = serverItem["port"] as? String, let port = UInt(portStr) {
             favServ.port = port
             if let ip = serverItem["ip"] as? String {
-                favServ.userName = MUDatabase.username(forServerWithHostname: ip, port: port)
+                favServ.userName = MUDatabase.usernameForServer(withHostname: ip, port: Int(port))
             }
         }
 
         let modalNav = UINavigationController()
-        let editView = MUFavouriteServerEditViewController(inEditMode: false, withContentOf: favServ)
+        let editView = MUFavouriteServerEditViewController(inEditMode: false, withContentOfFavouriteServer: favServ)
 
         editView.setTarget(self)
         editView.setDoneAction(#selector(doneButtonClicked(_:)))
@@ -230,7 +230,7 @@ class MUCountryServerListController: UIViewController, UISearchBarDelegate, UITa
 
     @objc private func doneButtonClicked(_ sender: Any) {
         guard let editView = sender as? MUFavouriteServerEditViewController else { return }
-        guard let favServ = editView.copyFavouriteFromContent() else { return }
+        let favServ = editView.copyFavouriteFromContent()
 
         MUDatabase.storeFavourite(favServ)
 
