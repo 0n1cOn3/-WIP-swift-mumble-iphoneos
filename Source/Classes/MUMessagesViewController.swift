@@ -612,7 +612,7 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
 
     // MARK: - MKServerModelDelegate
 
-    func serverModel(_ model: MKServerModel!, joinedServerAs user: MKUser!, withWelcomeMessage msg: MKTextMessage!) {
+    func serverModel(_ model: MKServerModel!, joinedServerAs user: MKUser!, withWelcome msg: MKTextMessage!) {
         msgdb.addMessage(msg, withHeading: NSLocalizedString("Welcome Message", comment: "Title for welcome message"), andSentBySelf: false)
 
         let indexPath = IndexPath(row: msgdb.count() - 1, section: 0)

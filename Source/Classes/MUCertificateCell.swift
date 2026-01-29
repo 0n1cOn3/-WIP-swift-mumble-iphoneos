@@ -26,8 +26,8 @@ class MUCertificateCell: UITableViewCell {
 
     // MARK: - Class Methods
 
-    @objc(loadFromStoryboard)
-    static func load(fromStoryboard: Void) -> MUCertificateCell? {
+    @objc
+    static func loadFromStoryboard() -> MUCertificateCell? {
         let sb = UIStoryboard(name: "MUCertificateCell", bundle: nil)
         guard let tvc = sb.instantiateInitialViewController() as? UITableViewController else {
             return nil

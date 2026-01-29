@@ -5,10 +5,10 @@
 import UIKit
 
 /// Notification posted when a connection is opened
-@objc let MUConnectionOpenedNotification = "MUConnectionOpenedNotification"
+let MUConnectionOpenedNotification = "MUConnectionOpenedNotification"
 
 /// Notification posted when a connection is closed
-@objc let MUConnectionClosedNotification = "MUConnectionClosedNotification"
+let MUConnectionClosedNotification = "MUConnectionClosedNotification"
 
 /// Manages the connection lifecycle to Mumble servers.
 /// Singleton controller that handles connection establishment, authentication,
@@ -39,7 +39,7 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
     private var numDots: Int = 0
 
     private var rejectAlertCtrl: UIAlertController?
-    private var rejectReason: MKRejectReason = .none
+    private var rejectReason: MKRejectReason = MKRejectReasonNone
 
     private var hostname: String?
     private var port: UInt = 0
@@ -326,7 +326,7 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
         }
     }
 
-    func connection(_ conn: MKConnection, rejectedWithReason reason: MKRejectReason, explanation: String?) {
+    func connection(_ conn: MKConnection!, rejectedWith reason: MKRejectReason, explanation: String!) {
         hideConnectingView()
         teardownConnection()
 

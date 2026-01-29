@@ -150,7 +150,7 @@ class MUServerRootViewController: UINavigationController, MKConnectionDelegate, 
     func connectionOpened(_ conn: MKConnection) {
     }
 
-    func connection(_ conn: MKConnection, rejectedWithReason reason: MKRejectReason, explanation: String?) {
+    func connection(_ conn: MKConnection!, rejectedWith reason: MKRejectReason, explanation: String!) {
     }
 
     func connection(_ conn: MKConnection, trustFailureInCertificateChain chain: [Any]) {
@@ -211,7 +211,7 @@ class MUServerRootViewController: UINavigationController, MKConnectionDelegate, 
         MUConnectionController.shared().disconnectFromServer()
     }
 
-    func serverModel(_ model: MKServerModel, permissionDenied perm: MKPermission, forUser user: MKUser?, inChannel channel: MKChannel?) {
+    func serverModel(_ model: MKServerModel!, permissionDenied perm: MKPermission, for user: MKUser!, in channel: MKChannel!) {
         MUNotificationController.shared().addNotification(NSLocalizedString("Permission denied", comment: ""))
     }
 
@@ -231,7 +231,7 @@ class MUServerRootViewController: UINavigationController, MKConnectionDelegate, 
         MUNotificationController.shared().addNotification(NSLocalizedString("Not permitted in temporary channel", comment: ""))
     }
 
-    func serverModel(_ model: MKServerModel, missingCertificateErrorForUser user: MKUser?) {
+    func serverModel(_ model: MKServerModel!, missingCertificateErrorFor user: MKUser!) {
         if user == nil {
             MUNotificationController.shared().addNotification(NSLocalizedString("Missing certificate", comment: ""))
         } else {

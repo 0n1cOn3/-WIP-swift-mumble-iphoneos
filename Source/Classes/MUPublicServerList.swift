@@ -197,23 +197,4 @@ class MUPublicServerList: NSObject, XMLParserDelegate {
         return countries[countryIndex]
     }
 
-    // MARK: - Objective-C Compatibility
-
-    /// Objective-C compatible accessor for continent name
-    @objc(continentNameAtIndex:)
-    func objc_continentName(at index: Int) -> String {
-        return continentName(at: index)
-    }
-
-    /// Objective-C compatible accessor for number of countries
-    @objc(numberOfCountriesAtContinentIndex:)
-    func objc_numberOfCountries(atContinentIndex index: Int) -> Int {
-        return numberOfCountries(atContinentIndex: index)
-    }
-
-    /// Objective-C compatible accessor for country dictionary
-    @objc(countryAtIndexPath:)
-    func objc_country(at indexPath: IndexPath) -> NSDictionary? {
-        return country(at: indexPath) as NSDictionary?
-    }
 }
