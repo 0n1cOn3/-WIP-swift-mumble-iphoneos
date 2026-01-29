@@ -7,22 +7,9 @@
                 <viewController id="MULegalVC" customClass="MULegalViewController" customModule="Mumble" customModuleProvider="target" sceneMemberID="viewController" isInitialViewController="YES">
                     <view key="view" contentMode="scaleToFill" id="MULegalView">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
-                        <subviews>
-                            <wkWebView contentMode="scaleToFill" id="webViewElement">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <wkWebViewConfiguration key="configuration">
-                                    <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
-                                    <wkPreferences key="preferences"/>
-                                </wkWebViewConfiguration>
-                            </wkWebView>
-                        </subviews>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
-                    <connections>
-                        <outlet property="webView" destination="webViewElement" id="webViewOutlet"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FirstResponder" sceneMemberID="firstResponder"/>
             </objects>

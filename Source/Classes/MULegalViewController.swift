@@ -3,7 +3,7 @@
 // license that can be found in the LICENSE file.
 
 import UIKit
-import WebKit
+@preconcurrency import WebKit
 
 /// View controller for displaying legal information.
 /// Loads Legal.html from the app bundle in a WKWebView.
@@ -11,15 +11,22 @@ import WebKit
 @objcMembers
 class MULegalViewController: UIViewController, WKNavigationDelegate {
 
-    // MARK: - IBOutlets
+    // MARK: - Properties
 
-    @IBOutlet private weak var webView: WKWebView!
+    private var webView: WKWebView!
 
     // MARK: - View Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        // Create WKWebView programmatically
+        let config = WKWebViewConfiguration()
+        webView = WKWebView(frame: view.bounds, configuration: config)
+        webView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         webView.navigationDelegate = self
+        webView.backgroundColor = .black
+        view.addSubview(webView)
     }
 
     override func viewWillAppear(_ animated: Bool) {
