@@ -17,6 +17,7 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
     private var navigationController: UINavigationController?
     private var publistFetcher: MUPublicServerListFetcher?
     private var audioWasRunningBeforeInterruption: Bool = false
+    private let audioSessionQueue = DispatchQueue(label: "info.mumble.AppDelegate.AudioSession", qos: .userInitiated)
 
     // MARK: - UIApplicationDelegate
 
@@ -285,106 +286,119 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
 
     // MARK: - Audio Session Configuration
 
+    /// Configures audio session on a background queue to avoid blocking main thread.
+    /// AVAudioSession calls are synchronous XPC calls that can take hundreds of milliseconds.
     private func configureAudioSession(with defaults: UserDefaults) {
-        let session = AVAudioSession.sharedInstance()
-
-        var options: AVAudioSession.CategoryOptions = [.allowBluetooth, .mixWithOthers]
-        if defaults.bool(forKey: "AudioSpeakerPhoneMode") {
-            options.insert(.defaultToSpeaker)
-        }
-        if #available(iOS 10.0, *) {
-            options.insert(.allowBluetoothA2DP)
-        }
-
-        let mode: AVAudioSession.Mode
-        if !defaults.bool(forKey: "AudioPreprocessor") {
-            mode = .measurement
-        } else {
-            let transmitMethod = defaults.string(forKey: "AudioTransmitMethod")
-            switch transmitMethod {
-            case "continuous":
-                if #available(iOS 9.0, *) {
-                    mode = .spokenAudio
-                } else {
-                    mode = .default
-                }
-            case "ptt":
-                mode = .default
-            default:
-                mode = .voiceChat
-            }
-        }
-
-        do {
-            if #available(iOS 10.0, *) {
-                try session.setCategory(.playAndRecord, mode: mode, options: options)
-            } else {
-                try session.setCategory(.playAndRecord, options: options)
-                try session.setMode(mode)
-            }
-        } catch {
-            NSLog("MUApplicationDelegate: Failed to set audio session category: %@", error.localizedDescription)
-        }
-
-        // Sample rate
-        var preferredSampleRate: Double = 48000.0
-        if defaults.string(forKey: "AudioQualityKind") == "low" {
-            preferredSampleRate = 16000.0
-        }
-
-        do {
-            try session.setPreferredSampleRate(preferredSampleRate)
-        } catch {
-            NSLog("MUApplicationDelegate: Unable to set preferred sample rate: %@", error.localizedDescription)
-        }
-
-        // IO buffer duration
+        // Capture all values from defaults on current thread before async dispatch
+        let speakerPhoneMode = defaults.bool(forKey: "AudioSpeakerPhoneMode")
+        let preprocessorEnabled = defaults.bool(forKey: "AudioPreprocessor")
+        let transmitMethod = defaults.string(forKey: "AudioTransmitMethod")
+        let qualityKind = defaults.string(forKey: "AudioQualityKind")
         var framesPerPacket = defaults.integer(forKey: "AudioQualityFrames")
-        if framesPerPacket <= 0 {
-            switch defaults.string(forKey: "AudioQualityKind") {
-            case "low":
-                framesPerPacket = 6
-            case "balanced":
-                framesPerPacket = 2
-            case "high", "opus":
-                framesPerPacket = 1
-            default:
-                framesPerPacket = 2
-            }
-        }
-
-        let preferredIOBuffer = max(0.01, TimeInterval(framesPerPacket) * 0.01)
-        do {
-            try session.setPreferredIOBufferDuration(preferredIOBuffer)
-        } catch {
-            NSLog("MUApplicationDelegate: Unable to set preferred IO buffer duration: %@", error.localizedDescription)
-        }
-
-        // Input gain
         let micBoost = defaults.float(forKey: "AudioMicBoost")
-        let requestedGain = max(0.0, min(1.0, micBoost))
-        if session.isInputGainSettable {
+
+        audioSessionQueue.async {
+            let session = AVAudioSession.sharedInstance()
+
+            var options: AVAudioSession.CategoryOptions = [.allowBluetooth, .mixWithOthers]
+            if speakerPhoneMode {
+                options.insert(.defaultToSpeaker)
+            }
+            if #available(iOS 10.0, *) {
+                options.insert(.allowBluetoothA2DP)
+            }
+
+            let mode: AVAudioSession.Mode
+            if !preprocessorEnabled {
+                mode = .measurement
+            } else {
+                switch transmitMethod {
+                case "continuous":
+                    if #available(iOS 9.0, *) {
+                        mode = .spokenAudio
+                    } else {
+                        mode = .default
+                    }
+                case "ptt":
+                    mode = .default
+                default:
+                    mode = .voiceChat
+                }
+            }
+
             do {
-                try session.setInputGain(requestedGain)
+                if #available(iOS 10.0, *) {
+                    try session.setCategory(.playAndRecord, mode: mode, options: options)
+                } else {
+                    try session.setCategory(.playAndRecord, options: options)
+                    try session.setMode(mode)
+                }
             } catch {
-                NSLog("MUApplicationDelegate: Unable to set input gain: %@", error.localizedDescription)
+                NSLog("MUApplicationDelegate: Failed to set audio session category: %@", error.localizedDescription)
+            }
+
+            // Sample rate
+            var preferredSampleRate: Double = 48000.0
+            if qualityKind == "low" {
+                preferredSampleRate = 16000.0
+            }
+
+            do {
+                try session.setPreferredSampleRate(preferredSampleRate)
+            } catch {
+                NSLog("MUApplicationDelegate: Unable to set preferred sample rate: %@", error.localizedDescription)
+            }
+
+            // IO buffer duration
+            if framesPerPacket <= 0 {
+                switch qualityKind {
+                case "low":
+                    framesPerPacket = 6
+                case "balanced":
+                    framesPerPacket = 2
+                case "high", "opus":
+                    framesPerPacket = 1
+                default:
+                    framesPerPacket = 2
+                }
+            }
+
+            let preferredIOBuffer = max(0.01, TimeInterval(framesPerPacket) * 0.01)
+            do {
+                try session.setPreferredIOBufferDuration(preferredIOBuffer)
+            } catch {
+                NSLog("MUApplicationDelegate: Unable to set preferred IO buffer duration: %@", error.localizedDescription)
+            }
+
+            // Input gain
+            let requestedGain = max(0.0, min(1.0, micBoost))
+            if session.isInputGainSettable {
+                do {
+                    try session.setInputGain(requestedGain)
+                } catch {
+                    NSLog("MUApplicationDelegate: Unable to set input gain: %@", error.localizedDescription)
+                }
             }
         }
     }
 
     private func activateAudioSession() {
-        do {
-            try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
-        } catch {
-            NSLog("MUApplicationDelegate: Failed to activate audio session: %@", error.localizedDescription)
+        audioSessionQueue.async {
+            do {
+                try AVAudioSession.sharedInstance().setActive(true, options: .notifyOthersOnDeactivation)
+            } catch {
+                NSLog("MUApplicationDelegate: Failed to activate audio session: %@", error.localizedDescription)
+            }
         }
     }
 
     private func deactivateAudioSession() {
-        do {
-            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
-        } catch {
-            NSLog("MUApplicationDelegate: Failed to deactivate audio session: %@", error.localizedDescription)
+        audioSessionQueue.async {
+            do {
+                try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+            } catch {
+                NSLog("MUApplicationDelegate: Failed to deactivate audio session: %@", error.localizedDescription)
+            }
         }
     }
 
@@ -419,10 +433,12 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
     }
 
     private func activateAudioSessionIfNeeded() {
-        do {
-            try AVAudioSession.sharedInstance().setActive(true)
-        } catch {
-            NSLog("MUApplicationDelegate: Failed to activate AVAudioSession: %@", error.localizedDescription)
+        audioSessionQueue.async {
+            do {
+                try AVAudioSession.sharedInstance().setActive(true)
+            } catch {
+                NSLog("MUApplicationDelegate: Failed to activate AVAudioSession: %@", error.localizedDescription)
+            }
         }
     }
 

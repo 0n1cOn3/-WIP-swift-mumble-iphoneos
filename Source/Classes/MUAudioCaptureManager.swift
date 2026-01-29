@@ -48,6 +48,7 @@ class MUAudioCaptureManager: NSObject {
     private var recorder: AVAudioRecorder?
     private var tapInstalled: Bool = false
     private var meteringHandler: (() -> Void)?
+    private let audioSessionQueue = DispatchQueue(label: "info.mumble.AudioSessionQueue", qos: .userInitiated)
 
     // MARK: - Initialization
 
@@ -86,6 +87,7 @@ class MUAudioCaptureManager: NSObject {
     }
 
     /// Refreshes encoder/format hints from defaults.
+    /// Audio session configuration is dispatched to a background queue to avoid blocking the main thread.
     @objc func refreshEncoderPreferences() {
         let defaults = UserDefaults.standard
         let quality = defaults.string(forKey: "AudioQualityKind")
@@ -102,30 +104,35 @@ class MUAudioCaptureManager: NSObject {
             break
         }
 
-        let session = AVAudioSession.sharedInstance()
-        do {
-            try session.setCategory(.playAndRecord, options: [.allowBluetooth, .mixWithOthers])
-            try session.setPreferredSampleRate(sampleRate)
-            try session.setPreferredIOBufferDuration(0.02)
-            try session.setActive(true)
-        } catch {
-            NSLog("MUAudioCaptureManager: failed to configure audio session: %@", error.localizedDescription)
-        }
+        // Dispatch audio session configuration to background queue to avoid blocking main thread.
+        // AVAudioSession calls are synchronous XPC calls that can take hundreds of milliseconds.
+        audioSessionQueue.async { [weak self] in
+            let session = AVAudioSession.sharedInstance()
+            do {
+                try session.setCategory(.playAndRecord, options: [.allowBluetooth, .mixWithOthers])
+                try session.setPreferredSampleRate(sampleRate)
+                try session.setPreferredIOBufferDuration(0.02)
+                try session.setActive(true)
+            } catch {
+                NSLog("MUAudioCaptureManager: failed to configure audio session: %@", error.localizedDescription)
+            }
 
-        let settings: [String: Any] = [
-            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
-            AVSampleRateKey: sampleRate,
-            AVNumberOfChannelsKey: 1,
-            AVEncoderBitRateKey: Int(sampleRate),
-            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
-        ]
+            let settings: [String: Any] = [
+                AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
+                AVSampleRateKey: sampleRate,
+                AVNumberOfChannelsKey: 1,
+                AVEncoderBitRateKey: Int(sampleRate),
+                AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+            ]
 
-        do {
-            recorder = try AVAudioRecorder(url: URL(fileURLWithPath: "/dev/null"), settings: settings)
-            recorder?.isMeteringEnabled = true
-            recorder?.prepareToRecord()
-        } catch {
-            NSLog("MUAudioCaptureManager: failed to create recorder: %@", error.localizedDescription)
+            do {
+                let newRecorder = try AVAudioRecorder(url: URL(fileURLWithPath: "/dev/null"), settings: settings)
+                newRecorder.isMeteringEnabled = true
+                newRecorder.prepareToRecord()
+                self?.recorder = newRecorder
+            } catch {
+                NSLog("MUAudioCaptureManager: failed to create recorder: %@", error.localizedDescription)
+            }
         }
     }
 
