@@ -1,3 +1,7 @@
+// Foundation (required by MumbleKit headers)
+#import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
+
 // MumbleKit headers
 #import "../MumbleKit/src/MumbleKit/MKAudio.h"
 #import "../MumbleKit/src/MumbleKit/MKCertificate.h"
