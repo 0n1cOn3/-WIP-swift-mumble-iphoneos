@@ -218,7 +218,7 @@ class MUAudioCaptureManager: NSObject {
 
         // Accessing inputNode can throw NSException if audio session isn't properly configured
         var input: AVAudioInputNode?
-        let inputError = ObjCExceptionCatcher.tryBlock {
+        let inputError = ObjCExceptionCatcher.try {
             input = self.engine.inputNode
         }
 
@@ -239,7 +239,7 @@ class MUAudioCaptureManager: NSObject {
 
         // installTap can throw NSException if format is incompatible or tap already exists
         // We need to catch this at the Objective-C level since Swift can't catch NSExceptions
-        let installError = ObjCExceptionCatcher.tryBlock {
+        let installError = ObjCExceptionCatcher.try {
             input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
                 self?.processBuffer(buffer)
             }
