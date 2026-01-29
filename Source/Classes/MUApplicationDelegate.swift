@@ -107,7 +107,7 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
 
         // Handle mumble:// URL on launch
         if let url = launchOptions?[.url] as? URL, url.scheme == "mumble" {
-            let connController = MUConnectionController.sharedController()
+            let connController = MUConnectionController.shared()
             let hostname = url.host ?? ""
             let port = url.port ?? 64738
             let username = url.user
@@ -122,7 +122,7 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey: Any] = [:]) -> Bool {
         guard url.scheme == "mumble" else { return false }
 
-        let connController = MUConnectionController.sharedController()
+        let connController = MUConnectionController.shared()
         if connController.isConnected {
             return false
         }
@@ -144,8 +144,8 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
     }
 
     func applicationWillResignActive(_ application: UIApplication) {
-        let audio = MKAudio.sharedAudio()
-        let connController = MUConnectionController.sharedController()
+        let audio = MKAudio.shared()
+        let connController = MUConnectionController.shared()
 
         if !connController.isConnected {
             NSLog("MumbleApplicationDelegate: Not connected to a server. Stopping MKAudio.")
@@ -162,10 +162,10 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
-        let audio = MKAudio.sharedAudio()
-        let connController = MUConnectionController.sharedController()
+        let audio = MKAudio.shared()
+        let connController = MUConnectionController.shared()
 
-        if audio?.isRunning == false {
+        if audio?.isRunning() == false {
             NSLog("MumbleApplicationDelegate: MKAudio not running. Starting it.")
             audio?.start()
             MUAudioCaptureManager.shared.start()
@@ -268,7 +268,7 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
 
         MUAudioCaptureManager.shared.configureFromDefaults()
 
-        let audio = MKAudio.sharedAudio()
+        let audio = MKAudio.shared()
         MUAudioSessionManager.shared.bind(toMumbleKitAudio: audio, defaults: defaults)
         audio?.update(&settings)
         MUAudioSessionManager.shared.refreshPlaybackChain()
@@ -413,7 +413,7 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
     @objc private func handleApplicationActivation(_ notification: Notification) {
         activateAudioSessionIfNeeded()
 
-        if let audio = MKAudio.sharedAudio(), !audio.isRunning {
+        if let audio = MKAudio.shared(), !audio.isRunning {
             audio.start()
         }
     }
@@ -433,9 +433,9 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
 
         switch type {
         case .began:
-            audioWasRunningBeforeInterruption = MKAudio.sharedAudio()?.isRunning ?? false
+            audioWasRunningBeforeInterruption = MKAudio.shared()?.isRunning ?? false
             if audioWasRunningBeforeInterruption {
-                MKAudio.sharedAudio()?.stop()
+                MKAudio.shared()?.stop()
             }
         case .ended:
             if let optionsValue = userInfo[AVAudioSessionInterruptionOptionKey] as? UInt {
@@ -443,7 +443,7 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
                 if options.contains(.shouldResume) {
                     activateAudioSessionIfNeeded()
                     if audioWasRunningBeforeInterruption {
-                        MKAudio.sharedAudio()?.start()
+                        MKAudio.shared()?.start()
                     }
                 }
             }

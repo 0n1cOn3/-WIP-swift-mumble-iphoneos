@@ -159,7 +159,7 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
             }
         }
 
-        connection?.connect(toHost: hostname, port: UInt16(port))
+        connection?.connect(toHost: hostname, port: port)
 
         DispatchQueue.main.async {
             NotificationCenter.default.post(name: Notification.Name(MUConnectionOpenedNotification), object: nil)
@@ -167,9 +167,9 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
     }
 
     private func teardownConnection() {
-        serverModel?.remove(self)
+        serverModel?.removeDelegate(self)
         serverModel = nil
-        connection?.delegate = nil
+        connection?.setDelegate(nil)
         connection?.disconnect()
         connection = nil
         timer?.invalidate()
@@ -203,7 +203,7 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
     // MARK: - MKConnectionDelegate
 
     func connectionOpened(_ conn: MKConnection) {
-        let tokens = MUDatabase.accessTokens(forServerWithHostname: conn.hostname(), port: conn.port()) as? [String]
+        let tokens = MUDatabase.accessTokensForServer(withHostname: conn.hostname(), port: Int(conn.port())) as? [String]
         conn.authenticate(withUsername: username, password: password, accessTokens: tokens)
     }
 
@@ -256,7 +256,7 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
 
     func connection(_ conn: MKConnection, trustFailureInCertificateChain chain: [Any]) {
         // Check the database whether the user trusts the leaf certificate of this server.
-        let storedDigest = MUDatabase.digest(forServerWithHostname: conn.hostname(), port: conn.port())
+        let storedDigest = MUDatabase.digestForServer(withHostname: conn.hostname(), port: Int(conn.port()))
         let cert = conn.peerCertificates()?.first as? MKCertificate
         let serverDigest = cert?.hexDigest()
 
@@ -272,7 +272,9 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
             guard let self = self else { return }
             if let cert = self.connection?.peerCertificates()?.first as? MKCertificate {
                 let digest = cert.hexDigest()
-                MUDatabase.storeDigest(digest, forServerWithHostname: self.connection?.hostname(), port: self.connection?.port() ?? 0)
+                if let hostname = self.connection?.hostname() {
+                    MUDatabase.storeDigest(digest, forServerWithHostname: hostname, port: Int(self.connection?.port() ?? 0))
+                }
             }
             self.connection?.setIgnoreSSLVerification(true)
             self.connection?.reconnect()
@@ -399,7 +401,7 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
             alertCtrl?.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: ""), style: .cancel, handler: cancelHandler))
             alertCtrl?.addAction(UIAlertAction(title: NSLocalizedString("Reconnect", comment: ""), style: .default, handler: reconnectHandler))
 
-        case MKRejectReasonServerFull:
+        case MKRejectReasonServerIsFull:
             msg = NSLocalizedString("Server is full", comment: "")
             alertCtrl = UIAlertController(title: title, message: msg, preferredStyle: .alert)
             alertCtrl?.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: ""), style: .cancel, handler: cancelHandler))
