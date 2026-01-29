@@ -55,6 +55,7 @@
 		5D9D1AA1871D0E7BDAB0CD7D /* MUVoiceActivitySetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D821D2BFC18ECF02B45F381B /* MUVoiceActivitySetupViewController.swift */; };
 		4329BC781531D9FB92E31188 /* MUWelcomeScreenPad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFBF616781050931434D678 /* MUWelcomeScreenPad.swift */; };
 		3E3FE0DD5BE0DD0F93252BE6 /* MUWelcomeScreenPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6657F710F9396C1D1930079 /* MUWelcomeScreenPhone.swift */; };
+		0E0C0E0C14D7551600F6D003 /* ObjCExceptionCatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E0C0E0C14D7551600F6D002 /* ObjCExceptionCatcher.m */; };
 		0EEEF3B42DF1E5450042C0A8 /* libFMDB-IOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EEEF35C2DF1DC6D0042C0A8 /* libFMDB-IOS.a */; };
 		0EF3A4672DC2573900028454 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2861C2AD116BE9B5002B8514 /* AudioToolbox.framework */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
@@ -598,6 +599,8 @@
 		28FAA36214D7551600F6D711 /* MKNumberBadgeView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MKNumberBadgeView.h; path = Dependencies/MKNumberBadgeView/MKNumberBadgeView.h; sourceTree = "<group>"; };
 		28FAA36314D7551600F6D711 /* MKNumberBadgeView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MKNumberBadgeView.m; path = Dependencies/MKNumberBadgeView/MKNumberBadgeView.m; sourceTree = "<group>"; };
 		29B97316FDCFA39411CA2CEA /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Source/main.m; sourceTree = "<group>"; };
+		0E0C0E0C14D7551600F6D001 /* ObjCExceptionCatcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjCExceptionCatcher.h; sourceTree = "<group>"; };
+		0E0C0E0C14D7551600F6D002 /* ObjCExceptionCatcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjCExceptionCatcher.m; sourceTree = "<group>"; };
 		32CA4F630368D1EE00C91783 /* Mumble.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Mumble.pch; path = Source/Mumble.pch; sourceTree = "<group>"; };
 		8D1107310486CEB800E47090 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Source/Info.plist; plistStructureDefinitionIdentifier = "com.apple.xcode.plist.structure-definition.iphone.info-plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -739,6 +742,8 @@
 				853FD0E0A54A11ABB0EFDDAF /* MUMessagesDatabase.swift */,
 				3FA4D67474D3CEE26F8D648B /* MUMessagesViewController.swift */,
 				19A0E71452E08660171950F4 /* MUNotificationController.swift */,
+				0E0C0E0C14D7551600F6D001 /* ObjCExceptionCatcher.h */,
+				0E0C0E0C14D7551600F6D002 /* ObjCExceptionCatcher.m */,
 				D502053589B91A3EB11F413C /* MUPopoverBackgroundView.swift */,
 				CABE589237763FEA6395AB35 /* MUPublicServerList.swift */,
 				48926A593C4CFECE6DFC9828 /* MUPublicServerListController.swift */,
@@ -1418,6 +1423,7 @@
 						 283363DB13EF154C00A04F04 /* MUAudioTransmissionPreferencesViewController.swift in Sources */,
 				28F79C73147991490003B8BA /* MUAccessTokenViewController.swift in Sources */,
 				28FAA36414D7551600F6D711 /* MKNumberBadgeView.m in Sources */,
+				0E0C0E0C14D7551600F6D003 /* ObjCExceptionCatcher.m in Sources */,
 				2836767D1525053A0015958E /* MUCertificateChainBuilder.swift in Sources */,
 						 2813B1D115EBFDA90049A59A /* MURemoteControlPreferencesViewController.swift in Sources */,
 			);
