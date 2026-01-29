@@ -5,18 +5,22 @@
 import UIKit
 
 /// Custom table view cell for displaying certificate information.
-/// Loaded from MUCertificateCell storyboard.
 @objc(MUCertificateCell)
 @objcMembers
 class MUCertificateCell: UITableViewCell {
 
-    // MARK: - IBOutlets
+    // MARK: - Constants
 
-    @IBOutlet private weak var certImage: UIImageView!
-    @IBOutlet private weak var nameLabel: UILabel!
-    @IBOutlet private weak var emailLabel: UILabel!
-    @IBOutlet private weak var issuerLabel: UILabel!
-    @IBOutlet private weak var expiryLabel: UILabel!
+    static let reuseIdentifier = "CertificateCell"
+    static let cellHeight: CGFloat = 84
+
+    // MARK: - UI Elements
+
+    private var certImage: UIImageView!
+    private var nameLabel: UILabel!
+    private var emailLabel: UILabel!
+    private var issuerLabel: UILabel!
+    private var expiryLabel: UILabel!
 
     // MARK: - Private Properties
 
@@ -24,16 +28,84 @@ class MUCertificateCell: UITableViewCell {
     private var _isExpired: Bool = false
     private var _isIntermediate: Bool = false
 
+    // MARK: - Initialization
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupUI()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+
+    private func setupUI() {
+        // Certificate image (64x64)
+        certImage = UIImageView()
+        certImage.contentMode = .scaleAspectFit
+        certImage.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(certImage)
+
+        // Name label (bold)
+        nameLabel = UILabel()
+        nameLabel.font = UIFont.boldSystemFont(ofSize: 17)
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(nameLabel)
+
+        // Email label
+        emailLabel = UILabel()
+        emailLabel.font = UIFont.systemFont(ofSize: 14)
+        emailLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(emailLabel)
+
+        // Issuer label
+        issuerLabel = UILabel()
+        issuerLabel.font = UIFont.systemFont(ofSize: 14)
+        issuerLabel.textColor = .gray
+        issuerLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(issuerLabel)
+
+        // Expiry label
+        expiryLabel = UILabel()
+        expiryLabel.font = UIFont.systemFont(ofSize: 14)
+        expiryLabel.textColor = .gray
+        expiryLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(expiryLabel)
+
+        // Layout constraints
+        NSLayoutConstraint.activate([
+            certImage.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 9),
+            certImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+            certImage.widthAnchor.constraint(equalToConstant: 64),
+            certImage.heightAnchor.constraint(equalToConstant: 64),
+
+            nameLabel.leadingAnchor.constraint(equalTo: certImage.trailingAnchor, constant: 13),
+            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -10),
+            nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 8),
+
+            emailLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            emailLabel.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
+            emailLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 2),
+
+            issuerLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            issuerLabel.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
+            issuerLabel.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 2),
+
+            expiryLabel.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            expiryLabel.trailingAnchor.constraint(equalTo: nameLabel.trailingAnchor),
+            expiryLabel.topAnchor.constraint(equalTo: issuerLabel.bottomAnchor, constant: 2),
+        ])
+
+        // Default image
+        certImage.image = UIImage(named: "certificatecell")
+    }
+
     // MARK: - Class Methods
 
     @objc
-    static func loadFromStoryboard() -> MUCertificateCell? {
-        let sb = UIStoryboard(name: "MUCertificateCell", bundle: nil)
-        guard let tvc = sb.instantiateInitialViewController() as? UITableViewController else {
-            return nil
-        }
-        tvc.loadViewIfNeeded()
-        return tvc.tableView.dequeueReusableCell(withIdentifier: "CertificateCell") as? MUCertificateCell
+    static func createCell() -> MUCertificateCell {
+        return MUCertificateCell(style: .default, reuseIdentifier: reuseIdentifier)
     }
 
     // MARK: - Public Methods

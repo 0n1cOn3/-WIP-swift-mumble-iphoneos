@@ -63,9 +63,8 @@ class MUCertificatePreferencesViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = MUCertificateCell.loadFromStoryboard() else {
-            return UITableViewCell()
-        }
+        let cell = tableView.dequeueReusableCell(withIdentifier: MUCertificateCell.reuseIdentifier) as? MUCertificateCell
+            ?? MUCertificateCell.createCell()
 
         let dict = certificateItems[indexPath.row]
         guard let cert = dict["cert"] as? MKCertificate else {
