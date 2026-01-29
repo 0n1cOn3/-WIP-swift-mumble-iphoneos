@@ -528,11 +528,16 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
 
         if let destName = destName {
             let heading = String(format: NSLocalizedString("To %@", comment: "Message recipient title"), destName)
+            let countBefore = msgdb.count()
             msgdb.addMessage(txtMsg, withHeading: heading, andSentBySelf: true)
+            let countAfter = msgdb.count()
 
-            let indexPath = IndexPath(row: msgdb.count() - 1, section: 0)
-            tableView.insertRows(at: [indexPath], with: .fade)
-            tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+            // Only insert row if message was actually added
+            if countAfter > countBefore {
+                let indexPath = IndexPath(row: countAfter - 1, section: 0)
+                tableView.insertRows(at: [indexPath], with: .fade)
+                tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+            }
         }
 
         textField.text = nil
@@ -623,10 +628,16 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
     func serverModel(_ model: MKServerModel!, joinedServerAs user: MKUser!, withWelcome msg: MKTextMessage!) {
         // Dispatch to main thread since MKServerModel delegates may be called from background
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
-            self.msgdb.addMessage(msg, withHeading: NSLocalizedString("Welcome Message", comment: "Title for welcome message"), andSentBySelf: false)
+            guard let self = self, let msg = msg else { return }
 
-            let indexPath = IndexPath(row: self.msgdb.count() - 1, section: 0)
+            let countBefore = self.msgdb.count()
+            self.msgdb.addMessage(msg, withHeading: NSLocalizedString("Welcome Message", comment: "Title for welcome message"), andSentBySelf: false)
+            let countAfter = self.msgdb.count()
+
+            // Only insert row if message was actually added
+            guard countAfter > countBefore else { return }
+
+            let indexPath = IndexPath(row: countAfter - 1, section: 0)
             self.tableView.insertRows(at: [indexPath], with: .fade)
             if !self.tableView.isDragging && !UIMenuController.shared.isMenuVisible {
                 self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
@@ -695,14 +706,21 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
 
     func serverModel(_ model: MKServerModel!, textMessageReceived msg: MKTextMessage!, from user: MKUser!) {
         DispatchQueue.main.async { [weak self] in
-            guard let self = self else { return }
+            guard let self = self, let msg = msg else { return }
+
             var heading = NSLocalizedString("Server Message", comment: "A message sent from the server itself")
             if let user = user {
                 heading = String(format: NSLocalizedString("From %@", comment: "Message sender title"), user.userName())
             }
-            self.msgdb.addMessage(msg, withHeading: heading, andSentBySelf: false)
 
-            let indexPath = IndexPath(row: self.msgdb.count() - 1, section: 0)
+            let countBefore = self.msgdb.count()
+            self.msgdb.addMessage(msg, withHeading: heading, andSentBySelf: false)
+            let countAfter = self.msgdb.count()
+
+            // Only insert row if message was actually added
+            guard countAfter > countBefore else { return }
+
+            let indexPath = IndexPath(row: countAfter - 1, section: 0)
             self.tableView.insertRows(at: [indexPath], with: .fade)
             if !self.tableView.isDragging && !UIMenuController.shared.isMenuVisible {
                 self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
