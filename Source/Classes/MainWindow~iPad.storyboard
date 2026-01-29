@@ -6,7 +6,7 @@
             <objects>
                 <placeholder placeholderIdentifier="IBFilesOwner" id="app" userLabel="File's Owner" customClass="UIApplication"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FirstResponder" customClass="UIResponder"/>
-                <customObject id="delegate" customClass="MUApplicationDelegate"/>
+                <customObject id="delegate" customClass="MUApplicationDelegate" customModule="Mumble" customModuleProvider="target"/>
             </objects>
         </scene>
     </scenes>
