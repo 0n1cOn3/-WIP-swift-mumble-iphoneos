@@ -150,7 +150,9 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
         serverModel = MKServerModel(connection: connection)
         serverModel?.addDelegate(self)
 
-        serverRoot = MUServerRootViewController(connection: connection!, andServerModel: serverModel!)
+        if let connection = connection, let serverModel = serverModel {
+            serverRoot = MUServerRootViewController(connection: connection, andServerModel: serverModel)
+        }
 
         // Set the connection's client cert if one is set in the app's preferences
         if let certPersistentId = UserDefaults.standard.object(forKey: "DefaultCertificate") as? Data {
@@ -439,14 +441,16 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
 
         hideConnectingView { [weak self] in
             guard let self = self else { return }
-            self.serverRoot?.takeOwnershipOfConnectionDelegate()
+            guard let serverRoot = self.serverRoot else { return }
+
+            serverRoot.takeOwnershipOfConnectionDelegate()
 
             self.username = nil
             self.hostname = nil
             self.password = nil
 
-            self.serverRoot?.modalPresentationStyle = .fullScreen
-            self.parentViewController?.navigationController?.present(self.serverRoot!, animated: true)
+            serverRoot.modalPresentationStyle = .fullScreen
+            self.parentViewController?.navigationController?.present(serverRoot, animated: true)
             self.parentViewController = nil
         }
     }
