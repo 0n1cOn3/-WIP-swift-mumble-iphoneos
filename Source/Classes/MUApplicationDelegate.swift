@@ -109,10 +109,10 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
         if let url = launchOptions?[.url] as? URL, url.scheme == "mumble" {
             let connController = MUConnectionController.shared()
             let hostname = url.host ?? ""
-            let port = url.port ?? 64738
+            let port = UInt(url.port ?? 64738)
             let username = url.user
             let password = url.password
-            connController.connetToHostname(hostname, port: port, withUsername: username, andPassword: password, withParentViewController: welcomeScreen)
+            connController.connet(toHostname: hostname, port: port, withUsername: username, andPassword: password, withParentViewController: welcomeScreen)
             return true
         }
 
@@ -123,17 +123,17 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
         guard url.scheme == "mumble" else { return false }
 
         let connController = MUConnectionController.shared()
-        if connController.isConnected {
+        if connController.isConnected() {
             return false
         }
 
         let hostname = url.host ?? ""
-        let port = url.port ?? 64738
+        let port = UInt(url.port ?? 64738)
         let username = url.user
         let password = url.password
 
         if let visibleVC = navigationController?.visibleViewController {
-            connController.connetToHostname(hostname, port: port, withUsername: username, andPassword: password, withParentViewController: visibleVC)
+            connController.connet(toHostname: hostname, port: port, withUsername: username, andPassword: password, withParentViewController: visibleVC)
         }
 
         return true
@@ -147,7 +147,7 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
         let audio = MKAudio.shared()
         let connController = MUConnectionController.shared()
 
-        if !connController.isConnected {
+        if !connController.isConnected() {
             NSLog("MumbleApplicationDelegate: Not connected to a server. Stopping MKAudio.")
             audio?.stop()
             MUAudioCaptureManager.shared.stop()

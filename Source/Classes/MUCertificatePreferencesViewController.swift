@@ -63,7 +63,7 @@ class MUCertificatePreferencesViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = MUCertificateCell.load(fromStoryboard: ()) else {
+        guard let cell = MUCertificateCell.loadFromStoryboard() else {
             return UITableViewCell()
         }
 
@@ -92,7 +92,7 @@ class MUCertificatePreferencesViewController: UITableViewController {
 
         if let isIdentity = dict["isIdentity"] as? Bool, isIdentity {
             cell.setIsIntermediate(false)
-            cell.selectionStyle = .gray
+            cell.selectionStyle = .default
         } else {
             cell.setIsIntermediate(true)
             cell.selectionStyle = .none
@@ -105,7 +105,7 @@ class MUCertificatePreferencesViewController: UITableViewController {
             cell.setIsCurrentCertificate(false)
         }
 
-        cell.accessoryType = .detailButton
+        cell.accessoryType = .detailDisclosureButton
 
         return cell
     }
@@ -181,7 +181,7 @@ class MUCertificatePreferencesViewController: UITableViewController {
             handler: { [weak self] _ in
                 let navCtrl = UINavigationController()
                 navCtrl.modalPresentationStyle = .currentContext
-                let certGen = MUCertificateCreationView()
+                let certGen = MUCertificateCreationView(style: .grouped)
                 navCtrl.pushViewController(certGen, animated: false)
                 self?.navigationController?.present(navCtrl, animated: true, completion: nil)
             }
@@ -203,7 +203,7 @@ class MUCertificatePreferencesViewController: UITableViewController {
             title: NSLocalizedString("Import From iTunes", comment: ""),
             style: .default,
             handler: { [weak self] _ in
-                let diskImportViewController = MUCertificateDiskImportViewController()
+                let diskImportViewController = MUCertificateDiskImportViewController(style: .grouped)
                 let navController = UINavigationController(rootViewController: diskImportViewController)
                 self?.navigationController?.present(navController, animated: true, completion: nil)
             }
@@ -215,7 +215,7 @@ class MUCertificatePreferencesViewController: UITableViewController {
     // MARK: - Private Methods
 
     private func fetchCertificates() {
-        guard let persistentRefs = MUCertificateController.persistentRefs(forIdentities: ()) as? [Data] else {
+        guard let persistentRefs = MUCertificateController.persistentRefsForIdentities() else {
             certificateItems = []
             return
         }

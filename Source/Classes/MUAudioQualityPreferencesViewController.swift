@@ -31,7 +31,7 @@ class MUAudioQualityPreferencesViewController: UITableViewController {
         tableView.backgroundView = MUBackgroundView.backgroundView()
         tableView.separatorStyle = .singleLine
         tableView.separatorInset = .zero
-        tableView.scrollEnabled = false
+        tableView.isScrollEnabled = false
     }
 
     // MARK: - UITableViewDataSource

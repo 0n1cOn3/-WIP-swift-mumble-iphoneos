@@ -144,11 +144,11 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
 
     private func establishConnection() {
         connection = MKConnection()
-        connection?.delegate = self
+        connection?.setDelegate(self)
         connection?.setForceTCP(UserDefaults.standard.bool(forKey: "NetworkForceTCP"))
 
         serverModel = MKServerModel(connection: connection)
-        serverModel?.add(self)
+        serverModel?.addDelegate(self)
 
         serverRoot = MUServerRootViewController(connection: connection!, andServerModel: serverModel!)
 
@@ -270,11 +270,10 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
         }
         let trustHandler: (UIAlertAction) -> Void = { [weak self] _ in
             guard let self = self else { return }
-            if let cert = self.connection?.peerCertificates()?.first as? MKCertificate {
-                let digest = cert.hexDigest()
-                if let hostname = self.connection?.hostname() {
-                    MUDatabase.storeDigest(digest, forServerWithHostname: hostname, port: Int(self.connection?.port() ?? 0))
-                }
+            if let cert = self.connection?.peerCertificates()?.first as? MKCertificate,
+               let digest = cert.hexDigest(),
+               let hostname = self.connection?.hostname() {
+                MUDatabase.storeDigest(digest, forServerWithHostname: hostname, port: Int(self.connection?.port() ?? 0))
             }
             self.connection?.setIgnoreSSLVerification(true)
             self.connection?.reconnect()

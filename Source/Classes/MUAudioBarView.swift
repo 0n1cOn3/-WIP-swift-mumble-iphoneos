@@ -132,9 +132,9 @@ class MUAudioBarView: UIView {
         }
 
         if kind == "snr" {
-            currentValue = CGFloat(captureManager.speechProbability())
+            currentValue = CGFloat(captureManager.speechProbability)
         } else {
-            currentValue = CGFloat(captureManager.meterLevel())
+            currentValue = CGFloat(captureManager.meterLevel)
         }
 
         setNeedsDisplay()

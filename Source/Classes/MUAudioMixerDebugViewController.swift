@@ -58,7 +58,7 @@ class MUAudioMixerDebugViewController: UITableViewController {
     // MARK: - Private Methods
 
     @objc private func updateMixerInfo(_ sender: Any) {
-        if let info = MKAudio.shared().copyAudioOutputMixerDebugInfo() as? [String: Any] {
+        if let info = MKAudio.shared()?.copyOutputMixerDebugInfo() as? [String: Any] {
             mixerInfo = info
         }
         tableView.reloadData()
