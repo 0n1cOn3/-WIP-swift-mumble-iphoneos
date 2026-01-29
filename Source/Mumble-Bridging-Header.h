@@ -24,4 +24,4 @@
 
 // Expose Objective-C headers to Swift
 #import "MKNumberBadgeView.h"
-#import "ObjCExceptionCatcher.h"
+#import "Classes/ObjCExceptionCatcher.h"
