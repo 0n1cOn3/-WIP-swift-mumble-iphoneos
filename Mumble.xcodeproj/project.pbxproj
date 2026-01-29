@@ -7,6 +7,54 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2AA93380F9010A2250603969 /* MUAdvancedAudioPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 844409BA284053D55AF41CEC /* MUAdvancedAudioPreferencesViewController.swift */; };
+		7F07B2FB547DCE237DB16FA9 /* MUApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F767017C7C06F3B08991B6E8 /* MUApplicationDelegate.swift */; };
+		F0540E79C556F90A66F643F5 /* MUAudioBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAFB60C2541E726B4C06BE92 /* MUAudioBarView.swift */; };
+		E37AB868F5546175E8CFC993 /* MUAudioBarViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3599ABC13BCCA8E8258EDFC7 /* MUAudioBarViewCell.swift */; };
+		9E5A49562ABE0AF27C50B0A3 /* MUAudioCaptureManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300A2A7B96D528462DCCEAE3 /* MUAudioCaptureManager.swift */; };
+		5FAB786BD8392837259D03A8 /* MUAudioMixerDebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29C46790BA887A9CCBAB27D9 /* MUAudioMixerDebugViewController.swift */; };
+		7BDA5DC9119FE0E920A1FD2A /* MUAudioQualityPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85A2D403300A8D42E301C889 /* MUAudioQualityPreferencesViewController.swift */; };
+		482C80E456C9B6346C083D00 /* MUAudioSidetonePreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 958B736F309D948D9C45BF3C /* MUAudioSidetonePreferencesViewController.swift */; };
+		530504BB00727BA074FA8D6A /* MUBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C86CE058EFCAA29F75CBC72 /* MUBackgroundView.swift */; };
+		94A25C15B9EBA99F3770662A /* MUCertificateCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 869AF301461FA733A77692F6 /* MUCertificateCell.swift */; };
+		C59895D2367265F0A2EBD367 /* MUCertificateCreationProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98D85116FB9A87477618E09F /* MUCertificateCreationProgressView.swift */; };
+		CBB0037D6A9F236A3CB71281 /* MUCertificatePreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8EED04D3A070BBE34FC3FA5C /* MUCertificatePreferencesViewController.swift */; };
+		FA6753E08B6724DB57135B11 /* MUColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8173DC3E2125BDB7969FB65 /* MUColor.swift */; };
+		406B81AE471830F626546886 /* MUConnectionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74551E08436FA2A52D247CF5 /* MUConnectionController.swift */; };
+		6451429DAB238E284F469BB2 /* MUCountryServerListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F402D145FD77387D8CDEB37 /* MUCountryServerListController.swift */; };
+		2D2E94323F88D328BDB183F8 /* MUDataURL.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2527311CFF7C3AEACF7990 /* MUDataURL.swift */; };
+		E74AE8863CB071973A4B0D8E /* MUDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58DC0905CA7D8C9E879EAE88 /* MUDatabase.swift */; };
+		B0C64F90E24898F2CA5FB853 /* MUFavouriteServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D4FB51F44E29096E18A82AC /* MUFavouriteServer.swift */; };
+		8909E3F5965BC1AF1135ED10 /* MUFavouriteServerEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A84B1D008D998DB65C32B86 /* MUFavouriteServerEditViewController.swift */; };
+		2C9A01A017E37922674F6CB9 /* MUFavouriteServerListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D95F115CFFB823B6C560F4C /* MUFavouriteServerListController.swift */; };
+		8BB3ECA9BC5AA23FB9C6CC8E /* MUHorizontalFlipTransitionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E7E770087580C5C5371DF5 /* MUHorizontalFlipTransitionDelegate.swift */; };
+		8889C15D283CD423811D96B0 /* MUImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = D333DB642086B4EA21117EB7 /* MUImage.swift */; };
+		7188F16035C3E114E8F23CD3 /* MUImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EAAD37F8468EA48EE0D7021 /* MUImageViewController.swift */; };
+		172FF8A8C0540D62ABF9FCDD /* MULanServerListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B848D26CE3737A0120AB8A /* MULanServerListController.swift */; };
+		8441F7C246F4EF26C1B1E215 /* MULegalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B4031CA76D1BF57C685292 /* MULegalViewController.swift */; };
+		77EC4C86005B75322C539A07 /* MUMessageAttachmentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 94E10A7AE179F80D100F8FFD /* MUMessageAttachmentViewController.swift */; };
+		4117C8FC97528189B2433367 /* MUMessageBubbleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32ED8566F2AFBB431BCE4798 /* MUMessageBubbleTableViewCell.swift */; };
+		DAE29B0215DE511FF714F228 /* MUMessageRecipientViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356B53B7BA0759021A95FCC0 /* MUMessageRecipientViewController.swift */; };
+		86005937CCF0B7FAF031B33B /* MUMessagesDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 853FD0E0A54A11ABB0EFDDAF /* MUMessagesDatabase.swift */; };
+		11F610295EF4660C66ED58CA /* MUMessagesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FA4D67474D3CEE26F8D648B /* MUMessagesViewController.swift */; };
+		F789BFDF062DCEE9252C7CEF /* MUNotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A0E71452E08660171950F4 /* MUNotificationController.swift */; };
+		39303F63780081539C0CDD94 /* MUPopoverBackgroundView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D502053589B91A3EB11F413C /* MUPopoverBackgroundView.swift */; };
+		FBA0D47201FD867FFF8651C9 /* MUPublicServerList.swift in Sources */ = {isa = PBXBuildFile; fileRef = CABE589237763FEA6395AB35 /* MUPublicServerList.swift */; };
+		7C0126A64C6D8047906D9DA9 /* MUPublicServerListController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 48926A593C4CFECE6DFC9828 /* MUPublicServerListController.swift */; };
+		04D42D4A4CC6685EB60ED95F /* MURemoteControlServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 472598FE4B726A4730D3C003 /* MURemoteControlServer.swift */; };
+		5A6BBD03837B2E14A829E678 /* MUServerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75EE65FB66A98C153199AF6A /* MUServerButton.swift */; };
+		E10D8BC3FB49F8B868049C7A /* MUServerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E164CAC22AFDFCF0829569AE /* MUServerCell.swift */; };
+		28024FE1BD18B36C1EB99EBF /* MUServerCertificateTrustViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F431D16F5DA5ECE158989BCF /* MUServerCertificateTrustViewController.swift */; };
+		A11D56E62DDB0778E55AC490 /* MUServerRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAE48FBEE38A62AD24E391B1 /* MUServerRootViewController.swift */; };
+		D9174F7F63099A5E16FE7BEC /* MUServerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42F7FC452104AA700D643447 /* MUServerTableViewCell.swift */; };
+		969091ABCF3DDD7F93BDE26B /* MUServerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D7B117313B70DBFE447761B /* MUServerViewController.swift */; };
+		1639DDAA89DE751FCB1C8492 /* MUTableViewHeaderLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C4E66FFE54337DDCC411340 /* MUTableViewHeaderLabel.swift */; };
+		B9C8170630712B3F4A4C3413 /* MUTextMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB2B712A1C75C5539B95BD67 /* MUTextMessage.swift */; };
+		AEF248FFD696BBEBB72E2359 /* MUTextMessageProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5AB4C7AA4312DDF98F99FAAC /* MUTextMessageProcessor.swift */; };
+		9CC09349B245CC14320D0037 /* MUUserStateAcessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB3FECF051C6610974C3B670 /* MUUserStateAcessoryView.swift */; };
+		5D9D1AA1871D0E7BDAB0CD7D /* MUVoiceActivitySetupViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D821D2BFC18ECF02B45F381B /* MUVoiceActivitySetupViewController.swift */; };
+		4329BC781531D9FB92E31188 /* MUWelcomeScreenPad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFBF616781050931434D678 /* MUWelcomeScreenPad.swift */; };
+		3E3FE0DD5BE0DD0F93252BE6 /* MUWelcomeScreenPhone.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6657F710F9396C1D1930079 /* MUWelcomeScreenPhone.swift */; };
 		0EEEF3B42DF1E5450042C0A8 /* libFMDB-IOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EEEF35C2DF1DC6D0042C0A8 /* libFMDB-IOS.a */; };
 		0EF3A4672DC2573900028454 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2861C2AD116BE9B5002B8514 /* AudioToolbox.framework */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
@@ -267,6 +315,54 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		844409BA284053D55AF41CEC /* MUAdvancedAudioPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUAdvancedAudioPreferencesViewController.swift; sourceTree = "<group>"; };
+		F767017C7C06F3B08991B6E8 /* MUApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUApplicationDelegate.swift; sourceTree = "<group>"; };
+		DAFB60C2541E726B4C06BE92 /* MUAudioBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUAudioBarView.swift; sourceTree = "<group>"; };
+		3599ABC13BCCA8E8258EDFC7 /* MUAudioBarViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUAudioBarViewCell.swift; sourceTree = "<group>"; };
+		300A2A7B96D528462DCCEAE3 /* MUAudioCaptureManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUAudioCaptureManager.swift; sourceTree = "<group>"; };
+		29C46790BA887A9CCBAB27D9 /* MUAudioMixerDebugViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUAudioMixerDebugViewController.swift; sourceTree = "<group>"; };
+		85A2D403300A8D42E301C889 /* MUAudioQualityPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUAudioQualityPreferencesViewController.swift; sourceTree = "<group>"; };
+		958B736F309D948D9C45BF3C /* MUAudioSidetonePreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUAudioSidetonePreferencesViewController.swift; sourceTree = "<group>"; };
+		4C86CE058EFCAA29F75CBC72 /* MUBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUBackgroundView.swift; sourceTree = "<group>"; };
+		869AF301461FA733A77692F6 /* MUCertificateCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUCertificateCell.swift; sourceTree = "<group>"; };
+		98D85116FB9A87477618E09F /* MUCertificateCreationProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUCertificateCreationProgressView.swift; sourceTree = "<group>"; };
+		8EED04D3A070BBE34FC3FA5C /* MUCertificatePreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUCertificatePreferencesViewController.swift; sourceTree = "<group>"; };
+		F8173DC3E2125BDB7969FB65 /* MUColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUColor.swift; sourceTree = "<group>"; };
+		74551E08436FA2A52D247CF5 /* MUConnectionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUConnectionController.swift; sourceTree = "<group>"; };
+		1F402D145FD77387D8CDEB37 /* MUCountryServerListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUCountryServerListController.swift; sourceTree = "<group>"; };
+		CE2527311CFF7C3AEACF7990 /* MUDataURL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUDataURL.swift; sourceTree = "<group>"; };
+		58DC0905CA7D8C9E879EAE88 /* MUDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUDatabase.swift; sourceTree = "<group>"; };
+		5D4FB51F44E29096E18A82AC /* MUFavouriteServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUFavouriteServer.swift; sourceTree = "<group>"; };
+		8A84B1D008D998DB65C32B86 /* MUFavouriteServerEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUFavouriteServerEditViewController.swift; sourceTree = "<group>"; };
+		3D95F115CFFB823B6C560F4C /* MUFavouriteServerListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUFavouriteServerListController.swift; sourceTree = "<group>"; };
+		38E7E770087580C5C5371DF5 /* MUHorizontalFlipTransitionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUHorizontalFlipTransitionDelegate.swift; sourceTree = "<group>"; };
+		D333DB642086B4EA21117EB7 /* MUImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUImage.swift; sourceTree = "<group>"; };
+		3EAAD37F8468EA48EE0D7021 /* MUImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUImageViewController.swift; sourceTree = "<group>"; };
+		C8B848D26CE3737A0120AB8A /* MULanServerListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MULanServerListController.swift; sourceTree = "<group>"; };
+		F1B4031CA76D1BF57C685292 /* MULegalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MULegalViewController.swift; sourceTree = "<group>"; };
+		94E10A7AE179F80D100F8FFD /* MUMessageAttachmentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUMessageAttachmentViewController.swift; sourceTree = "<group>"; };
+		32ED8566F2AFBB431BCE4798 /* MUMessageBubbleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUMessageBubbleTableViewCell.swift; sourceTree = "<group>"; };
+		356B53B7BA0759021A95FCC0 /* MUMessageRecipientViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUMessageRecipientViewController.swift; sourceTree = "<group>"; };
+		853FD0E0A54A11ABB0EFDDAF /* MUMessagesDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUMessagesDatabase.swift; sourceTree = "<group>"; };
+		3FA4D67474D3CEE26F8D648B /* MUMessagesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUMessagesViewController.swift; sourceTree = "<group>"; };
+		19A0E71452E08660171950F4 /* MUNotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUNotificationController.swift; sourceTree = "<group>"; };
+		D502053589B91A3EB11F413C /* MUPopoverBackgroundView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUPopoverBackgroundView.swift; sourceTree = "<group>"; };
+		CABE589237763FEA6395AB35 /* MUPublicServerList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUPublicServerList.swift; sourceTree = "<group>"; };
+		48926A593C4CFECE6DFC9828 /* MUPublicServerListController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUPublicServerListController.swift; sourceTree = "<group>"; };
+		472598FE4B726A4730D3C003 /* MURemoteControlServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MURemoteControlServer.swift; sourceTree = "<group>"; };
+		75EE65FB66A98C153199AF6A /* MUServerButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUServerButton.swift; sourceTree = "<group>"; };
+		E164CAC22AFDFCF0829569AE /* MUServerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUServerCell.swift; sourceTree = "<group>"; };
+		F431D16F5DA5ECE158989BCF /* MUServerCertificateTrustViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUServerCertificateTrustViewController.swift; sourceTree = "<group>"; };
+		CAE48FBEE38A62AD24E391B1 /* MUServerRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUServerRootViewController.swift; sourceTree = "<group>"; };
+		42F7FC452104AA700D643447 /* MUServerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUServerTableViewCell.swift; sourceTree = "<group>"; };
+		4D7B117313B70DBFE447761B /* MUServerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUServerViewController.swift; sourceTree = "<group>"; };
+		3C4E66FFE54337DDCC411340 /* MUTableViewHeaderLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUTableViewHeaderLabel.swift; sourceTree = "<group>"; };
+		EB2B712A1C75C5539B95BD67 /* MUTextMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUTextMessage.swift; sourceTree = "<group>"; };
+		5AB4C7AA4312DDF98F99FAAC /* MUTextMessageProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUTextMessageProcessor.swift; sourceTree = "<group>"; };
+		DB3FECF051C6610974C3B670 /* MUUserStateAcessoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUUserStateAcessoryView.swift; sourceTree = "<group>"; };
+		D821D2BFC18ECF02B45F381B /* MUVoiceActivitySetupViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUVoiceActivitySetupViewController.swift; sourceTree = "<group>"; };
+		9EFBF616781050931434D678 /* MUWelcomeScreenPad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUWelcomeScreenPad.swift; sourceTree = "<group>"; };
+		F6657F710F9396C1D1930079 /* MUWelcomeScreenPhone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUWelcomeScreenPhone.swift; sourceTree = "<group>"; };
 		0EA3B0742DC3A75E00A69F03 /* fmdb.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = fmdb.xcodeproj; path = Dependencies/fmdb/fmdb.xcodeproj; sourceTree = "<group>"; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* Mumble.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mumble.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1240,6 +1336,54 @@
 			buildActionMask = 2147483647;
 			files = (
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
+				2AA93380F9010A2250603969 /* MUAdvancedAudioPreferencesViewController.swift in Sources */,
+				7F07B2FB547DCE237DB16FA9 /* MUApplicationDelegate.swift in Sources */,
+				F0540E79C556F90A66F643F5 /* MUAudioBarView.swift in Sources */,
+				E37AB868F5546175E8CFC993 /* MUAudioBarViewCell.swift in Sources */,
+				9E5A49562ABE0AF27C50B0A3 /* MUAudioCaptureManager.swift in Sources */,
+				5FAB786BD8392837259D03A8 /* MUAudioMixerDebugViewController.swift in Sources */,
+				7BDA5DC9119FE0E920A1FD2A /* MUAudioQualityPreferencesViewController.swift in Sources */,
+				482C80E456C9B6346C083D00 /* MUAudioSidetonePreferencesViewController.swift in Sources */,
+				530504BB00727BA074FA8D6A /* MUBackgroundView.swift in Sources */,
+				94A25C15B9EBA99F3770662A /* MUCertificateCell.swift in Sources */,
+				C59895D2367265F0A2EBD367 /* MUCertificateCreationProgressView.swift in Sources */,
+				CBB0037D6A9F236A3CB71281 /* MUCertificatePreferencesViewController.swift in Sources */,
+				FA6753E08B6724DB57135B11 /* MUColor.swift in Sources */,
+				406B81AE471830F626546886 /* MUConnectionController.swift in Sources */,
+				6451429DAB238E284F469BB2 /* MUCountryServerListController.swift in Sources */,
+				2D2E94323F88D328BDB183F8 /* MUDataURL.swift in Sources */,
+				E74AE8863CB071973A4B0D8E /* MUDatabase.swift in Sources */,
+				B0C64F90E24898F2CA5FB853 /* MUFavouriteServer.swift in Sources */,
+				8909E3F5965BC1AF1135ED10 /* MUFavouriteServerEditViewController.swift in Sources */,
+				2C9A01A017E37922674F6CB9 /* MUFavouriteServerListController.swift in Sources */,
+				8BB3ECA9BC5AA23FB9C6CC8E /* MUHorizontalFlipTransitionDelegate.swift in Sources */,
+				8889C15D283CD423811D96B0 /* MUImage.swift in Sources */,
+				7188F16035C3E114E8F23CD3 /* MUImageViewController.swift in Sources */,
+				172FF8A8C0540D62ABF9FCDD /* MULanServerListController.swift in Sources */,
+				8441F7C246F4EF26C1B1E215 /* MULegalViewController.swift in Sources */,
+				77EC4C86005B75322C539A07 /* MUMessageAttachmentViewController.swift in Sources */,
+				4117C8FC97528189B2433367 /* MUMessageBubbleTableViewCell.swift in Sources */,
+				DAE29B0215DE511FF714F228 /* MUMessageRecipientViewController.swift in Sources */,
+				86005937CCF0B7FAF031B33B /* MUMessagesDatabase.swift in Sources */,
+				11F610295EF4660C66ED58CA /* MUMessagesViewController.swift in Sources */,
+				F789BFDF062DCEE9252C7CEF /* MUNotificationController.swift in Sources */,
+				39303F63780081539C0CDD94 /* MUPopoverBackgroundView.swift in Sources */,
+				FBA0D47201FD867FFF8651C9 /* MUPublicServerList.swift in Sources */,
+				7C0126A64C6D8047906D9DA9 /* MUPublicServerListController.swift in Sources */,
+				04D42D4A4CC6685EB60ED95F /* MURemoteControlServer.swift in Sources */,
+				5A6BBD03837B2E14A829E678 /* MUServerButton.swift in Sources */,
+				E10D8BC3FB49F8B868049C7A /* MUServerCell.swift in Sources */,
+				28024FE1BD18B36C1EB99EBF /* MUServerCertificateTrustViewController.swift in Sources */,
+				A11D56E62DDB0778E55AC490 /* MUServerRootViewController.swift in Sources */,
+				D9174F7F63099A5E16FE7BEC /* MUServerTableViewCell.swift in Sources */,
+				969091ABCF3DDD7F93BDE26B /* MUServerViewController.swift in Sources */,
+				1639DDAA89DE751FCB1C8492 /* MUTableViewHeaderLabel.swift in Sources */,
+				B9C8170630712B3F4A4C3413 /* MUTextMessage.swift in Sources */,
+				AEF248FFD696BBEBB72E2359 /* MUTextMessageProcessor.swift in Sources */,
+				9CC09349B245CC14320D0037 /* MUUserStateAcessoryView.swift in Sources */,
+				5D9D1AA1871D0E7BDAB0CD7D /* MUVoiceActivitySetupViewController.swift in Sources */,
+				4329BC781531D9FB92E31188 /* MUWelcomeScreenPad.swift in Sources */,
+				3E3FE0DD5BE0DD0F93252BE6 /* MUWelcomeScreenPhone.swift in Sources */,
 				2861C276116BE905002B8514 /* MUApplicationDelegate.m in Sources */,
 				2861C27B116BE905002B8514 /* MUPublicServerList.m in Sources */,
 				2861C27C116BE905002B8514 /* MUPublicServerListController.m in Sources */,
