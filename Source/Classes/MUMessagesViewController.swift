@@ -228,6 +228,7 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        // Register for keyboard notifications
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(keyboardWillShow(_:)),
@@ -241,77 +242,76 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
             object: nil
         )
 
-        tableView?.reloadData()
-    }
+        // Set up UI if not already created
+        if tableView == nil {
+            let textBarHeight: CGFloat = 44
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+            let viewSafeAreaInsets = view.safeAreaInsets
+            let bottomInset = viewSafeAreaInsets.bottom
 
-        let textBarHeight: CGFloat = 44
+            let viewFrame = view.frame
 
-        let viewSafeAreaInsets = view.safeAreaInsets
-        let bottomInset = viewSafeAreaInsets.bottom
+            // Create table view
+            let tableViewFrame = CGRect(
+                x: 0,
+                y: 0,
+                width: viewFrame.width,
+                height: viewFrame.height - textBarHeight - bottomInset
+            )
+            tableView = UITableView(frame: tableViewFrame, style: .plain)
+            tableView.backgroundView = MUBackgroundView.backgroundView()
+            tableView.separatorStyle = .none
+            tableView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
+            tableView.delegate = self
+            tableView.dataSource = self
+            view.addSubview(tableView)
 
-        let viewFrame = view.frame
+            // Add swipe gestures for keyboard
+            let hideSwipe = UISwipeGestureRecognizer(target: self, action: #selector(hideKeyboard(_:)))
+            hideSwipe.direction = .down
+            view.addGestureRecognizer(hideSwipe)
 
-        // Create table view
-        let tableViewFrame = CGRect(
-            x: 0,
-            y: 0,
-            width: viewFrame.width,
-            height: viewFrame.height - textBarHeight - bottomInset
-        )
-        tableView = UITableView(frame: tableViewFrame, style: .plain)
-        tableView.backgroundView = MUBackgroundView.backgroundView()
-        tableView.separatorStyle = .none
-        tableView.autoresizingMask = [.flexibleHeight, .flexibleWidth]
-        tableView.delegate = self
-        tableView.dataSource = self
-        view.addSubview(tableView)
+            let showSwipe = UISwipeGestureRecognizer(target: self, action: #selector(showKeyboard(_:)))
+            showSwipe.direction = .up
+            view.addGestureRecognizer(showSwipe)
 
-        // Add swipe gestures for keyboard
-        let hideSwipe = UISwipeGestureRecognizer(target: self, action: #selector(hideKeyboard(_:)))
-        hideSwipe.direction = .down
-        view.addGestureRecognizer(hideSwipe)
+            // Create text bar
+            let textBarFrame = CGRect(
+                x: 0,
+                y: tableViewFrame.height,
+                width: tableViewFrame.width,
+                height: textBarHeight
+            )
+            textBarView = UIView(frame: textBarFrame)
+            textBarView.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
+            textBarView.backgroundColor = UIColor(patternImage: UIImage(named: "BlackToolbarPatterniOS7")!)
 
-        let showSwipe = UISwipeGestureRecognizer(target: self, action: #selector(showKeyboard(_:)))
-        showSwipe.direction = .up
-        view.addGestureRecognizer(showSwipe)
+            // Create text field
+            let textFieldMargin: CGFloat = 6
+            textField = MUConsistentTextField(frame: CGRect(
+                x: textFieldMargin,
+                y: textFieldMargin,
+                width: tableViewFrame.width - 2 * textFieldMargin,
+                height: textBarHeight - 2 * textFieldMargin
+            ))
+            textField.leftViewMode = .always
+            textField.rightViewMode = .always
+            textField.borderStyle = .roundedRect
+            textField.textColor = .black
+            textField.font = UIFont.systemFont(ofSize: 17.0)
+            textField.contentVerticalAlignment = .center
+            textField.returnKeyType = .send
+            textField.delegate = self
+            textBarView.addSubview(textField)
+            view.addSubview(textBarView)
 
-        // Create text bar
-        let textBarFrame = CGRect(
-            x: 0,
-            y: tableViewFrame.height,
-            width: tableViewFrame.width,
-            height: textBarHeight
-        )
-        textBarView = UIView(frame: textBarFrame)
-        textBarView.autoresizingMask = [.flexibleWidth, .flexibleTopMargin]
-        textBarView.backgroundColor = UIColor(patternImage: UIImage(named: "BlackToolbarPatterniOS7")!)
-
-        // Create text field
-        let textFieldMargin: CGFloat = 6
-        textField = MUConsistentTextField(frame: CGRect(
-            x: textFieldMargin,
-            y: textFieldMargin,
-            width: tableViewFrame.width - 2 * textFieldMargin,
-            height: textBarHeight - 2 * textFieldMargin
-        ))
-        textField.leftViewMode = .always
-        textField.rightViewMode = .always
-        textField.borderStyle = .roundedRect
-        textField.textColor = .black
-        textField.font = UIFont.systemFont(ofSize: 17.0)
-        textField.contentVerticalAlignment = .center
-        textField.returnKeyType = .send
-        textField.delegate = self
-        textBarView.addSubview(textField)
-        view.addSubview(textBarView)
-
-        // Set default recipient to current channel
-        if let channelName = model?.connectedUser()?.channel()?.channelName() {
-            setReceiverName(channelName, imageName: "channelmsg")
+            // Set default recipient to current channel
+            if let channelName = model?.connectedUser()?.channel()?.channelName() {
+                setReceiverName(channelName, imageName: "channelmsg")
+            }
         }
+
+        tableView?.reloadData()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
