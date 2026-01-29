@@ -39,7 +39,7 @@ final class MURemoteControlPreferencesViewController: UITableViewController {
             cell.textLabel?.text = NSLocalizedString("Enable", comment: "Enable remote control switch")
             let enableSwitch = UISwitch(frame: .zero)
             enableSwitch.addTarget(self, action: #selector(enableSwitchChanged(_:)), for: .valueChanged)
-            enableSwitch.isOn = MURemoteControlServer.sharedRemoteControlServer().isRunning()
+            enableSwitch.isOn = MURemoteControlServer.sharedRemoteControlServer().isRunning
             enableSwitch.onTintColor = .black
             cell.accessoryView = enableSwitch
             cell.selectionStyle = .none
