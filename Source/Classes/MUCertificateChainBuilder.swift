@@ -91,8 +91,8 @@ class MUCertificateChainBuilder: NSObject {
         guard SecItemCopyMatching(query as CFDictionary, &thing) == errSecSuccess,
               let result = thing else { return nil }
         var chain: [Any] = []
-        if CFGetTypeID(result) == SecIdentityGetTypeID() {
-            let identity = result as! SecIdentity
+        if CFGetTypeID(result) == SecIdentityGetTypeID(),
+           let identity = result as? SecIdentity {
             chain.append(identity)
             var cert: SecCertificate?
             SecIdentityCopyCertificate(identity, &cert)
@@ -101,8 +101,8 @@ class MUCertificateChainBuilder: NSObject {
                     chain.append(contentsOf: parents)
                 }
             }
-        } else if CFGetTypeID(result) == SecCertificateGetTypeID() {
-            let cert = result as! SecCertificate
+        } else if CFGetTypeID(result) == SecCertificateGetTypeID(),
+                  let cert = result as? SecCertificate {
             chain.append(cert)
             if let parents = buildCertChain(from: cert) {
                 chain.append(contentsOf: parents)

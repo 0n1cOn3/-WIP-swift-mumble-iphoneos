@@ -108,14 +108,15 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
             hostname ?? "", port
         )
 
-        alertCtrl = UIAlertController(title: title, message: msg, preferredStyle: .alert)
-        alertCtrl?.addAction(UIAlertAction(
+        let alert = UIAlertController(title: title, message: msg, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(
             title: NSLocalizedString("Cancel", comment: ""),
             style: .cancel
         ) { [weak self] _ in
             self?.teardownConnection()
         })
-        parentViewController?.present(alertCtrl!, animated: true)
+        alertCtrl = alert
+        parentViewController?.present(alert, animated: true)
 
         timer = Timer.scheduledTimer(
             timeInterval: 0.2,

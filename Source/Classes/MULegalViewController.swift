@@ -42,12 +42,13 @@ class MULegalViewController: UIViewController, WKNavigationDelegate {
         navigationItem.rightBarButtonItem = done
 
         if let path = Bundle.main.path(forResource: "Legal", ofType: "html"),
-           let html = try? Data(contentsOf: URL(fileURLWithPath: path)) {
+           let html = try? Data(contentsOf: URL(fileURLWithPath: path)),
+           let baseURL = URL(string: "http://localhost") {
             webView.load(
                 html,
                 mimeType: "text/html",
                 characterEncodingName: "utf-8",
-                baseURL: URL(string: "http://localhost")!
+                baseURL: baseURL
             )
         }
     }

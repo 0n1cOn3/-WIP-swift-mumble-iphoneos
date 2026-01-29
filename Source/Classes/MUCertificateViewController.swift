@@ -21,7 +21,7 @@ class MUCertificateViewController: UITableViewController {
             }
             for (index, obj) in chains.enumerated() where index > 0 {
                 // SecCertificate is a CoreFoundation type bridged as AnyObject
-                let secCert = obj as! SecCertificate
+                guard let secCert = obj as? SecCertificate else { continue }
                 let certData = SecCertificateCopyData(secCert) as Data
                 if let cert = MKCertificate(certificate: certData, privateKey: nil) {
                     certs.append(cert)
@@ -80,8 +80,8 @@ class MUCertificateViewController: UITableViewController {
             self.tableView.separatorStyle = .none
         }
         let actions = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(actionClicked(_:)))
-        if certificates.count > 1 {
-            let segmentedContainer = UIBarButtonItem(customView: arrows!)
+        if certificates.count > 1, let arrows = arrows {
+            let segmentedContainer = UIBarButtonItem(customView: arrows)
             if allowExportAndDelete {
                 let toolbar = UIToolbar(frame: CGRect(x: 0, y: 0, width: 125, height: 45))
                 toolbar.barStyle = .black

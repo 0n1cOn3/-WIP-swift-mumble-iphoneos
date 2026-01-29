@@ -293,7 +293,7 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
 
         cell?.indentationLevel = navItem.indentLevel
 
-        return cell!
+        return cell ?? UITableViewCell()
     }
 
     // MARK: - UITableViewDelegate

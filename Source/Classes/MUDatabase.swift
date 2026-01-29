@@ -17,15 +17,17 @@ class MUDatabase: NSObject {
     // MARK: - File Path
 
     private class func filePath() -> String {
-        let libraryDirectories = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true)
-        let library = libraryDirectories[0]
+        guard let library = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).first else {
+            return ""
+        }
         try? FileManager.default.createDirectory(atPath: library, withIntermediateDirectories: true, attributes: nil)
         return (library as NSString).appendingPathComponent("mumble.sqlite")
     }
 
     private class func moveOldDatabases() {
-        let documentDirectories = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        let docs = documentDirectories[0]
+        guard let docs = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first else {
+            return
+        }
         let manager = FileManager.default
 
         // Hide the SQLite database from the iTunes document inspector.

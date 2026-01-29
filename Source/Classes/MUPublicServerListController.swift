@@ -124,7 +124,7 @@ class MUPublicServerListController: UITableViewController {
         }
 
         cell?.selectionStyle = .default
-        return cell!
+        return cell ?? UITableViewCell()
     }
 
     // MARK: - UITableViewDelegate

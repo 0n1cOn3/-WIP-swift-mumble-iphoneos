@@ -95,8 +95,10 @@ class MUCertificateDiskImportViewController: UITableViewController, UITextFieldD
     override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat { showHelp ? 80.0 : 0.0 }
 
     private func tryImportCertificate(password: String?) {
-        guard let fileName = diskCertificates[attemptIndexPath?.row ?? 0] as String?,
+        guard let indexPath = attemptIndexPath,
+              indexPath.row < diskCertificates.count,
               let documentsDir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first else { return }
+        let fileName = diskCertificates[indexPath.row]
         let file = (documentsDir as NSString).appendingPathComponent(fileName)
         guard let pkcs12Data = try? Data(contentsOf: URL(fileURLWithPath: file)) else { return }
         guard let chain = MKCertificate.certificates(withPKCS12: pkcs12Data, password: password), !chain.isEmpty else {
@@ -135,9 +137,9 @@ class MUCertificateDiskImportViewController: UITableViewController, UITextFieldD
                 if addErr == errSecSuccess, let dataRef = dataRef as? Data {
                     if MUCertificateController.defaultCertificate() == nil { MUCertificateController.setDefaultCertificate(byPersistentRef: dataRef) }
                     try? FileManager.default.removeItem(atPath: file)
-                    tableView.deselectRow(at: attemptIndexPath!, animated: true)
-                    diskCertificates.remove(at: attemptIndexPath!.row)
-                    tableView.deleteRows(at: [attemptIndexPath!], with: .fade)
+                    tableView.deselectRow(at: indexPath, animated: true)
+                    diskCertificates.remove(at: indexPath.row)
+                    tableView.deleteRows(at: [indexPath], with: .fade)
                     return
                 } else if addErr == errSecDuplicateItem || (addErr == errSecSuccess && dataRef == nil) {
                     showAlertDialog(title: NSLocalizedString("Import Error", comment: "Error title for certificate import failure"), msg: NSLocalizedString("A certificate with the same name already exist.", comment: "Error message when certificate with same name exists"))
@@ -146,16 +148,16 @@ class MUCertificateDiskImportViewController: UITableViewController, UITextFieldD
                     showAlertDialog(title: NSLocalizedString("Import Error", comment: "Error title for certificate import failure"), msg: msg)
                 }
             }
-            tableView.deselectRow(at: attemptIndexPath!, animated: true)
+            tableView.deselectRow(at: indexPath, animated: true)
         } else if err == errSecAuthFailed {
             showPasswordDialog()
-            tableView.deselectRow(at: attemptIndexPath!, animated: true)
+            tableView.deselectRow(at: indexPath, animated: true)
         } else if err == errSecDecode {
             showAlertDialog(title: NSLocalizedString("Import Error", comment: "Error title for certificate import failure"), msg: NSLocalizedString("Unable to decode PKCS12 file", comment: "Error message when PKCS12 file cannot be decoded"))
-            tableView.deselectRow(at: attemptIndexPath!, animated: true)
+            tableView.deselectRow(at: indexPath, animated: true)
         } else {
             showAlertDialog(title: NSLocalizedString("Import Error", comment: "Error title for certificate import failure"), msg: NSLocalizedString("Mumble was unable to import the certificate.", comment: "Error message when certificate import fails"))
-            tableView.deselectRow(at: attemptIndexPath!, animated: true)
+            tableView.deselectRow(at: indexPath, animated: true)
         }
     }
 
@@ -172,7 +174,7 @@ class MUCertificateDiskImportViewController: UITableViewController, UITextFieldD
     }
 
     private func removeAllDiskCertificates() {
-        let dir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first!
+        guard let dir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first else { return }
         for fn in diskCertificates {
             let path = (dir as NSString).appendingPathComponent(fn)
             if let err = try? FileManager.default.removeItem(atPath: path) { }

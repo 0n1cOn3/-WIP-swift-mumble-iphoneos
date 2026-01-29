@@ -123,7 +123,7 @@ class MULanServerListController: UITableViewController, NetServiceBrowserDelegat
             port: "\(netService.port)"
         )
         cell?.selectionStyle = .default
-        return cell!
+        return cell ?? UITableViewCell()
     }
 
     // MARK: - UITableViewDelegate

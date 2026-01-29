@@ -36,8 +36,9 @@ class MUAudioBarView: UIView {
     }
 
     private func setupTimer() {
-        timer = Timer(timeInterval: 1.0/60.0, target: self, selector: #selector(tickTock), userInfo: nil, repeats: true)
-        RunLoop.main.add(timer!, forMode: .common)
+        let newTimer = Timer(timeInterval: 1.0/60.0, target: self, selector: #selector(tickTock), userInfo: nil, repeats: true)
+        timer = newTimer
+        RunLoop.main.add(newTimer, forMode: .common)
     }
 
     // MARK: - Public Methods

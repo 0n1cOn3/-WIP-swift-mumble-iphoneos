@@ -123,7 +123,7 @@ class MUCountryServerListController: UIViewController, UISearchBarDelegate, UITa
             port: serverItem["port"] as? String
         )
         cell?.selectionStyle = .default
-        return cell!
+        return cell ?? UITableViewCell()
     }
 
     // MARK: - UITableViewDelegate

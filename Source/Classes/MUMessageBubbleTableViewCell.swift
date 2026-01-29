@@ -422,11 +422,13 @@ private class MUMessageBubbleView: UIView {
     }
 
     override func copy(_ sender: Any?) {
-        cell?.delegate?.messageBubbleTableViewCellRequestedCopy(cell!)
+        guard let cell = cell else { return }
+        cell.delegate?.messageBubbleTableViewCellRequestedCopy(cell)
     }
 
     override func delete(_ sender: Any?) {
-        cell?.delegate?.messageBubbleTableViewCellRequestedDeletion(cell!)
+        guard let cell = cell else { return }
+        cell.delegate?.messageBubbleTableViewCellRequestedDeletion(cell)
     }
 }
 

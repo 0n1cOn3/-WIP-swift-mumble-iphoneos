@@ -240,7 +240,7 @@ class MUFavouriteServerEditViewController: UITableViewController {
     // MARK: - Data Accessors
 
     @objc func copyFavouriteFromContent() -> MUFavouriteServer {
-        return favourite.copy() as! MUFavouriteServer
+        return (favourite.copy() as? MUFavouriteServer) ?? MUFavouriteServer()
     }
 
     // MARK: - Target/Action
