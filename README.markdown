@@ -149,6 +149,62 @@ If you have Xcode and an Apple Developer account:
 
 [AltStore](https://altstore.io/) is an alternative sideloading solution that automatically refreshes apps.
 
+### Option 4: Linux Sideloading
+
+Linux users have several options for sideloading iOS apps:
+
+#### SideStore (Recommended for Linux)
+
+[SideStore](https://sidestore.io/) is a fork of AltStore that works without a computer after initial setup.
+
+#### AltServer-Linux
+
+Community port of AltServer for Linux:
+
+```bash
+# Install dependencies (Debian/Ubuntu)
+sudo apt install libimobiledevice-utils usbmuxd
+
+# Get AltServer-Linux from:
+# https://github.com/NyaMisty/AltServer-Linux
+```
+
+#### libimobiledevice + Sideloader
+
+For advanced users, use libimobiledevice tools directly:
+
+```bash
+# Install libimobiledevice (Fedora)
+sudo dnf install libimobiledevice usbmuxd ifuse
+
+# Install libimobiledevice (Debian/Ubuntu)
+sudo apt install libimobiledevice6 usbmuxd ifuse
+
+# Install libimobiledevice (Arch)
+sudo pacman -S libimobiledevice usbmuxd ifuse
+```
+
+Then use [Sideloader](https://github.com/Dadoum/Sideloader) - a cross-platform sideloading tool written in D:
+
+```bash
+# Download from releases or build from source
+# https://github.com/Dadoum/Sideloader/releases
+```
+
+#### Manual Installation with ideviceinstaller
+
+```bash
+# Pair your device first
+idevicepair pair
+
+# Install the IPA (unsigned - device must be jailbroken)
+ideviceinstaller -i Mumble.ipa
+```
+
+> [!NOTE]
+> For non-jailbroken devices on Linux, you'll need to sign the IPA first.
+> Consider using a signing service or setting up a macOS VM for signing.
+
 ---
 
 ## Configuration
