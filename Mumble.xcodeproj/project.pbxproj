@@ -10,22 +10,22 @@
 		0EEEF3B42DF1E5450042C0A8 /* libFMDB-IOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0EEEF35C2DF1DC6D0042C0A8 /* libFMDB-IOS.a */; };
 		0EF3A4672DC2573900028454 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2861C2AD116BE9B5002B8514 /* AudioToolbox.framework */; };
 		1D60589B0D05DD56006BFB54 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
-               2801C35B11CA9F1A00E664E8 /* MUPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2801C35A11CA9F1A00E664E8 /* MUPreferencesViewController.swift */; };
+		2801C35B11CA9F1A00E664E8 /* MUPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2801C35A11CA9F1A00E664E8 /* MUPreferencesViewController.swift */; };
 		280256381510D70D00178B08 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 280256361510D70D00178B08 /* Localizable.strings */; };
 		2802AC0014C9E948000983A5 /* MUDataURL.m in Sources */ = {isa = PBXBuildFile; fileRef = 2802ABFF14C9E948000983A5 /* MUDataURL.m */; };
 		2802AC0314CB0131000983A5 /* MUImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2802AC0214CB0131000983A5 /* MUImage.m */; };
 		2802AC0614CB024A000983A5 /* MUImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2802AC0514CB024A000983A5 /* MUImageViewController.m */; };
 		2802AC0D14CB2E2B000983A5 /* MUTextMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 2802AC0C14CB2E2B000983A5 /* MUTextMessage.m */; };
 		280D9ADA13EAFAAE003B64A0 /* MUServerRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 280D9AD913EAFAAE003B64A0 /* MUServerRootViewController.m */; };
-            2813B1D115EBFDA90049A59A /* MURemoteControlPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2813B1D015EBFDA90049A59A /* MURemoteControlPreferencesViewController.swift */; };
+		2813B1D115EBFDA90049A59A /* MURemoteControlPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2813B1D015EBFDA90049A59A /* MURemoteControlPreferencesViewController.swift */; };
 		2822AC0614878AC500E9DB17 /* MUConnectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2822AC0514878AC500E9DB17 /* MUConnectionController.m */; };
 		28234D5F13F09148006B830D /* talkbutton_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 28234D5B13F09148006B830D /* talkbutton_off.png */; };
 		28234D6013F09148006B830D /* talkbutton_off@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28234D5C13F09148006B830D /* talkbutton_off@2x.png */; };
 		28234D6113F09148006B830D /* talkbutton_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 28234D5D13F09148006B830D /* talkbutton_on.png */; };
 		28234D6213F09148006B830D /* talkbutton_on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28234D5E13F09148006B830D /* talkbutton_on@2x.png */; };
-		282F6A2513620BD5008F555B /* MUCertificateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 282F6A2413620BD5008F555B /* MUCertificateController.swift */ };
-            283363DB13EF154C00A04F04 /* MUAudioTransmissionPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283363DA13EF154C00A04F04 /* MUAudioTransmissionPreferencesViewController.swift */; };
-		2836767D1525053A0015958E /* MUCertificateChainBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2836767C1525053A0015958E /* MUCertificateChainBuilder.swift */ };
+		282F6A2513620BD5008F555B /* MUCertificateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 282F6A2413620BD5008F555B /* MUCertificateController.swift */; };
+		283363DB13EF154C00A04F04 /* MUAudioTransmissionPreferencesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 283363DA13EF154C00A04F04 /* MUAudioTransmissionPreferencesViewController.swift */; };
+		2836767D1525053A0015958E /* MUCertificateChainBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2836767C1525053A0015958E /* MUCertificateChainBuilder.swift */; };
 		2838EA0F129316C200035C5D /* MUCertificatePreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2838EA0E129316C200035C5D /* MUCertificatePreferencesViewController.m */; };
 		2843040A16BF25590025A783 /* MumbleMenuButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 2843040816BF25590025A783 /* MumbleMenuButton.png */; };
 		2843040B16BF25590025A783 /* MumbleMenuButton@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2843040916BF25590025A783 /* MumbleMenuButton@2x.png */; };
@@ -36,7 +36,7 @@
 		28529B3B1541C043003DD813 /* certificatecreation.png in Resources */ = {isa = PBXBuildFile; fileRef = 28529B391541C042003DD813 /* certificatecreation.png */; };
 		28529B3C1541C043003DD813 /* certificatecreation@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28529B3A1541C042003DD813 /* certificatecreation@2x.png */; };
 		285432201F536122000E5E88 /* icon7@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2854321F1F536122000E5E88 /* icon7@3x.png */; };
-               2858A580123B9E5700A82155 /* MUCertificateCell.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2858A57F123B9E5700A82155 /* MUCertificateCell.storyboard */; };
+		2858A580123B9E5700A82155 /* MUCertificateCell.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2858A57F123B9E5700A82155 /* MUCertificateCell.storyboard */; };
 		2858A5AD123BA08D00A82155 /* MUCertificateCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 2858A5AC123BA08D00A82155 /* MUCertificateCell.m */; };
 		285AF26B1840DEE20065E339 /* MUAudioMixerDebugViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 285AF26A1840DEE20065E339 /* MUAudioMixerDebugViewController.m */; };
 		285D6B7116BEEFA700F239EB /* MUTextMessageProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 285D6B7016BEEFA700F239EB /* MUTextMessageProcessor.m */; };
@@ -52,18 +52,18 @@
 		286A3CA0158BB17E00C817D1 /* MUAudioSidetonePreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 286A3C9F158BB17E00C817D1 /* MUAudioSidetonePreferencesViewController.m */; };
 		286A3CA4158CCF9F00C817D1 /* MUWelcomeScreenPad.m in Sources */ = {isa = PBXBuildFile; fileRef = 286A3CA2158CCF9D00C817D1 /* MUWelcomeScreenPad.m */; };
 		286A3CA7158CD05A00C817D1 /* BackgroundTextureBlackGradientPad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 286A3CA6158CD05A00C817D1 /* BackgroundTextureBlackGradientPad@2x.png */; };
-                286A3CA9158CD12E00C817D1 /* LogoBigShadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 286A3CA8158CD12E00C817D1 /* LogoBigShadow@2x.png */; };
-                286A3CAB158CD55700C817D1 /* LogoBigShadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 286A3CAA158CD55700C817D1 /* LogoBigShadow.png */; };
-                286A3CAD158CD5F400C817D1 /* BackgroundTextureBlackGradientPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 286A3CAC158CD5F400C817D1 /* BackgroundTextureBlackGradientPad.png */; };
-                286A3CB0158CD78900C817D1 /* MUAudioSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3C4012DC3C60000A69F03 /* MUAudioSessionManager.swift */; };
-                286A3CBE158CFDF300C817D1 /* MUPopoverBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 286A3CBD158CFDF200C817D1 /* MUPopoverBackgroundView.m */; };
-                286A3CC1158CFEAB00C817D1 /* _UIPopoverViewBlackBackgroundArrowUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 286A3CBF158CFEAB00C817D1 /* _UIPopoverViewBlackBackgroundArrowUp.png */; };
-                286A3CC2158CFEAB00C817D1 /* _UIPopoverViewBlackBackgroundArrowUp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 286A3CC0158CFEAB00C817D1 /* _UIPopoverViewBlackBackgroundArrowUp@2x.png */; };
+		286A3CA9158CD12E00C817D1 /* LogoBigShadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 286A3CA8158CD12E00C817D1 /* LogoBigShadow@2x.png */; };
+		286A3CAB158CD55700C817D1 /* LogoBigShadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 286A3CAA158CD55700C817D1 /* LogoBigShadow.png */; };
+		286A3CAD158CD5F400C817D1 /* BackgroundTextureBlackGradientPad.png in Resources */ = {isa = PBXBuildFile; fileRef = 286A3CAC158CD5F400C817D1 /* BackgroundTextureBlackGradientPad.png */; };
+		286A3CB0158CD78900C817D1 /* MUAudioSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EA3C4012DC3C60000A69F03 /* MUAudioSessionManager.swift */; };
+		286A3CBE158CFDF300C817D1 /* MUPopoverBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 286A3CBD158CFDF200C817D1 /* MUPopoverBackgroundView.m */; };
+		286A3CC1158CFEAB00C817D1 /* _UIPopoverViewBlackBackgroundArrowUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 286A3CBF158CFEAB00C817D1 /* _UIPopoverViewBlackBackgroundArrowUp.png */; };
+		286A3CC2158CFEAB00C817D1 /* _UIPopoverViewBlackBackgroundArrowUp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 286A3CC0158CFEAB00C817D1 /* _UIPopoverViewBlackBackgroundArrowUp@2x.png */; };
 		286E9260148452A000B13593 /* MUVoiceActivitySetupViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 286E925F148452A000B13593 /* MUVoiceActivitySetupViewController.m */; };
 		287172AB151A041A00153D74 /* certificatecell-intermediate.png in Resources */ = {isa = PBXBuildFile; fileRef = 287172A9151A041A00153D74 /* certificatecell-intermediate.png */; };
 		287172AC151A041A00153D74 /* certificatecell-intermediate@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 287172AA151A041A00153D74 /* certificatecell-intermediate@2x.png */; };
 		287639F911D29D99009DB8B6 /* MUCertificateCreationProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 287639F811D29D99009DB8B6 /* MUCertificateCreationProgressView.m */; };
-               287639FF11D2A242009DB8B6 /* MUCertificateCreationProgressView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 287639FE11D2A242009DB8B6 /* MUCertificateCreationProgressView.storyboard */; };
+		287639FF11D2A242009DB8B6 /* MUCertificateCreationProgressView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 287639FE11D2A242009DB8B6 /* MUCertificateCreationProgressView.storyboard */; };
 		2879523714BF519A00567430 /* MUMessagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2879523614BF519A00567430 /* MUMessagesViewController.m */; };
 		2879525E14C0AFAC00567430 /* BlackToolbarPattern.png in Resources */ = {isa = PBXBuildFile; fileRef = 2879525C14C0AFAC00567430 /* BlackToolbarPattern.png */; };
 		2879525F14C0AFAC00567430 /* BlackToolbarPattern@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2879525D14C0AFAC00567430 /* BlackToolbarPattern@2x.png */; };
@@ -90,10 +90,10 @@
 		287BA3A611B996D90010E031 /* MUFavouriteServerEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 287BA3A511B996D90010E031 /* MUFavouriteServerEditViewController.m */; };
 		2882858118CE40C80034F319 /* MUBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2882858018CE40C80034F319 /* MUBackgroundView.m */; };
 		28851B94147DC97E00088C4F /* MULegalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28851B92147DC97D00088C4F /* MULegalViewController.m */; };
-               28851B95147DC97E00088C4F /* MULegalViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28851B93147DC97D00088C4F /* MULegalViewController.storyboard */; };
+		28851B95147DC97E00088C4F /* MULegalViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28851B93147DC97D00088C4F /* MULegalViewController.storyboard */; };
 		288B55E01252903300563A28 /* MUServerCertificateTrustViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 288B55DF1252903300563A28 /* MUServerCertificateTrustViewController.m */; };
-		288D6B60123D08EE00D37EDE /* MUCertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288D6B5F123D08EE00D37EDE /* MUCertificateViewController.swift */ };
-		28942D7C12456F9200C63A07 /* MUCertificateCreationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28942D7B12456F9200C63A07 /* MUCertificateCreationView.swift */ };
+		288D6B60123D08EE00D37EDE /* MUCertificateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 288D6B5F123D08EE00D37EDE /* MUCertificateViewController.swift */; };
+		28942D7C12456F9200C63A07 /* MUCertificateCreationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28942D7B12456F9200C63A07 /* MUCertificateCreationView.swift */; };
 		28990AB1132FDA540034B406 /* libMumbleKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 28990AB0132FDA540034B406 /* libMumbleKit.a */; };
 		289CBA18125693040015E58E /* MUServerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 289CBA17125693040015E58E /* MUServerViewController.m */; };
 		289D254C11BC28BC00E39F2C /* MULanServerListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 289D254B11BC28BC00E39F2C /* MULanServerListController.m */; };
@@ -102,7 +102,7 @@
 		28A2AEBB14786E6000F3B83F /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 28A2AEB714786E6000F3B83F /* icon.png */; };
 		28A2AEBC14786E6000F3B83F /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28A2AEB814786E6000F3B83F /* icon@2x.png */; };
 		28A2AEC114788BE300F3B83F /* MUColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A2AEC014788BE300F3B83F /* MUColor.m */; };
-               28AD733F0D9D9553002E5188 /* MainWindow.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.storyboard */; };
+		28AD733F0D9D9553002E5188 /* MainWindow.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.storyboard */; };
 		28ADA303148A3E3B00C55E51 /* MUAudioQualityPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ADA302148A3E3B00C55E51 /* MUAudioQualityPreferencesViewController.m */; };
 		28B034961F5354C3008E51C7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28B034951F5354C3008E51C7 /* LaunchScreen.storyboard */; };
 		28BE998018CFA83800910551 /* BlackToolbarPatterniOS7@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28BE997F18CFA83800910551 /* BlackToolbarPatterniOS7@2x.png */; };
@@ -118,7 +118,7 @@
 		28BE99A018CFF03D00910551 /* LeftBalloonSelectedMono@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28BE999C18CFF03D00910551 /* LeftBalloonSelectedMono@2x.png */; };
 		28BE99A118CFF03D00910551 /* RightBalloonSelectedMono.png in Resources */ = {isa = PBXBuildFile; fileRef = 28BE999D18CFF03D00910551 /* RightBalloonSelectedMono.png */; };
 		28BE99A218CFF03D00910551 /* RightBalloonSelectedMono@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28BE999E18CFF03D00910551 /* RightBalloonSelectedMono@2x.png */; };
-		28BF81D2139AFFD50078B722 /* MUCertificateDiskImportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28BF81D1139AFFD50078B722 /* MUCertificateDiskImportViewController.swift */ };
+		28BF81D2139AFFD50078B722 /* MUCertificateDiskImportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28BF81D1139AFFD50078B722 /* MUCertificateDiskImportViewController.swift */; };
 		28C6EF0A11BBF38100E426C8 /* MUCountryServerListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28C6EF0911BBF38100E426C8 /* MUCountryServerListController.m */; };
 		28D963961639B9E4002A9E73 /* iconpad.png in Resources */ = {isa = PBXBuildFile; fileRef = 28D963951639B9E4002A9E73 /* iconpad.png */; };
 		28D963981639B9E8002A9E73 /* iconpad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28D963971639B9E8002A9E73 /* iconpad@2x.png */; };
@@ -271,7 +271,7 @@
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		1D6058910D05DD3D006BFB54 /* Mumble.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mumble.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-               2801C35A11CA9F1A00E664E8 /* MUPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUPreferencesViewController.swift; sourceTree = "<group>"; };
+		2801C35A11CA9F1A00E664E8 /* MUPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUPreferencesViewController.swift; sourceTree = "<group>"; };
 		280256371510D70D00178B08 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Localizable.strings; sourceTree = "<group>"; };
 		2802563B1510DDCA00178B08 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = Localizable.strings; sourceTree = "<group>"; };
 		2802ABFE14C9E948000983A5 /* MUDataURL.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUDataURL.h; sourceTree = "<group>"; };
@@ -293,7 +293,7 @@
 		28234D5D13F09148006B830D /* talkbutton_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = talkbutton_on.png; path = Resources/talkbutton_on.png; sourceTree = "<group>"; };
 		28234D5E13F09148006B830D /* talkbutton_on@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "talkbutton_on@2x.png"; path = "Resources/talkbutton_on@2x.png"; sourceTree = "<group>"; };
 		282F6A2413620BD5008F555B /* MUCertificateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUCertificateController.swift; sourceTree = "<group>"; };
-                283363DA13EF154C00A04F04 /* MUAudioTransmissionPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUAudioTransmissionPreferencesViewController.swift; sourceTree = "<group>"; };
+		283363DA13EF154C00A04F04 /* MUAudioTransmissionPreferencesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUAudioTransmissionPreferencesViewController.swift; sourceTree = "<group>"; };
 		2836767C1525053A0015958E /* MUCertificateChainBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUCertificateChainBuilder.swift; sourceTree = "<group>"; };
 		2838EA0D129316C200035C5D /* MUCertificatePreferencesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUCertificatePreferencesViewController.h; sourceTree = "<group>"; };
 		2838EA0E129316C200035C5D /* MUCertificatePreferencesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUCertificatePreferencesViewController.m; sourceTree = "<group>"; };
@@ -307,7 +307,7 @@
 		28529B391541C042003DD813 /* certificatecreation.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = certificatecreation.png; path = Resources/certificatecreation.png; sourceTree = "<group>"; };
 		28529B3A1541C042003DD813 /* certificatecreation@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "certificatecreation@2x.png"; path = "Resources/certificatecreation@2x.png"; sourceTree = "<group>"; };
 		2854321F1F536122000E5E88 /* icon7@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon7@3x.png"; sourceTree = "<group>"; };
-               2858A57F123B9E5700A82155 /* MUCertificateCell.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MUCertificateCell.storyboard; sourceTree = "<group>"; };
+		2858A57F123B9E5700A82155 /* MUCertificateCell.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MUCertificateCell.storyboard; sourceTree = "<group>"; };
 		2858A5AB123BA08D00A82155 /* MUCertificateCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUCertificateCell.h; sourceTree = "<group>"; };
 		2858A5AC123BA08D00A82155 /* MUCertificateCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUCertificateCell.m; sourceTree = "<group>"; };
 		285AF2691840DEE20065E339 /* MUAudioMixerDebugViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MUAudioMixerDebugViewController.h; sourceTree = "<group>"; };
@@ -316,7 +316,7 @@
 		285D6B7016BEEFA700F239EB /* MUTextMessageProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MUTextMessageProcessor.m; sourceTree = "<group>"; };
 		285D6B7316BF027A00F239EB /* MUTextMessageProcessorTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MUTextMessageProcessorTest.h; path = Tests/MUTextMessageProcessorTest.h; sourceTree = "<group>"; };
 		285D6B7416BF027A00F239EB /* MUTextMessageProcessorTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MUTextMessageProcessorTest.m; path = Tests/MUTextMessageProcessorTest.m; sourceTree = "<group>"; };
-    285D6B7C16BF02E900F239EB /* MumbleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MumbleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+	285D6B7C16BF02E900F239EB /* MumbleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MumbleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2858A5AB123BA08D00A82155 /* MUCertificateCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUCertificateCell.h; sourceTree = "<group>"; };
 		2858A5AC123BA08D00A82155 /* MUCertificateCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUCertificateCell.m; sourceTree = "<group>"; };
 		285AF2691840DEE20065E339 /* MUAudioMixerDebugViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUAudioMixerDebugViewController.h; sourceTree = "<group>"; };
@@ -353,7 +353,7 @@
 		286A3CA8158CD12E00C817D1 /* LogoBigShadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "LogoBigShadow@2x.png"; path = "Resources/LogoBigShadow@2x.png"; sourceTree = "<group>"; };
 		286A3CAA158CD55700C817D1 /* LogoBigShadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LogoBigShadow.png; path = Resources/LogoBigShadow.png; sourceTree = "<group>"; };
 		286A3CAC158CD5F400C817D1 /* BackgroundTextureBlackGradientPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BackgroundTextureBlackGradientPad.png; path = Resources/BackgroundTextureBlackGradientPad.png; sourceTree = "<group>"; };
-               286A3CAE158CEB5A00C817D1 /* MainWindow~iPad.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "MainWindow~iPad.storyboard"; sourceTree = "<group>"; };
+		286A3CAE158CEB5A00C817D1 /* MainWindow~iPad.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "MainWindow~iPad.storyboard"; sourceTree = "<group>"; };
 		286A3CBC158CFDF000C817D1 /* MUPopoverBackgroundView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUPopoverBackgroundView.h; sourceTree = "<group>"; };
 		286A3CBD158CFDF200C817D1 /* MUPopoverBackgroundView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUPopoverBackgroundView.m; sourceTree = "<group>"; };
 		286A3CBF158CFEAB00C817D1 /* _UIPopoverViewBlackBackgroundArrowUp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = _UIPopoverViewBlackBackgroundArrowUp.png; path = Resources/Apple/_UIPopoverViewBlackBackgroundArrowUp.png; sourceTree = "<group>"; };
@@ -364,7 +364,7 @@
 		287172AA151A041A00153D74 /* certificatecell-intermediate@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "certificatecell-intermediate@2x.png"; path = "Resources/certificatecell-intermediate@2x.png"; sourceTree = "<group>"; };
 		287639F711D29D99009DB8B6 /* MUCertificateCreationProgressView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUCertificateCreationProgressView.h; sourceTree = "<group>"; };
 		287639F811D29D99009DB8B6 /* MUCertificateCreationProgressView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUCertificateCreationProgressView.m; sourceTree = "<group>"; };
-               287639FE11D2A242009DB8B6 /* MUCertificateCreationProgressView.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MUCertificateCreationProgressView.storyboard; sourceTree = "<group>"; };
+		287639FE11D2A242009DB8B6 /* MUCertificateCreationProgressView.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MUCertificateCreationProgressView.storyboard; sourceTree = "<group>"; };
 		2879523514BF519A00567430 /* MUMessagesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUMessagesViewController.h; sourceTree = "<group>"; };
 		2879523614BF519A00567430 /* MUMessagesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUMessagesViewController.m; sourceTree = "<group>"; };
 		2879525C14C0AFAC00567430 /* BlackToolbarPattern.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BlackToolbarPattern.png; path = Resources/BlackToolbarPattern.png; sourceTree = "<group>"; };
@@ -401,7 +401,7 @@
 		2882858018CE40C80034F319 /* MUBackgroundView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUBackgroundView.m; sourceTree = "<group>"; };
 		28851B91147DC97D00088C4F /* MULegalViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MULegalViewController.h; sourceTree = "<group>"; };
 		28851B92147DC97D00088C4F /* MULegalViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MULegalViewController.m; sourceTree = "<group>"; };
-               28851B93147DC97D00088C4F /* MULegalViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MULegalViewController.storyboard; sourceTree = "<group>"; };
+		28851B93147DC97D00088C4F /* MULegalViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MULegalViewController.storyboard; sourceTree = "<group>"; };
 		288B55DE1252903300563A28 /* MUServerCertificateTrustViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUServerCertificateTrustViewController.h; sourceTree = "<group>"; };
 		288B55DF1252903300563A28 /* MUServerCertificateTrustViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUServerCertificateTrustViewController.m; sourceTree = "<group>"; };
 		288D6B5F123D08EE00D37EDE /* MUCertificateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MUCertificateViewController.swift; sourceTree = "<group>"; };
@@ -417,7 +417,7 @@
 		28A2AEB814786E6000F3B83F /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 		28A2AEBF14788BE300F3B83F /* MUColor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUColor.h; sourceTree = "<group>"; };
 		28A2AEC014788BE300F3B83F /* MUColor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUColor.m; sourceTree = "<group>"; };
-               28AD733E0D9D9553002E5188 /* MainWindow.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainWindow.storyboard; sourceTree = "<group>"; };
+		28AD733E0D9D9553002E5188 /* MainWindow.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainWindow.storyboard; sourceTree = "<group>"; };
 		28ADA301148A3E3B00C55E51 /* MUAudioQualityPreferencesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUAudioQualityPreferencesViewController.h; sourceTree = "<group>"; };
 		28ADA302148A3E3B00C55E51 /* MUAudioQualityPreferencesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUAudioQualityPreferencesViewController.m; sourceTree = "<group>"; };
 		28B034951F5354C3008E51C7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -546,8 +546,8 @@
 				2872F7C4124668880078C0B1 /* Certificates */,
 				28BF8E1C11D93A1900B72770 /* Database */,
 				2838EA0C1293165700035C5D /* Preferences */,
-                               28AD733E0D9D9553002E5188 /* MainWindow.storyboard */,
-                               286A3CAE158CEB5A00C817D1 /* MainWindow~iPad.storyboard */,
+						28AD733E0D9D9553002E5188 /* MainWindow.storyboard */,
+						286A3CAE158CEB5A00C817D1 /* MainWindow~iPad.storyboard */,
 				28B034951F5354C3008E51C7 /* LaunchScreen.storyboard */,
 				2861C25D116BE905002B8514 /* MUApplicationDelegate.h */,
 				2861C25E116BE905002B8514 /* MUApplicationDelegate.m */,
@@ -590,7 +590,7 @@
 				28F79CA8147AB6280003B8BA /* MUNotificationController.m */,
 				28851B91147DC97D00088C4F /* MULegalViewController.h */,
 				28851B92147DC97D00088C4F /* MULegalViewController.m */,
-                               28851B93147DC97D00088C4F /* MULegalViewController.storyboard */,
+						28851B93147DC97D00088C4F /* MULegalViewController.storyboard */,
 				28F08360147F263B00DC126F /* MUAudioBarView.h */,
 				28F08361147F263B00DC126F /* MUAudioBarView.m */,
 				28F08363147F369100DC126F /* MUAudioBarViewCell.h */,
@@ -651,7 +651,7 @@
 			isa = PBXGroup;
 			children = (
 				1D6058910D05DD3D006BFB54 /* Mumble.app */,
-                               285D6B7C16BF02E900F239EB /* MumbleTests.xctest */,
+						285D6B7C16BF02E900F239EB /* MumbleTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -752,10 +752,10 @@
 			children = (
 				287639F711D29D99009DB8B6 /* MUCertificateCreationProgressView.h */,
 				287639F811D29D99009DB8B6 /* MUCertificateCreationProgressView.m */,
-                               287639FE11D2A242009DB8B6 /* MUCertificateCreationProgressView.storyboard */,
+						287639FE11D2A242009DB8B6 /* MUCertificateCreationProgressView.storyboard */,
 				2858A5AB123BA08D00A82155 /* MUCertificateCell.h */,
 				2858A5AC123BA08D00A82155 /* MUCertificateCell.m */,
-                               2858A57F123B9E5700A82155 /* MUCertificateCell.storyboard */,
+						2858A57F123B9E5700A82155 /* MUCertificateCell.storyboard */,
 				288D6B5F123D08EE00D37EDE /* MUCertificateViewController.swift */,
 				28942D7B12456F9200C63A07 /* MUCertificateCreationView.swift */,
 				282F6A2413620BD5008F555B /* MUCertificateController.swift */,
@@ -979,8 +979,8 @@
 			);
 			name = MumbleTests;
 			productName = MumbleTests;
-                       productReference = 285D6B7C16BF02E900F239EB /* MumbleTests.xctest */;
-                       productType = "com.apple.product-type.bundle.unit-test";
+		       productReference = 285D6B7C16BF02E900F239EB /* MumbleTests.xctest */;
+		       productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -1102,10 +1102,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-                               28AD733F0D9D9553002E5188 /* MainWindow.storyboard in Resources */,
+						28AD733F0D9D9553002E5188 /* MainWindow.storyboard in Resources */,
 				28BE999918CFED9A00910551 /* Balloon_2_Right.png in Resources */,
-                               287639FF11D2A242009DB8B6 /* MUCertificateCreationProgressView.storyboard in Resources */,
-                               2858A580123B9E5700A82155 /* MUCertificateCell.storyboard in Resources */,
+						287639FF11D2A242009DB8B6 /* MUCertificateCreationProgressView.storyboard in Resources */,
+						2858A580123B9E5700A82155 /* MUCertificateCell.storyboard in Resources */,
 				28DC1C5C13DE596B0037CDC2 /* authenticated.png in Resources */,
 				28DC1C5D13DE596B0037CDC2 /* authenticated@2x.png in Resources */,
 				28DC1C6513DE596B0037CDC2 /* certificatecell-selected.png in Resources */,
@@ -1161,7 +1161,7 @@
 				28F79C6B147968C60003B8BA /* WelcomeScreenIcon@2x.png in Resources */,
 				28F79CA11479C2180003B8BA /* BackgroundTextureBlackGradient@2x.png in Resources */,
 				28F79CA31479C23F0003B8BA /* BackgroundTextureBlackGradient.png in Resources */,
-                               28851B95147DC97E00088C4F /* MULegalViewController.storyboard in Resources */,
+						28851B95147DC97E00088C4F /* MULegalViewController.storyboard in Resources */,
 				28BE998218CFA8B900910551 /* BlackToolbarPatterniOS7.png in Resources */,
 				28F0835F147F102F00DC126F /* publist.xml in Resources */,
 				2879525E14C0AFAC00567430 /* BlackToolbarPattern.png in Resources */,
@@ -1243,19 +1243,19 @@
 				2861C276116BE905002B8514 /* MUApplicationDelegate.m in Sources */,
 				2861C27B116BE905002B8514 /* MUPublicServerList.m in Sources */,
 				2861C27C116BE905002B8514 /* MUPublicServerListController.m in Sources */,
-                                2861C281116BE905002B8514 /* MUWelcomeScreenPhone.m in Sources */,
-                                287BA29011B96C960010E031 /* MUDatabase.m in Sources */,
-                                287BA33B11B97C470010E031 /* MUFavouriteServer.m in Sources */,
-                                287BA34011B97EEE0010E031 /* MUFavouriteServerListController.m in Sources */,
-                                287BA3A611B996D90010E031 /* MUFavouriteServerEditViewController.m in Sources */,
-                                28C6EF0A11BBF38100E426C8 /* MUCountryServerListController.m in Sources */,
-                                289D254C11BC28BC00E39F2C /* MULanServerListController.m in Sources */,
-                               2801C35B11CA9F1A00E664E8 /* MUPreferencesViewController.swift in Sources */,
-                                286A3CB0158CD78900C817D1 /* MUAudioSessionManager.swift in Sources */,
-                                287639F911D29D99009DB8B6 /* MUCertificateCreationProgressView.m in Sources */,
-                                2858A5AD123BA08D00A82155 /* MUCertificateCell.m in Sources */,
-                                2882858118CE40C80034F319 /* MUBackgroundView.m in Sources */,
-                                288D6B60123D08EE00D37EDE /* MUCertificateViewController.swift in Sources */,
+						 2861C281116BE905002B8514 /* MUWelcomeScreenPhone.m in Sources */,
+						 287BA29011B96C960010E031 /* MUDatabase.m in Sources */,
+						 287BA33B11B97C470010E031 /* MUFavouriteServer.m in Sources */,
+						 287BA34011B97EEE0010E031 /* MUFavouriteServerListController.m in Sources */,
+						 287BA3A611B996D90010E031 /* MUFavouriteServerEditViewController.m in Sources */,
+						 28C6EF0A11BBF38100E426C8 /* MUCountryServerListController.m in Sources */,
+						 289D254C11BC28BC00E39F2C /* MULanServerListController.m in Sources */,
+						2801C35B11CA9F1A00E664E8 /* MUPreferencesViewController.swift in Sources */,
+						 286A3CB0158CD78900C817D1 /* MUAudioSessionManager.swift in Sources */,
+						 287639F911D29D99009DB8B6 /* MUCertificateCreationProgressView.m in Sources */,
+						 2858A5AD123BA08D00A82155 /* MUCertificateCell.m in Sources */,
+						 2882858118CE40C80034F319 /* MUBackgroundView.m in Sources */,
+						 288D6B60123D08EE00D37EDE /* MUCertificateViewController.swift in Sources */,
 				28942D7C12456F9200C63A07 /* MUCertificateCreationView.swift in Sources */,
 				288B55E01252903300563A28 /* MUServerCertificateTrustViewController.m in Sources */,
 				289CBA18125693040015E58E /* MUServerViewController.m in Sources */,
@@ -1264,7 +1264,7 @@
 				28F019911364585C00E402F6 /* MUServerCell.m in Sources */,
 				28BF81D2139AFFD50078B722 /* MUCertificateDiskImportViewController.swift in Sources */,
 				280D9ADA13EAFAAE003B64A0 /* MUServerRootViewController.m in Sources */,
-                                283363DB13EF154C00A04F04 /* MUAudioTransmissionPreferencesViewController.swift in Sources */,
+						 283363DB13EF154C00A04F04 /* MUAudioTransmissionPreferencesViewController.swift in Sources */,
 				28A2AEC114788BE300F3B83F /* MUColor.m in Sources */,
 				28F79C70147973D60003B8BA /* MUUserStateAcessoryView.m in Sources */,
 				28F79C73147991490003B8BA /* MUAccessTokenViewController.swift in Sources */,
@@ -1295,7 +1295,7 @@
 				286A3CA4158CCF9F00C817D1 /* MUWelcomeScreenPad.m in Sources */,
 				286A3CBE158CFDF300C817D1 /* MUPopoverBackgroundView.m in Sources */,
 				28F9E1BF15EBDF2400D52001 /* MURemoteControlServer.m in Sources */,
-                                2813B1D115EBFDA90049A59A /* MURemoteControlPreferencesViewController.swift in Sources */,
+						 2813B1D115EBFDA90049A59A /* MURemoteControlPreferencesViewController.swift in Sources */,
 				285D6B7116BEEFA700F239EB /* MUTextMessageProcessor.m in Sources */,
 				2846C7D616F4A09000739FD8 /* MUServerButton.m in Sources */,
 			);
@@ -1360,22 +1360,22 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				PROVISIONING_PROFILE = "";
-                               TARGETED_DEVICE_FAMILY = 1;
-                               SWIFT_OBJC_BRIDGING_HEADER = Source/Mumble-Bridging-Header.h;
-                       };
-                       name = Debug;
-               };
+						TARGETED_DEVICE_FAMILY = 1;
+						SWIFT_OBJC_BRIDGING_HEADER = Source/Mumble-Bridging-Header.h;
+		       };
+		       name = Debug;
+	           };
 		1D6058950D05DD3E006BFB54 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				PROVISIONING_PROFILE = "";
-                               TARGETED_DEVICE_FAMILY = 1;
-                               SWIFT_OBJC_BRIDGING_HEADER = Source/Mumble-Bridging-Header.h;
-                       };
-                       name = Release;
-               };
+						TARGETED_DEVICE_FAMILY = 1;
+						SWIFT_OBJC_BRIDGING_HEADER = Source/Mumble-Bridging-Header.h;
+		       };
+		       name = Release;
+	           };
 		285D6B8C16BF02E900F239EB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1409,7 +1409,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-                               WRAPPER_EXTENSION = xctest;
+						WRAPPER_EXTENSION = xctest;
 			};
 			name = Debug;
 		};
@@ -1439,7 +1439,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
-                               WRAPPER_EXTENSION = xctest;
+						WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;
 		};
@@ -1469,7 +1469,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
-                               WRAPPER_EXTENSION = xctest;
+						WRAPPER_EXTENSION = xctest;
 			};
 			name = AppStore;
 		};
@@ -1499,7 +1499,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
-                               WRAPPER_EXTENSION = xctest;
+						WRAPPER_EXTENSION = xctest;
 			};
 			name = BetaDist;
 		};
@@ -1519,11 +1519,11 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				PROVISIONING_PROFILE = "";
-                               TARGETED_DEVICE_FAMILY = 1;
-                               SWIFT_OBJC_BRIDGING_HEADER = Source/Mumble-Bridging-Header.h;
-                       };
-                       name = AppStore;
-               };
+						TARGETED_DEVICE_FAMILY = 1;
+						SWIFT_OBJC_BRIDGING_HEADER = Source/Mumble-Bridging-Header.h;
+		       };
+		       name = AppStore;
+	           };
 		28BC1E7A1227155500C03FCF /* BetaDist */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 285E2A62150D729B008AE185 /* BetaDist.xcconfig */;
@@ -1540,11 +1540,11 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				PROVISIONING_PROFILE = "";
-                               TARGETED_DEVICE_FAMILY = 1;
-                               SWIFT_OBJC_BRIDGING_HEADER = Source/Mumble-Bridging-Header.h;
-                       };
-                       name = BetaDist;
-               };
+						TARGETED_DEVICE_FAMILY = 1;
+						SWIFT_OBJC_BRIDGING_HEADER = Source/Mumble-Bridging-Header.h;
+		       };
+		       name = BetaDist;
+	           };
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 285E2A63150D729B008AE185 /* Debug.xcconfig */;
