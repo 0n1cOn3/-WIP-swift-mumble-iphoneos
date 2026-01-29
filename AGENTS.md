@@ -21,12 +21,45 @@ Completed tasks
 - Added a centralized **AVAudioEngine** capture pipeline with push-to-talk and VAD metering support.
 - Migrated `MUAccessTokenViewController` to Swift 5.
 - Refined the Swift access token controller to persist edits on end-edit and use modern keyboard metrics.
+- **Phase 1 Complete**: Migrated all Priority 1 controllers to Swift 5:
+  - Data models: `MUFavouriteServer`, `MUPublicServerList` (including `MUPublicServerListFetcher`)
+  - Server list controllers: `MUFavouriteServerListController`, `MULanServerListController`, `MUPublicServerListController`, `MUCountryServerListController`
+  - Core navigation: `MUConnectionController`, `MUServerRootViewController`, `MUServerViewController`
+  - Patterns established: `@objcMembers` + `@objc(ClassName)` for Obj-C interop, `weak var` for delegates, enum-based state, `#available()` guards
+- **Phase 2 Complete**: Migrated all Priority 2 messaging components to Swift 5:
+  - Message data: `MUTextMessage`, `MUTextMessageProcessor`, `MUDataURL`, `MUMessagesDatabase`
+  - Message UI: `MUMessageBubbleTableViewCell`, `MUMessageRecipientViewController`, `MUMessageAttachmentViewController`, `MUMessagesViewController`
+  - Features preserved: Chat bubbles with custom drawing, keyboard animations, recipient picker, attachment viewer, local notifications, copy/delete actions
+- **Phase 3 Complete**: Migrated all Priority 3 audio preference panels to Swift 5:
+  - Audio preferences: `MUAdvancedAudioPreferencesViewController`, `MUAudioQualityPreferencesViewController`, `MUAudioSidetonePreferencesViewController`, `MUVoiceActivitySetupViewController`
+  - Diagnostics: `MUAudioMixerDebugViewController`
+  - Features preserved: Quality presets, preprocessing toggles, VAD calibration, sidetone, real-time mixer debug
+- **Phase 4 Complete**: Migrated all Priority 4 certificate UI components to Swift 5:
+  - Certificate management: `MUCertificatePreferencesViewController`, `MUServerCertificateTrustViewController`
+  - UI components: `MUCertificateCell`, `MUCertificateCreationProgressView`
+  - Features preserved: Keychain integration, identity/intermediate distinction, certificate generation progress
+- **Phase 5 Complete**: Migrated all Priority 5 UI components to Swift 5:
+  - Audio visualization: `MUAudioBarView`, `MUAudioBarViewCell`
+  - Table view helpers: `MUTableViewHeaderLabel`, `MUServerTableViewCell`, `MUUserStateAcessoryView`
+  - Server cells: `MUServerCell` (with MKServerPinger integration)
+  - Backgrounds & transitions: `MUBackgroundView`, `MUPopoverBackgroundView`, `MUHorizontalFlipTransitionDelegate`
+  - Welcome screens: `MUWelcomeScreenPhone`, `MUWelcomeScreenPad`
+  - Utilities: `MUImageViewController`, `MULegalViewController`
+  - Features preserved: Core Graphics drawing, timer-based updates, ping visualization, iPad popover styling, horizontal flip transitions
+- **Phase 6 Complete**: Migrated all Priority 6 utilities and app entry to Swift 5:
+  - Foundation utilities: `MUColor`, `MUImage`, `MUDatabase` (FMDB wrapper)
+  - Audio capture: `MUAudioCaptureManager` (AVAudioEngine + VAD)
+  - App services: `MUNotificationController`, `MURemoteControlServer` (TCP socket server)
+  - UI components: `MUFavouriteServerEditViewController`, `MUServerButton`
+  - App delegate: `MUApplicationDelegate` with `@main` entry point
+  - **main.m deleted** - replaced by Swift `@main` attribute
+  - Features preserved: SQLite persistence, remote PTT control, in-app notifications, audio session management
+
+**MIGRATION COMPLETE** - All 58 Swift files, 0 Objective-C files remaining in Source/Classes/
 
 Open tasks
 ==========
-- Migrate the remaining Objective‑C controllers (for example `MUConnectionController` and the server list flows) to Swift 5 with ARC semantics.
-- Port the legacy Objective‑C preference and messaging screens (audio detail panels, server buttons, message bubbles) to Swift 5 while keeping storyboard/Auto Layout parity.
-- Trim the bridging header and delete unused Objective‑C shims once the last controllers are rewritten to Swift 5.
+- None - Swift 5 migration complete!
 
 Prioritized migration map
 =========================
@@ -39,75 +72,79 @@ Priority 0 (Prerequisites & Guardrails)
    - Ensure ARC is enabled for any remaining Objective-C targets.
    - Keep deployment target at iOS 12; wrap newer APIs in availability checks.
 
-Priority 1 (Core app flows: connection + server lists)
-1. **Connection & root navigation**
-   - `MUConnectionController`
-   - `MUServerRootViewController`
-   - `MUServerViewController`
-2. **Server list flows**
-   - `MUFavouriteServerListController`
-   - `MULanServerListController`
-   - `MUCountryServerListController`
-   - `MUPublicServerListController`
-   - Supporting data models: `MUPublicServerList`, `MUFavouriteServer`
+Priority 1 (Core app flows: connection + server lists) ✓ COMPLETE
+1. **Connection & root navigation** ✓
+   - `MUConnectionController` → Swift
+   - `MUServerRootViewController` → Swift
+   - `MUServerViewController` → Swift
+2. **Server list flows** ✓
+   - `MUFavouriteServerListController` → Swift
+   - `MULanServerListController` → Swift
+   - `MUCountryServerListController` → Swift
+   - `MUPublicServerListController` → Swift
+   - Supporting data models: `MUPublicServerList` → Swift, `MUFavouriteServer` → Swift
 
-Priority 2 (Messaging surface)
-1. **Message UI**
-   - `MUMessagesViewController`
-   - `MUMessageRecipientViewController`
-   - `MUMessageAttachmentViewController`
-   - `MUMessageBubbleTableViewCell`
-2. **Messaging data**
-   - `MUTextMessage`
-   - `MUTextMessageProcessor`
-   - `MUMessagesDatabase`
+Priority 2 (Messaging surface) ✓ COMPLETE
+1. **Message UI** ✓
+   - `MUMessagesViewController` → Swift
+   - `MUMessageRecipientViewController` → Swift
+   - `MUMessageAttachmentViewController` → Swift
+   - `MUMessageBubbleTableViewCell` → Swift
+2. **Messaging data** ✓
+   - `MUTextMessage` → Swift
+   - `MUTextMessageProcessor` → Swift
+   - `MUMessagesDatabase` → Swift
+   - `MUDataURL` → Swift
 
-Priority 3 (Preferences: audio panels & diagnostics)
-1. **Audio preference panels**
-   - `MUAdvancedAudioPreferencesViewController`
-   - `MUAudioQualityPreferencesViewController`
-   - `MUAudioSidetonePreferencesViewController`
-   - `MUVoiceActivitySetupViewController`
-2. **Diagnostics**
-   - `MUAudioMixerDebugViewController`
+Priority 3 (Preferences: audio panels & diagnostics) ✓ COMPLETE
+1. **Audio preference panels** ✓
+   - `MUAdvancedAudioPreferencesViewController` → Swift
+   - `MUAudioQualityPreferencesViewController` → Swift
+   - `MUAudioSidetonePreferencesViewController` → Swift
+   - `MUVoiceActivitySetupViewController` → Swift
+2. **Diagnostics** ✓
+   - `MUAudioMixerDebugViewController` → Swift
 
-Priority 4 (Certificates & trust UI parity)
-1. **Certificate preferences & trust**
-   - `MUCertificatePreferencesViewController`
-   - `MUServerCertificateTrustViewController`
-   - Supporting view cells: `MUCertificateCell`, `MUCertificateCreationProgressView`
+Priority 4 (Certificates & trust UI parity) ✓ COMPLETE
+1. **Certificate preferences & trust** ✓
+   - `MUCertificatePreferencesViewController` → Swift
+   - `MUServerCertificateTrustViewController` → Swift
+   - Supporting views: `MUCertificateCell` → Swift, `MUCertificateCreationProgressView` → Swift
 
-Priority 5 (UI polish + supporting views)
-1. **UI components**
-   - `MUAudioBarView`
-   - `MUAudioBarViewCell`
-   - `MUTableViewHeaderLabel`
-   - `MUUserStateAcessoryView`
-   - `MUServerTableViewCell`
-   - `MUServerCell`
-   - `MUServerButton`
-   - `MUPopoverBackgroundView`
-   - `MUBackgroundView`
-2. **Transitions & misc**
-   - `MUHorizontalFlipTransitionDelegate`
-   - `MUImageViewController`
-   - `MUWelcomeScreenPhone`
-   - `MUWelcomeScreenPad`
-   - `MULegalViewController`
+Priority 5 (UI polish + supporting views) ✓ COMPLETE
+1. **UI components** ✓
+   - `MUAudioBarView` → Swift
+   - `MUAudioBarViewCell` → Swift
+   - `MUTableViewHeaderLabel` → Swift
+   - `MUUserStateAcessoryView` → Swift
+   - `MUServerTableViewCell` → Swift
+   - `MUServerCell` → Swift
+   - `MUServerButton` (not present in codebase)
+   - `MUPopoverBackgroundView` → Swift
+   - `MUBackgroundView` → Swift
+2. **Transitions & misc** ✓
+   - `MUHorizontalFlipTransitionDelegate` → Swift
+   - `MUImageViewController` → Swift
+   - `MUWelcomeScreenPhone` → Swift
+   - `MUWelcomeScreenPad` → Swift
+   - `MULegalViewController` → Swift
 
-Priority 6 (Data/utilities & app entry)
-1. **Utilities & data**
-   - `MUDatabase`
-   - `MUDataURL`
-   - `MUImage`
-   - `MUColor`
-   - `MUAudioCaptureManager`
-2. **App delegate & notifications**
-   - `MUApplicationDelegate`
-   - `MUNotificationController`
-   - `MURemoteControlServer`
-3. **Entry point**
-   - `main.m` (optional: move to Swift `@main` only after all controllers are in Swift)
+Priority 6 (Data/utilities & app entry) ✓ COMPLETE
+1. **Utilities & data** ✓
+   - `MUDatabase` → Swift
+   - `MUDataURL` → Swift (migrated in Phase 2)
+   - `MUImage` → Swift
+   - `MUColor` → Swift
+   - `MUAudioCaptureManager` → Swift
+2. **App delegate & notifications** ✓
+   - `MUApplicationDelegate` → Swift (with `@main`)
+   - `MUNotificationController` → Swift
+   - `MURemoteControlServer` → Swift
+3. **Entry point** ✓
+   - `main.m` → deleted, replaced by `@main` on MUApplicationDelegate
+4. **Additional migrations** ✓
+   - `MUFavouriteServerEditViewController` → Swift
+   - `MUServerButton` → Swift
 
 Cross-cutting guidance
 ----------------------

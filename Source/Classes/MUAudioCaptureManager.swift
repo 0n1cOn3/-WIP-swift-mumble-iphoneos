@@ -1,0 +1,267 @@
+// Copyright 2024 The 'Mumble for iOS' Developers.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
+import Foundation
+import AVFoundation
+
+/// Transmit mode for audio capture.
+@objc enum MUTransmitMode: Int {
+    case continuous = 0
+    case pushToTalk
+    case vad
+}
+
+/// Notification posted when audio metering updates.
+let MUAudioCaptureManagerMeterUpdateNotification = NSNotification.Name("MUAudioCaptureManagerMeterUpdate")
+
+/// Centralized capture pipeline built on AVAudioEngine/AVAudioRecorder.
+@objc(MUAudioCaptureManager)
+@objcMembers
+class MUAudioCaptureManager: NSObject {
+
+    // MARK: - Constants
+
+    private static let minimumMeterPowerDb: Float = -96.0
+
+    // MARK: - Singleton
+
+    @objc static let shared = MUAudioCaptureManager()
+
+    /// Alias for shared (Obj-C compatibility)
+    @objc class func sharedManager() -> MUAudioCaptureManager {
+        return shared
+    }
+
+    // MARK: - Public Properties
+
+    @objc private(set) var transmitMode: MUTransmitMode = .vad
+    @objc private(set) var vadMin: Float = 0.0
+    @objc private(set) var vadMax: Float = 1.0
+    @objc private(set) var meterLevel: Float = 0.0
+    @objc private(set) var speechProbability: Float = 0.0
+    @objc private(set) var transmitting: Bool = false
+
+    // MARK: - Private Properties
+
+    private var engine: AVAudioEngine
+    private var recorder: AVAudioRecorder?
+    private var inputFormat: AVAudioFormat?
+    private var tapInstalled: Bool = false
+    private var meteringHandler: (() -> Void)?
+
+    // MARK: - Initialization
+
+    private override init() {
+        engine = AVAudioEngine()
+        super.init()
+        inputFormat = engine.inputNode.inputFormat(forBus: 0)
+    }
+
+    // MARK: - Configuration
+
+    /// Applies defaults for transmit mode, thresholds, and encoder quality.
+    @objc func configureFromDefaults() {
+        refreshTransmitMode()
+        refreshVADThresholds()
+        refreshEncoderPreferences()
+    }
+
+    /// Updates only the transmit mode from defaults.
+    @objc func refreshTransmitMode() {
+        let method = UserDefaults.standard.string(forKey: "AudioTransmitMethod")
+        switch method {
+        case "continuous":
+            transmitMode = .continuous
+        case "ptt":
+            transmitMode = .pushToTalk
+        default:
+            transmitMode = .vad
+        }
+    }
+
+    /// Updates only the VAD thresholds from defaults.
+    @objc func refreshVADThresholds() {
+        let defaults = UserDefaults.standard
+        vadMin = defaults.float(forKey: "AudioVADBelow")
+        vadMax = defaults.float(forKey: "AudioVADAbove")
+    }
+
+    /// Refreshes encoder/format hints from defaults.
+    @objc func refreshEncoderPreferences() {
+        let defaults = UserDefaults.standard
+        let quality = defaults.string(forKey: "AudioQualityKind")
+
+        var sampleRate: Double = 48000.0
+        switch quality {
+        case "low":
+            sampleRate = 16000.0
+        case "balanced":
+            sampleRate = 40000.0
+        case "high", "opus":
+            sampleRate = 72000.0
+        default:
+            break
+        }
+
+        let session = AVAudioSession.sharedInstance()
+        do {
+            try session.setCategory(.playAndRecord, options: [.allowBluetooth, .mixWithOthers])
+            try session.setPreferredSampleRate(sampleRate)
+            try session.setPreferredIOBufferDuration(0.02)
+            try session.setActive(true)
+        } catch {
+            NSLog("MUAudioCaptureManager: failed to configure audio session: %@", error.localizedDescription)
+        }
+
+        inputFormat = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1)
+
+        let settings: [String: Any] = [
+            AVFormatIDKey: Int(kAudioFormatMPEG4AAC),
+            AVSampleRateKey: sampleRate,
+            AVNumberOfChannelsKey: 1,
+            AVEncoderBitRateKey: Int(sampleRate),
+            AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
+        ]
+
+        do {
+            recorder = try AVAudioRecorder(url: URL(fileURLWithPath: "/dev/null"), settings: settings)
+            recorder?.isMeteringEnabled = true
+            recorder?.prepareToRecord()
+        } catch {
+            NSLog("MUAudioCaptureManager: failed to create recorder: %@", error.localizedDescription)
+        }
+    }
+
+    // MARK: - Engine Lifecycle
+
+    /// Starts the audio engine/recorder backing the capture pipeline.
+    @objc func start() {
+        installTapIfNeeded()
+
+        if !engine.isRunning {
+            do {
+                try engine.start()
+            } catch {
+                NSLog("MUAudioCaptureManager: failed to start engine: %@", error.localizedDescription)
+            }
+        }
+
+        if transmitMode == .continuous {
+            transmitting = true
+        }
+
+        if transmitMode == .pushToTalk, let recorder = recorder {
+            recorder.record()
+        }
+    }
+
+    /// Stops the audio engine/recorder backing the capture pipeline.
+    @objc func stop() {
+        if tapInstalled {
+            engine.inputNode.removeTap(onBus: 0)
+            tapInstalled = false
+        }
+
+        engine.stop()
+
+        if let recorder = recorder, recorder.isRecording {
+            recorder.stop()
+        }
+
+        transmitting = false
+    }
+
+    // MARK: - Push-to-Talk
+
+    /// Begin push-to-talk transmission.
+    @objc func beginPushToTalk() {
+        guard transmitMode == .pushToTalk else { return }
+
+        transmitting = true
+
+        if let recorder = recorder, !recorder.isRecording {
+            recorder.record()
+        }
+    }
+
+    /// End push-to-talk transmission.
+    @objc func endPushToTalk() {
+        guard transmitMode == .pushToTalk else { return }
+
+        transmitting = false
+
+        if let recorder = recorder, recorder.isRecording {
+            recorder.stop()
+        }
+    }
+
+    // MARK: - Metering
+
+    /// Allows UI components to receive metering callbacks on the main thread.
+    @objc func setMeteringHandler(_ handler: (() -> Void)?) {
+        meteringHandler = handler
+    }
+
+    private func installTapIfNeeded() {
+        let input = engine.inputNode
+
+        guard !tapInstalled else { return }
+        guard let format = inputFormat else { return }
+
+        input.installTap(onBus: 0, bufferSize: 1024, format: format) { [weak self] buffer, _ in
+            self?.processBuffer(buffer)
+        }
+        tapInstalled = true
+    }
+
+    private func processBuffer(_ buffer: AVAudioPCMBuffer) {
+        let frameLength = buffer.frameLength
+        guard frameLength > 0 else { return }
+
+        guard let data = buffer.floatChannelData?[0] else { return }
+
+        var sum: Float = 0.0
+        for i in 0..<Int(frameLength) {
+            sum += data[i] * data[i]
+        }
+
+        let rms = sqrtf(sum / Float(frameLength))
+        var powerDb = 20.0 * log10f(rms)
+
+        if !powerDb.isFinite {
+            powerDb = MUAudioCaptureManager.minimumMeterPowerDb
+        }
+
+        var normalizedPower = (powerDb - MUAudioCaptureManager.minimumMeterPowerDb) / abs(MUAudioCaptureManager.minimumMeterPowerDb)
+        normalizedPower = max(0.0, min(1.0, normalizedPower))
+
+        meterLevel = normalizedPower
+
+        if transmitMode == .vad {
+            var probability: Float = 0.0
+            if vadMax > vadMin {
+                probability = (normalizedPower - vadMin) / (vadMax - vadMin)
+                probability = max(0.0, min(1.0, probability))
+            }
+            speechProbability = probability
+
+            let shouldTransmit = normalizedPower >= vadMax
+            let shouldStop = normalizedPower <= vadMin
+
+            if shouldTransmit {
+                transmitting = true
+            } else if shouldStop {
+                transmitting = false
+            }
+        } else if transmitMode == .continuous {
+            transmitting = true
+        }
+
+        if let handler = meteringHandler {
+            DispatchQueue.main.async(execute: handler)
+        }
+
+        NotificationCenter.default.post(name: MUAudioCaptureManagerMeterUpdateNotification, object: self)
+    }
+}
