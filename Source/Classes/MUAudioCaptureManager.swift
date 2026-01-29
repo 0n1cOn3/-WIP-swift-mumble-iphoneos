@@ -207,9 +207,16 @@ class MUAudioCaptureManager: NSObject {
     }
 
     private func installTapIfNeeded() {
-        let input = engine.inputNode
-
         guard !tapInstalled else { return }
+
+        // Check microphone permission first
+        let session = AVAudioSession.sharedInstance()
+        guard session.recordPermission == .granted else {
+            NSLog("MUAudioCaptureManager: Microphone permission not granted, skipping tap installation")
+            return
+        }
+
+        let input = engine.inputNode
 
         // Use the input node's native output format to avoid format mismatch exceptions.
         // Passing a custom format that doesn't match hardware capabilities causes a crash.

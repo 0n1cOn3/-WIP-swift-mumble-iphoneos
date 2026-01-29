@@ -17,6 +17,7 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
     private var navigationController: UINavigationController?
     private var publistFetcher: MUPublicServerListFetcher?
     private var audioWasRunningBeforeInterruption: Bool = false
+    private var audioSubsystemConfigured: Bool = false
     private let audioSessionQueue = DispatchQueue(label: "info.mumble.AppDelegate.AudioSession", qos: .userInitiated)
 
     // MARK: - UIApplicationDelegate
@@ -165,14 +166,25 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
     func applicationDidBecomeActive(_ application: UIApplication) {
         let connController = MUConnectionController.shared()
 
-        // Start audio on background queue to avoid blocking main thread.
-        // AudioOutputUnitStart() can block for several seconds waiting on audio daemon.
-        audioSessionQueue.async {
-            if let audio = MKAudio.shared(), !audio.isRunning() {
-                NSLog("MumbleApplicationDelegate: MKAudio not running. Starting it.")
-                audio.start()
+        // Re-check microphone permission - user may have enabled it in Settings
+        let session = AVAudioSession.sharedInstance()
+        if session.recordPermission == .granted && !audioSubsystemConfigured {
+            // Permission granted but audio not configured (was denied at launch)
+            NSLog("MumbleApplicationDelegate: Microphone permission now granted, configuring audio subsystem")
+            setupAudio()
+        } else if session.recordPermission == .granted {
+            // Start audio on background queue to avoid blocking main thread.
+            // AudioOutputUnitStart() can block for several seconds waiting on audio daemon.
+            audioSessionQueue.async {
+                if let audio = MKAudio.shared(), !audio.isRunning() {
+                    NSLog("MumbleApplicationDelegate: MKAudio not running. Starting it.")
+                    audio.start()
+                }
+                MUAudioCaptureManager.shared.start()
             }
-            MUAudioCaptureManager.shared.start()
+        } else if session.recordPermission == .undetermined {
+            // Permission not yet requested - request it now
+            setupAudio()
         }
 
         if !connController.isConnected() && !AVAudioSession.sharedInstance().isOtherAudioPlaying {
@@ -245,6 +257,9 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
 
     private func configureAudioSubsystem() {
         let defaults = UserDefaults.standard
+
+        // Mark audio as configured
+        audioSubsystemConfigured = true
 
         // Configure AVAudioSession
         configureAudioSession(with: defaults)
