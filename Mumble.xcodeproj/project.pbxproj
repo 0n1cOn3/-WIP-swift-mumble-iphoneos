@@ -150,7 +150,6 @@
 		28A2AEBB14786E6000F3B83F /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 28A2AEB714786E6000F3B83F /* icon.png */; };
 		28A2AEBC14786E6000F3B83F /* icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28A2AEB814786E6000F3B83F /* icon@2x.png */; };
 		28A2AEC114788BE300F3B83F /* MUColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 28A2AEC014788BE300F3B83F /* MUColor.m */; };
-		28AD733F0D9D9553002E5188 /* MainWindow.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28AD733E0D9D9553002E5188 /* MainWindow.storyboard */; };
 		28ADA303148A3E3B00C55E51 /* MUAudioQualityPreferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 28ADA302148A3E3B00C55E51 /* MUAudioQualityPreferencesViewController.m */; };
 		28B034961F5354C3008E51C7 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 28B034951F5354C3008E51C7 /* LaunchScreen.storyboard */; };
 		28BE998018CFA83800910551 /* BlackToolbarPatterniOS7@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 28BE997F18CFA83800910551 /* BlackToolbarPatterniOS7@2x.png */; };
@@ -449,7 +448,6 @@
 		286A3CA8158CD12E00C817D1 /* LogoBigShadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "LogoBigShadow@2x.png"; path = "Resources/LogoBigShadow@2x.png"; sourceTree = "<group>"; };
 		286A3CAA158CD55700C817D1 /* LogoBigShadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LogoBigShadow.png; path = Resources/LogoBigShadow.png; sourceTree = "<group>"; };
 		286A3CAC158CD5F400C817D1 /* BackgroundTextureBlackGradientPad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BackgroundTextureBlackGradientPad.png; path = Resources/BackgroundTextureBlackGradientPad.png; sourceTree = "<group>"; };
-		286A3CAE158CEB5A00C817D1 /* MainWindow~iPad.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = "MainWindow~iPad.storyboard"; sourceTree = "<group>"; };
 		286A3CBC158CFDF000C817D1 /* MUPopoverBackgroundView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUPopoverBackgroundView.h; sourceTree = "<group>"; };
 		286A3CBD158CFDF200C817D1 /* MUPopoverBackgroundView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUPopoverBackgroundView.m; sourceTree = "<group>"; };
 		286A3CBF158CFEAB00C817D1 /* _UIPopoverViewBlackBackgroundArrowUp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = _UIPopoverViewBlackBackgroundArrowUp.png; path = Resources/Apple/_UIPopoverViewBlackBackgroundArrowUp.png; sourceTree = "<group>"; };
@@ -513,7 +511,6 @@
 		28A2AEB814786E6000F3B83F /* icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon@2x.png"; sourceTree = "<group>"; };
 		28A2AEBF14788BE300F3B83F /* MUColor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUColor.h; sourceTree = "<group>"; };
 		28A2AEC014788BE300F3B83F /* MUColor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUColor.m; sourceTree = "<group>"; };
-		28AD733E0D9D9553002E5188 /* MainWindow.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MainWindow.storyboard; sourceTree = "<group>"; };
 		28ADA301148A3E3B00C55E51 /* MUAudioQualityPreferencesViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MUAudioQualityPreferencesViewController.h; sourceTree = "<group>"; };
 		28ADA302148A3E3B00C55E51 /* MUAudioQualityPreferencesViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MUAudioQualityPreferencesViewController.m; sourceTree = "<group>"; };
 		28B034951F5354C3008E51C7 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -642,8 +639,6 @@
 				2872F7C4124668880078C0B1 /* Certificates */,
 				28BF8E1C11D93A1900B72770 /* Database */,
 				2838EA0C1293165700035C5D /* Preferences */,
-						28AD733E0D9D9553002E5188 /* MainWindow.storyboard */,
-						286A3CAE158CEB5A00C817D1 /* MainWindow~iPad.storyboard */,
 				28B034951F5354C3008E51C7 /* LaunchScreen.storyboard */,
 				2861C25D116BE905002B8514 /* MUApplicationDelegate.h */,
 				2861C25E116BE905002B8514 /* MUApplicationDelegate.m */,
@@ -1246,8 +1241,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-						28AD733F0D9D9553002E5188 /* MainWindow.storyboard in Resources */,
-				28BE999918CFED9A00910551 /* Balloon_2_Right.png in Resources */,
+					28BE999918CFED9A00910551 /* Balloon_2_Right.png in Resources */,
 						287639FF11D2A242009DB8B6 /* MUCertificateCreationProgressView.storyboard in Resources */,
 						2858A580123B9E5700A82155 /* MUCertificateCell.storyboard in Resources */,
 				28DC1C5C13DE596B0037CDC2 /* authenticated.png in Resources */,
