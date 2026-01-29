@@ -8,7 +8,7 @@
                     <view key="view" contentMode="scaleToFill" id="MULegalView">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
                         <subviews>
-                            <wkWebView contentMode="scaleToFill" id="webView">
+                            <wkWebView contentMode="scaleToFill" id="webViewElement">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="416"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -16,13 +16,13 @@
                                     <audiovisualMediaTypes key="mediaTypesRequiringUserActionForPlayback" none="YES"/>
                                     <wkPreferences key="preferences"/>
                                 </wkWebViewConfiguration>
-                                <connections>
-                                    <outlet property="navigationDelegate" destination="MULegalVC" id="wkConn1"/>
-                                </connections>
                             </wkWebView>
                         </subviews>
                         <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
+                    <connections>
+                        <outlet property="webView" destination="webViewElement" id="webViewOutlet"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FirstResponder" sceneMemberID="firstResponder"/>
             </objects>
