@@ -350,6 +350,17 @@ class MUApplicationDelegate: NSObject, UIApplicationDelegate {
 
         // Activate audio session
         activateAudioSession()
+
+        // Start audio on background queue after configuration
+        // This is needed because applicationDidBecomeActive may have already fired
+        // before microphone permission was granted
+        audioSessionQueue.async {
+            if let audio = MKAudio.shared(), !audio.isRunning() {
+                NSLog("MumbleApplicationDelegate: Starting MKAudio after configuration")
+                audio.start()
+            }
+            MUAudioCaptureManager.shared.start()
+        }
     }
 
     @objc func reloadPreferences() {

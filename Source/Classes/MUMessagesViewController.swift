@@ -192,12 +192,15 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
 
     func clearAllMessages() {
         msgdb = MUMessagesDatabase()
-        tableView.reloadData()
+        tableView?.reloadData()
     }
 
     // MARK: - Private Methods
 
     private func setReceiverName(_ receiver: String, imageName: String) {
+        // Guard against textField not yet initialized (viewWillAppear not called)
+        guard let textField = textField else { return }
+
         let receiverView = MUMessageReceiverButton(text: receiver)
         receiverView.addTarget(self, action: #selector(showRecipientPicker(_:)), for: .touchUpInside)
 
@@ -637,10 +640,13 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
             // Only insert row if message was actually added
             guard countAfter > countBefore else { return }
 
+            // Guard against tableView not yet initialized (viewWillAppear not called)
+            guard let tableView = self.tableView else { return }
+
             let indexPath = IndexPath(row: countAfter - 1, section: 0)
-            self.tableView.insertRows(at: [indexPath], with: .fade)
-            if !self.tableView.isDragging && !UIMenuController.shared.isMenuVisible {
-                self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+            tableView.insertRows(at: [indexPath], with: .fade)
+            if !tableView.isDragging && !UIMenuController.shared.isMenuVisible {
+                tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
             }
         }
     }
@@ -720,10 +726,13 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
             // Only insert row if message was actually added
             guard countAfter > countBefore else { return }
 
+            // Guard against tableView not yet initialized (viewWillAppear not called)
+            guard let tableView = self.tableView else { return }
+
             let indexPath = IndexPath(row: countAfter - 1, section: 0)
-            self.tableView.insertRows(at: [indexPath], with: .fade)
-            if !self.tableView.isDragging && !UIMenuController.shared.isMenuVisible {
-                self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
+            tableView.insertRows(at: [indexPath], with: .fade)
+            if !tableView.isDragging && !UIMenuController.shared.isMenuVisible {
+                tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
             }
 
             // Send local notification if app is in background
