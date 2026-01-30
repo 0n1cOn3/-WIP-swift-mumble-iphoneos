@@ -58,7 +58,7 @@ final class MURemoteControlPreferencesViewController: UITableViewController {
                 sender.isOn = false
             }
         } else {
-            server.stop()
+            _ = server.stop()
         }
     }
 }

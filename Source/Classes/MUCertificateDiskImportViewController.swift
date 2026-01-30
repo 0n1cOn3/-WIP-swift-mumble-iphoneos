@@ -177,8 +177,9 @@ class MUCertificateDiskImportViewController: UITableViewController, UITextFieldD
         guard let dir = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first else { return }
         for fn in diskCertificates {
             let path = (dir as NSString).appendingPathComponent(fn)
-            if let err = try? FileManager.default.removeItem(atPath: path) { }
-            else {
+            do {
+                try FileManager.default.removeItem(atPath: path)
+            } catch {
                 let title = NSLocalizedString("Unable to remove file", comment: "Error title when file cannot be removed")
                 let msg = String(format: NSLocalizedString("File '%@' could not be deleted: %@", comment: "Error message when file deletion fails"), fn, "")
                 let alert = UIAlertController(title: title, message: msg, preferredStyle: .alert)

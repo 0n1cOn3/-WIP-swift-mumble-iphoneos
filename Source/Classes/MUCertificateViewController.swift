@@ -14,14 +14,15 @@ class MUCertificateViewController: UITableViewController {
     init(persistentRef: Data) {
         super.init(style: .grouped)
         self.preferredContentSize = CGSize(width: 320, height: 480)
-        if let chains = MUCertificateChainBuilder.buildChain(fromPersistentRef: persistentRef) as? [Any] {
+        if let chains = MUCertificateChainBuilder.buildChain(fromPersistentRef: persistentRef) {
             var certs: [MKCertificate] = []
             if let first = MUCertificateController.certificate(withPersistentRef: persistentRef) {
                 certs.append(first)
             }
             for (index, obj) in chains.enumerated() where index > 0 {
-                // SecCertificate is a CoreFoundation type bridged as AnyObject
-                guard let secCert = obj as? SecCertificate else { continue }
+                // SecCertificate is a CoreFoundation type - check type ID before casting
+                guard CFGetTypeID(obj as CFTypeRef) == SecCertificateGetTypeID() else { continue }
+                let secCert = obj as! SecCertificate
                 let certData = SecCertificateCopyData(secCert) as Data
                 if let cert = MKCertificate(certificate: certData, privateKey: nil) {
                     certs.append(cert)
@@ -282,7 +283,7 @@ class MUCertificateViewController: UITableViewController {
             alert.addAction(UIAlertAction(title: cancel, style: .cancel, handler: nil))
             alert.addAction(UIAlertAction(title: delete, style: .default) { _ in
                 if let ref = self.persistentRef {
-                    MUCertificateController.deleteCertificate(withPersistentRef: ref)
+                    _ = MUCertificateController.deleteCertificate(withPersistentRef: ref)
                     self.navigationController?.popViewController(animated: true)
                 }
             })

@@ -11,8 +11,8 @@ class MUCertificateController: NSObject {
         let status = SecItemCopyMatching(query as CFDictionary, &item)
         guard status == errSecSuccess, let result = item else { return nil }
 
-        if CFGetTypeID(result) == SecIdentityGetTypeID(),
-           let identity = result as? SecIdentity {
+        if CFGetTypeID(result) == SecIdentityGetTypeID() {
+            let identity = result as! SecIdentity
             var cert: SecCertificate?
             if SecIdentityCopyCertificate(identity, &cert) == errSecSuccess, let secCert = cert {
                 let certData = SecCertificateCopyData(secCert) as Data
@@ -30,8 +30,8 @@ class MUCertificateController: NSObject {
                     }
                 }
             }
-        } else if CFGetTypeID(result) == SecCertificateGetTypeID(),
-                  let secCert = result as? SecCertificate {
+        } else if CFGetTypeID(result) == SecCertificateGetTypeID() {
+            let secCert = result as! SecCertificate
             let certData = SecCertificateCopyData(secCert) as Data
             return MKCertificate(certificate: certData, privateKey: nil)
         }
