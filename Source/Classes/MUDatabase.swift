@@ -60,7 +60,7 @@ class MUDatabase: NSObject {
 
     /// Initialize the database, creating tables if needed.
     @objc class func initializeDatabase() {
-        NSLog("Initializing database with SQLite version: %@", FMDatabase.sqliteLibVersion() ?? "unknown")
+        NSLog("Initializing database with SQLite version: %@", FMDatabase.sqliteLibVersion())
 
         // Attempt to move old databases if we find ones in our old locations.
         moveOldDatabases()
@@ -121,7 +121,7 @@ class MUDatabase: NSObject {
         database.executeUpdate("VACUUM", withArgumentsIn: [])
 
         if database.hadError() {
-            NSLog("MUDatabase: Error: %@ (Code: %d)", database.lastErrorMessage() ?? "unknown", database.lastErrorCode())
+            NSLog("MUDatabase: Error: %@ (Code: %d)", database.lastErrorMessage(), database.lastErrorCode())
         }
     }
 

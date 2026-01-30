@@ -261,7 +261,8 @@ class MUCertificatePreferencesViewController: UITableViewController {
                     var certResult: CFTypeRef?
                     if SecItemCopyMatching(certQuery as CFDictionary, &certResult) == errSecSuccess,
                        let secCert = certResult,
-                       let secCertRef = secCert as? SecCertificate {
+                       CFGetTypeID(secCert) == SecCertificateGetTypeID() {
+                        let secCertRef = secCert as! SecCertificate
                         let certData = SecCertificateCopyData(secCertRef) as Data
 
                         if let consideredCert = MKCertificate(certificate: certData, privateKey: nil) {
