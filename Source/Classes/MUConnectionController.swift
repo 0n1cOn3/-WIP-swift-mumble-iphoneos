@@ -80,6 +80,7 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
         andPassword password: String?,
         withParentViewController parentViewController: UIViewController?
     ) {
+        NSLog("MUConnectionController: connet called - host=%@, port=%lu, user=%@", hostName ?? "nil", port, userName ?? "nil")
         self.hostname = hostName
         self.port = port
         self.username = userName
@@ -144,6 +145,7 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
     }
 
     private func establishConnection() {
+        NSLog("MUConnectionController: establishConnection called")
         connection = MKConnection()
         connection?.setDelegate(self)
         connection?.setForceTCP(UserDefaults.standard.bool(forKey: "NetworkForceTCP"))
@@ -157,11 +159,18 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
 
         // Set the connection's client cert if one is set in the app's preferences
         if let certPersistentId = UserDefaults.standard.object(forKey: "DefaultCertificate") as? Data {
+            NSLog("MUConnectionController: Found certificate, building chain")
             if let certChain = MUCertificateChainBuilder.buildChain(fromPersistentRef: certPersistentId) {
+                NSLog("MUConnectionController: Certificate chain built with %lu items", certChain.count)
                 connection?.setCertificateChain(certChain)
+            } else {
+                NSLog("MUConnectionController: Failed to build certificate chain")
             }
+        } else {
+            NSLog("MUConnectionController: No certificate configured")
         }
 
+        NSLog("MUConnectionController: Calling connect to %@:%lu", hostname ?? "nil", port)
         connection?.connect(toHost: hostname, port: port)
 
         DispatchQueue.main.async {
@@ -206,6 +215,7 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
     // MARK: - MKConnectionDelegate
 
     func connectionOpened(_ conn: MKConnection) {
+        NSLog("MUConnectionController: connectionOpened delegate called")
         var tokens: [String]? = nil
         if let hostname = conn.hostname() {
             tokens = MUDatabase.accessTokensForServer(withHostname: hostname, port: Int(conn.port())) as? [String]
@@ -214,6 +224,7 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
     }
 
     func connection(_ conn: MKConnection, closedWithError err: Error?) {
+        NSLog("MUConnectionController: closedWithError delegate called - error=%@", err?.localizedDescription ?? "nil")
         hideConnectingView()
         if let error = err {
             let alertCtrl = UIAlertController(
@@ -231,6 +242,7 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
     }
 
     func connection(_ conn: MKConnection, unableToConnectWithError err: Error) {
+        NSLog("MUConnectionController: unableToConnectWithError delegate called - error=%@", err.localizedDescription)
         hideConnectingView()
 
         var msg = err.localizedDescription
@@ -261,6 +273,7 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
     }
 
     func connection(_ conn: MKConnection, trustFailureInCertificateChain chain: [Any]) {
+        NSLog("MUConnectionController: trustFailureInCertificateChain delegate called - chain count=%lu", chain.count)
         // Check the database whether the user trusts the leaf certificate of this server.
         var storedDigest: String? = nil
         if let hostname = conn.hostname() {
@@ -337,6 +350,7 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
     }
 
     func connection(_ conn: MKConnection!, rejectedWith reason: MKRejectReason, explanation: String!) {
+        NSLog("MUConnectionController: rejectedWith delegate called - reason=%d, explanation=%@", reason.rawValue, explanation ?? "nil")
         hideConnectingView()
         teardownConnection()
 
@@ -436,6 +450,7 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
     // MARK: - MKServerModelDelegate
 
     func serverModel(_ model: MKServerModel, joinedServerAs user: MKUser) {
+        NSLog("MUConnectionController: joinedServerAs delegate called - user=%@", user.userName() ?? "nil")
         if let username = user.userName(), let hostname = model.hostname() {
             MUDatabase.storeUsername(username, forServerWithHostname: hostname, port: model.port())
         }
