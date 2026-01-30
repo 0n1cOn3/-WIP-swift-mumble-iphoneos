@@ -314,8 +314,7 @@ class MUServerViewController: UITableViewController, MKServerModelDelegate {
     // Note: All delegate methods dispatch to main thread since MKServerModel
     // callbacks may be invoked from background threads (network layer).
 
-    @objc(serverModel:joinedServerAsUser:)
-    func serverModel(_ model: MKServerModel, joinedServerAsUser user: MKUser) {
+    func serverModel(_ model: MKServerModel, joinedServerAs user: MKUser) {
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             if let rootChannel = model.rootChannel() {

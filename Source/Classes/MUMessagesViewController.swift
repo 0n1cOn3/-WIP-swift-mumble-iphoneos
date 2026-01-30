@@ -628,8 +628,7 @@ class MUMessagesViewController: UIViewController, UITableViewDelegate, UITableVi
 
     // MARK: - MKServerModelDelegate
 
-    @objc(serverModel:joinedServerAsUser:withWelcomeMessage:)
-    func serverModel(_ model: MKServerModel!, joinedServerAsUser user: MKUser!, withWelcomeMessage msg: MKTextMessage!) {
+    func serverModel(_ model: MKServerModel!, joinedServerAs user: MKUser!, withWelcome msg: MKTextMessage!) {
         // Dispatch to main thread since MKServerModel delegates may be called from background
         DispatchQueue.main.async { [weak self] in
             guard let self = self, let msg = msg else { return }
