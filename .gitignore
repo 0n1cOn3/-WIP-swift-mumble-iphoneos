@@ -9,3 +9,11 @@ xcuserdata
 ProxiedDevice-2788c7f7aea7e5076bff82a4db0e9554bf5ad58d/
 ios-logs/
 mumble-debug.log
+
+# Diagnostic logs
+DiagnosticLogs/
+*.ips
+*.tailspin
+*.tailspin.gz
+*.crash
+sysdiagnose/
