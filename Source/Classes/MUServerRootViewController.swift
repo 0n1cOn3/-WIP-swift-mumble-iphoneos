@@ -150,7 +150,8 @@ class MUServerRootViewController: UINavigationController, MKConnectionDelegate, 
     func connectionOpened(_ conn: MKConnection) {
     }
 
-    func connection(_ conn: MKConnection!, rejectedWith reason: MKRejectReason, explanation: String!) {
+    @objc(connection:rejectedWithReason:explanation:)
+    func connection(_ conn: MKConnection!, rejectedWithReason reason: MKRejectReason, explanation: String!) {
     }
 
     func connection(_ conn: MKConnection, trustFailureInCertificateChain chain: [Any]) {

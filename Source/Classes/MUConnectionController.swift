@@ -23,6 +23,7 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
 
     @objc static func shared() -> MUConnectionController {
         if sharedInstance == nil {
+            NSLog("MUConnectionController: Creating singleton instance (Swift version)")
             sharedInstance = MUConnectionController()
         }
         return sharedInstance!
@@ -103,6 +104,7 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
     // MARK: - Connection Management
 
     private func showConnectingView() {
+        NSLog("MUConnectionController: showConnectingView called, parentVC=%@", String(describing: parentViewController))
         let title = "\(NSLocalizedString("Connecting", comment: ""))..."
         let msg = String(
             format: NSLocalizedString("Connecting to %@:%lu", comment: "Connecting to hostname:port"),
@@ -114,10 +116,19 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
             title: NSLocalizedString("Cancel", comment: ""),
             style: .cancel
         ) { [weak self] _ in
+            NSLog("MUConnectionController: Cancel button pressed")
             self?.teardownConnection()
         })
         alertCtrl = alert
-        parentViewController?.present(alert, animated: true)
+
+        if let pvc = parentViewController {
+            NSLog("MUConnectionController: Presenting connecting alert on %@", String(describing: pvc))
+            pvc.present(alert, animated: true) {
+                NSLog("MUConnectionController: Connecting alert presented successfully")
+            }
+        } else {
+            NSLog("MUConnectionController: ERROR - parentViewController is nil!")
+        }
 
         timer = Timer.scheduledTimer(
             timeInterval: 0.2,
@@ -133,13 +144,19 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
     }
 
     private func hideConnectingView(completion: (() -> Void)?) {
+        NSLog("MUConnectionController: hideConnectingView called, alertCtrl=%@", alertCtrl != nil ? "exists" : "nil")
         timer?.invalidate()
         timer = nil
 
         if alertCtrl != nil {
-            parentViewController?.dismiss(animated: true, completion: completion)
+            NSLog("MUConnectionController: Dismissing connecting alert")
+            parentViewController?.dismiss(animated: true) {
+                NSLog("MUConnectionController: Connecting alert dismissed")
+                completion?()
+            }
             alertCtrl = nil
         } else {
+            NSLog("MUConnectionController: No alert to dismiss")
             completion?()
         }
     }
@@ -226,19 +243,22 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
     func connection(_ conn: MKConnection, closedWithError err: Error?) {
         NSLog("MUConnectionController: closedWithError delegate called - error=%@", err?.localizedDescription ?? "nil")
         hideConnectingView()
+
+        let title = NSLocalizedString("Connection closed", comment: "")
+        let message: String
         if let error = err {
-            let alertCtrl = UIAlertController(
-                title: NSLocalizedString("Connection closed", comment: ""),
-                message: error.localizedDescription,
-                preferredStyle: .alert
-            )
-            alertCtrl.addAction(UIAlertAction(
-                title: NSLocalizedString("OK", comment: ""),
-                style: .cancel
-            ))
-            parentViewController?.present(alertCtrl, animated: true)
-            teardownConnection()
+            message = error.localizedDescription
+        } else {
+            message = NSLocalizedString("The connection was closed unexpectedly.", comment: "")
         }
+
+        let alertCtrl = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alertCtrl.addAction(UIAlertAction(
+            title: NSLocalizedString("OK", comment: ""),
+            style: .cancel
+        ))
+        parentViewController?.present(alertCtrl, animated: true)
+        teardownConnection()
     }
 
     func connection(_ conn: MKConnection, unableToConnectWithError err: Error) {
@@ -278,9 +298,11 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
         var storedDigest: String? = nil
         if let hostname = conn.hostname() {
             storedDigest = MUDatabase.digestForServer(withHostname: hostname, port: Int(conn.port()))
+            NSLog("MUConnectionController: Stored digest for %@:%d = %@", hostname, conn.port(), storedDigest ?? "nil")
         }
         let cert = conn.peerCertificates()?.first as? MKCertificate
         let serverDigest = cert?.hexDigest()
+        NSLog("MUConnectionController: Server certificate digest = %@", serverDigest ?? "nil")
 
         let cancelHandler: (UIAlertAction) -> Void = { [weak self] _ in
             self?.teardownConnection()
@@ -313,12 +335,14 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
 
         if let storedDigest = storedDigest {
             if storedDigest == serverDigest {
-                // Match
+                // Match - auto-reconnect with SSL verification disabled
+                NSLog("MUConnectionController: Certificate digest matches stored, auto-reconnecting")
                 conn.setIgnoreSSLVerification(true)
                 conn.reconnect()
                 return
             } else {
                 // Mismatch - server is using a new certificate
+                NSLog("MUConnectionController: Certificate MISMATCH - showing alert")
                 hideConnectingView()
 
                 let title = NSLocalizedString("Certificate Mismatch", comment: "")
@@ -334,6 +358,7 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
             }
         } else {
             // No cert hash in database for this hostname-port combo
+            NSLog("MUConnectionController: No stored certificate digest - showing trust dialog")
             hideConnectingView()
 
             let title = NSLocalizedString("Unable to validate server certificate", comment: "")
@@ -345,12 +370,14 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
             alertCtrl.addAction(UIAlertAction(title: NSLocalizedString("Trust Certificate", comment: ""), style: .default, handler: trustHandler))
             alertCtrl.addAction(UIAlertAction(title: NSLocalizedString("Show Certificates", comment: ""), style: .default, handler: showCertsHandler))
 
+            NSLog("MUConnectionController: Presenting certificate trust alert")
             parentViewController?.present(alertCtrl, animated: true)
         }
     }
 
-    func connection(_ conn: MKConnection!, rejectedWith reason: MKRejectReason, explanation: String!) {
-        NSLog("MUConnectionController: rejectedWith delegate called - reason=%d, explanation=%@", reason.rawValue, explanation ?? "nil")
+    @objc(connection:rejectedWithReason:explanation:)
+    func connection(_ conn: MKConnection!, rejectedWithReason reason: MKRejectReason, explanation: String!) {
+        NSLog("MUConnectionController: rejectedWithReason delegate called - reason=%d, explanation=%@", reason.rawValue, explanation ?? "nil")
         hideConnectingView()
         teardownConnection()
 
@@ -449,8 +476,9 @@ class MUConnectionController: UIView, MKConnectionDelegate, MKServerModelDelegat
 
     // MARK: - MKServerModelDelegate
 
-    func serverModel(_ model: MKServerModel, joinedServerAs user: MKUser) {
-        NSLog("MUConnectionController: joinedServerAs delegate called - user=%@", user.userName() ?? "nil")
+    @objc(serverModel:joinedServerAsUser:)
+    func serverModel(_ model: MKServerModel, joinedServerAsUser user: MKUser) {
+        NSLog("MUConnectionController: joinedServerAsUser delegate called - user=%@", user.userName() ?? "nil")
         if let username = user.userName(), let hostname = model.hostname() {
             MUDatabase.storeUsername(username, forServerWithHostname: hostname, port: model.port())
         }

@@ -244,7 +244,8 @@ class MUMessageRecipientViewController: UITableViewController, MKServerModelDele
 
     // MARK: - MKServerModelDelegate
 
-    func serverModel(_ model: MKServerModel!, joinedServerAs user: MKUser!) {
+    @objc(serverModel:joinedServerAsUser:)
+    func serverModel(_ model: MKServerModel!, joinedServerAsUser user: MKUser!) {
         if let rootChannel = model.rootChannel() {
             rebuildModelArray(from: rootChannel)
         }
